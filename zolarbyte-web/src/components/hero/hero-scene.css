@@ -1,0 +1,146 @@
+/* Elektroanimation im Einstieg.
+   Standardwerte = aktivierter Endzustand. Die Animationen spielen nur den Weg dorthin ab. */
+
+.scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 720 / 560;
+}
+
+.scene__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.scene__label text {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #9a9aa8;
+}
+
+.scene__glow {
+  opacity: 0.16;
+}
+
+/* Linie wird gezeichnet */
+.zb-draw {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  animation: zb-draw 1s cubic-bezier(0.55, 0.05, 0.35, 1) both;
+}
+
+/* Wandernder Lichtimpuls (nur während der Animation sichtbar) */
+.zb-pulse {
+  stroke-dasharray: 0.07 1.2;
+  stroke-dashoffset: 0.1;
+  opacity: 0;
+  animation: zb-pulse 1s cubic-bezier(0.55, 0.05, 0.35, 1);
+}
+
+/* Langsame, vereinzelte Ruheimpulse */
+.zb-idle {
+  stroke-dasharray: 0.05 1.2;
+  stroke-dashoffset: 0.1;
+  opacity: 0;
+  animation: zb-idle 14s linear infinite;
+}
+
+/* Elemente, die eingeschaltet werden */
+.zb-on {
+  animation: zb-on 0.6s ease-out both;
+}
+
+.zb-flash {
+  opacity: 0.4;
+  animation: zb-flash 1s ease-out both;
+}
+
+.zb-sheen {
+  opacity: 0;
+  animation: zb-sheen 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zb-logo {
+  animation: zb-logo 0.7s ease-out both;
+}
+
+.zb-trace {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: zb-trace 1.1s cubic-bezier(0.55, 0.05, 0.35, 1);
+}
+
+@keyframes zb-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes zb-pulse {
+  0% { stroke-dashoffset: 0.1; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { stroke-dashoffset: -1.02; opacity: 0; }
+}
+
+@keyframes zb-idle {
+  0% { stroke-dashoffset: 0.1; opacity: 0; }
+  2% { opacity: 0.65; }
+  22% { opacity: 0.65; }
+  24% { stroke-dashoffset: -1.02; opacity: 0; }
+  100% { stroke-dashoffset: -1.02; opacity: 0; }
+}
+
+@keyframes zb-on {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zb-flash {
+  0% { opacity: 0; }
+  35% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes zb-sheen {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(400px); opacity: 1; }
+}
+
+@keyframes zb-logo {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+@keyframes zb-trace {
+  0% { stroke-dashoffset: 1; opacity: 1; }
+  60% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* Außerhalb des sichtbaren Bereichs anhalten */
+.scene.is-paused * {
+  animation-play-state: paused !important;
+}
+
+/* Kompaktere, vereinfachte Szene auf kleinen Bildschirmen */
+@media (max-width: 640px) {
+  .scene__detail,
+  .scene__label,
+  .zb-idle {
+    display: none;
+  }
+}
+
+/* Reduzierte Bewegung: statischer, aktivierter Endzustand */
+@media (prefers-reduced-motion: reduce) {
+  .scene *,
+  .scene *::before,
+  .scene *::after {
+    animation: none !important;
+  }
+}
