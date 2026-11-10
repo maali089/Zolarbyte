@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { LOGO_PATHS, LOGO_STROKE } from "@/components/Logo";
 import "./hero-scene.css";
 
 /*
  * Markenillustration für den Einstieg: Netzanschluss → Verteilung →
- * Beleuchtung + Photovoltaik → Sonne-Blitz-Symbol.
+ * Beleuchtung + Photovoltaik. Das Markenzeichen sitzt bewusst nur im Header.
  * Die Animation läuft rein über CSS. Ohne CSS-Animation (reduzierte Bewegung,
  * Fehler) zeigt das SVG automatisch den aktivierten Endzustand.
  */
@@ -26,7 +25,6 @@ const WIRES: Wire[] = [
   { id: "feed", d: "M36 508H350Q360 508 360 498V444", delay: 0.35, dur: 1.0, idle: 6 },
   { id: "light", d: "M292 302H266Q256 302 256 292V114Q256 104 246 104H70", delay: 1.85, dur: 0.85, idle: 10 },
   { id: "solar", d: "M428 346H557Q567 346 567 336V332", delay: 1.85, dur: 0.7, idle: 14 },
-  { id: "brand", d: "M369 214V158", delay: 3.15, dur: 0.45 },
 ];
 
 const CORDS = [
@@ -50,7 +48,8 @@ const PANELS = [0, 1, 2].flatMap((c) =>
   [0, 1].map((r) => ({ x: 470 + c * 66, y: 238 + r * 44 })),
 );
 
-const t = (s: number) => `${s}s`;
+/** Verzögerung + Versatz, damit die Szene erst nach dem Markenauftritt startet */
+const t = (s: number) => `calc(${s}s + var(--scene-offset, 0s))`;
 
 function shade(x: number, y: number) {
   return `M${x - 22} ${y + 22}C${x - 22} ${y + 8} ${x - 12} ${y} ${x} ${y}C${x + 12} ${y} ${x + 22} ${y + 8} ${x + 22} ${y + 22}Z`;
@@ -92,16 +91,16 @@ export function HeroScene() {
             <circle cx="12" cy="12" r="0.9" fill="#2a2a33" />
           </pattern>
           <linearGradient id="zb-cone" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffd6a0" stopOpacity="0.16" />
-            <stop offset="1" stopColor="#ffd6a0" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff4f9" stopOpacity="0.16" />
+            <stop offset="1" stopColor="#fff4f9" stopOpacity="0" />
           </linearGradient>
           <radialGradient id="zb-halo">
-            <stop offset="0" stopColor="#ffe2b8" stopOpacity="0.55" />
-            <stop offset="1" stopColor="#ffe2b8" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff4f9" stopOpacity="0.55" />
+            <stop offset="1" stopColor="#fff4f9" stopOpacity="0" />
           </radialGradient>
           <linearGradient id="zb-panel" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#f34c96" stopOpacity="0.16" />
-            <stop offset="1" stopColor="#c71585" stopOpacity="0.02" />
+            <stop offset="0" stopColor="#e35dab" stopOpacity="0.16" />
+            <stop offset="1" stopColor="#C71C84" stopOpacity="0.02" />
           </linearGradient>
           <linearGradient id="zb-sheen" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#fff" stopOpacity="0" />
@@ -172,7 +171,7 @@ export function HeroScene() {
               cx={c.x}
               cy={c.y + 25}
               r="6"
-              fill="#ffdcaa"
+              fill="#fff1f7"
               style={{ animationDelay: t(2.75 + i * 0.12) }}
             />
           </g>
@@ -190,7 +189,7 @@ export function HeroScene() {
           height="230"
           rx="10"
           fill="none"
-          stroke="#c71585"
+          stroke="#C71C84"
           strokeWidth="2"
           style={{ animationDelay: t(1.3) }}
         />
@@ -219,7 +218,7 @@ export function HeroScene() {
           </g>
         ))}
         {/* Hauptschalter + ausgewählte Stromkreise */}
-        <g fill="#f34c96">
+        <g fill="#e35dab">
           <g className="zb-on" style={{ animationDelay: t(1.35) }}>
             <rect x="320" y={ROWS[0] - 4} width="9" height="8" rx="1.5" />
             <circle cx="324.5" cy={ROWS[0] - 8} r="1.6" />
@@ -259,11 +258,11 @@ export function HeroScene() {
           </g>
         </g>
         <rect x="559" y="322" width="16" height="11" rx="2" fill="#2c2c35" stroke="#4a4a57" />
-        <circle className="zb-on" cx="567" cy="327.5" r="1.8" fill="#f34c96" style={{ animationDelay: t(2.55) }} />
+        <circle className="zb-on" cx="567" cy="327.5" r="1.8" fill="#e35dab" style={{ animationDelay: t(2.55) }} />
 
         {/* Netzanschluss */}
         <circle cx="36" cy="508" r="9" fill="#141419" stroke="#4a4a57" strokeWidth="2" />
-        <circle className="zb-on" cx="36" cy="508" r="3.5" fill="#f34c96" style={{ animationDelay: t(0.2) }} />
+        <circle className="zb-on" cx="36" cy="508" r="3.5" fill="#e35dab" style={{ animationDelay: t(0.2) }} />
 
         {/* Leitungen – aktiviert (Glanz + Linie), dann Impulse */}
         <g fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -273,7 +272,7 @@ export function HeroScene() {
               className="zb-draw scene__glow"
               d={w.d}
               pathLength={1}
-              stroke="#c71585"
+              stroke="#C71C84"
               strokeWidth="10"
               style={{ animationDelay: t(w.delay), animationDuration: t(w.dur) }}
             />
@@ -284,7 +283,7 @@ export function HeroScene() {
               className="zb-draw"
               d={w.d}
               pathLength={1}
-              stroke="#d81b8c"
+              stroke="#C71C84"
               strokeWidth="3"
               style={{ animationDelay: t(w.delay), animationDuration: t(w.dur) }}
             />
@@ -295,7 +294,7 @@ export function HeroScene() {
               className="zb-draw"
               d={`M${c.x} 104V${c.y}`}
               pathLength={1}
-              stroke="#d81b8c"
+              stroke="#C71C84"
               strokeWidth="2"
               style={{ animationDelay: t(2.5 + i * 0.1), animationDuration: t(0.3) }}
             />
@@ -306,7 +305,7 @@ export function HeroScene() {
               className="zb-pulse"
               d={w.d}
               pathLength={1}
-              stroke="#ff8cc0"
+              stroke="#f2a6d0"
               strokeWidth="5"
               style={{ animationDelay: t(w.delay), animationDuration: t(w.dur) }}
             />
@@ -317,24 +316,11 @@ export function HeroScene() {
               className="zb-idle"
               d={w.d}
               pathLength={1}
-              stroke="#f34c96"
+              stroke="#e35dab"
               strokeWidth="4"
               style={{ animationDelay: t(w.idle!) }}
             />
           ))}
-        </g>
-
-        {/* ---------- Sonne-Blitz-Symbol ---------- */}
-        <g transform="translate(260.3 -7.1) scale(0.36)" fill="none" strokeLinecap="round" strokeLinejoin="round">
-          <g className="zb-logo" stroke="#c71585" strokeWidth={LOGO_STROKE} style={{ animationDelay: t(3.55) }}>
-            <path d={LOGO_PATHS.rays} />
-            <path d={LOGO_PATHS.arc} />
-            <path d={LOGO_PATHS.bolt} />
-          </g>
-          <g stroke="#ffb3d6" strokeWidth={LOGO_STROKE}>
-            <path className="zb-trace" d={LOGO_PATHS.bolt} pathLength={1} style={{ animationDelay: t(3.55) }} />
-            <path className="zb-trace" d={LOGO_PATHS.arc} pathLength={1} style={{ animationDelay: t(3.8) }} />
-          </g>
         </g>
 
         {/* Beschriftung */}

@@ -15,7 +15,7 @@ export default function DatenschutzPage() {
           <h1>Datenschutzerklärung</h1>
         </div>
       </section>
-      <section className="section">
+      <section className="section page-body">
         <div className="container prose">
           {isPreview ? (
             <div className="notice" role="note">

@@ -17,7 +17,7 @@ export default function KontaktPage() {
     <>
       <section className="page-head">
         <div className="container">
-          <p className="eyebrow eyebrow--light">Kontakt</p>
+          <p className="eyebrow">Kontakt</p>
           <h1>Projekt anfragen</h1>
           <p>
             Beschreiben Sie kurz Ihr Vorhaben oder Ihr Problem. Wir melden uns persönlich bei Ihnen – oder Sie rufen
@@ -26,7 +26,7 @@ export default function KontaktPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section page-body">
         <div className="container contact-layout">
           <div>
             <h2 className="visually-hidden">Anfrageformular</h2>

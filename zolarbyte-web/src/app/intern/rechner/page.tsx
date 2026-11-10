@@ -16,7 +16,7 @@ export default function RechnerKonzeptPage() {
     <>
       <section className="page-head">
         <div className="container">
-          <p className="eyebrow eyebrow--light">Interne Vorschau · Konzept</p>
+          <p className="eyebrow">Interne Vorschau · Konzept</p>
           <h1>Rechner-Komponente</h1>
           <p>
             Vorbereitete Bedienung für einen späteren Rechner. Diese Seite ist nicht verlinkt und nicht für die
@@ -24,7 +24,7 @@ export default function RechnerKonzeptPage() {
           </p>
         </div>
       </section>
-      <section className="section" style={{ background: "var(--grey)" }}>
+      <section className="section page-body">
         <div className="container">
           <div className="notice" role="note" style={{ maxWidth: "48rem", marginBottom: "2rem" }}>
             <span>

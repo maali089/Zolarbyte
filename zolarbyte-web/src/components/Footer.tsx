@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/Logo";
+import { LogoMark, Wordmark } from "@/components/Logo";
 import { services } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -8,7 +8,10 @@ export function Footer() {
     <footer className="site-footer">
       <div className="container site-footer__grid">
         <div className="site-footer__brand">
-          <Logo tone="light" />
+          <span className="footer-brand">
+            <LogoMark className="footer-brand__mark" />
+            <Wordmark />
+          </span>
           <p>
             Elektrotechnik-Meisterbetrieb
             <br />

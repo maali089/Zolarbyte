@@ -15,7 +15,7 @@ export default function ImpressumPage() {
           <h1>Impressum</h1>
         </div>
       </section>
-      <section className="section">
+      <section className="section page-body">
         <div className="container prose">
           {isPreview ? (
             <div className="notice" role="note">

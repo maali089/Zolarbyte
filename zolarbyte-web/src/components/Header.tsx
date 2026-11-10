@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Logo } from "@/components/Logo";
+import { AnimatedMark, Wordmark } from "@/components/Logo";
 
 const NAV = [
   { href: "/#leistungen", label: "Leistungen" },
@@ -33,8 +33,9 @@ export function Header() {
   return (
     <header className={`site-header${open ? " is-open" : ""}`}>
       <div className="site-header__inner">
-        <Link href="/" className="site-header__brand" aria-label="Zolarbyte – zur Startseite">
-          <Logo tone="light" />
+        <Link href="/" className="brand" aria-label="Zolarbyte – zur Startseite">
+          <AnimatedMark className="brand__mark" data-zb-mark="" />
+          <Wordmark className="brand__word" />
         </Link>
 
         <button

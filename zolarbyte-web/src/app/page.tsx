@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { HeroScene } from "@/components/hero/HeroScene";
-import { ServiceIcon } from "@/components/ServiceIcon";
 import { ContactPerson } from "@/components/ContactPerson";
 import { faqs, services, steps } from "@/lib/content";
 import { site } from "@/lib/site";
@@ -22,6 +21,8 @@ const jsonLd = {
   },
 };
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 export default function Home() {
   return (
     <>
@@ -34,11 +35,16 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__inner container">
           <div className="hero__copy">
-            <p className="eyebrow eyebrow--light">Meisterbetrieb · Karlsfeld bei München</p>
+            <p className="eyebrow hero__eyebrow">Elektrotechnik-Meisterbetrieb · Karlsfeld bei München</p>
             <h1 id="hero-title" className="hero__title">
-              Elektrotechnik,
-              <br />
-              die <span className="hero__accent">verbindet.</span>
+              <span className="hero__line">
+                <span>Elektrotechnik,</span>
+              </span>
+              <span className="hero__line">
+                <span>
+                  die <em>verbindet.</em>
+                </span>
+              </span>
             </h1>
             <p className="hero__lead">
               Zolarbyte – Ihr Elektrotechnik-Meisterbetrieb aus Karlsfeld. Für durchdachte Elektroinstallationen,
@@ -48,39 +54,55 @@ export default function Home() {
               <Link href="/kontakt" className="btn btn--primary">
                 Projekt anfragen
               </Link>
-              <a href="#leistungen" className="btn btn--ghost-light">
-                Leistungen entdecken
+              <a href="#leistungen" className="btn btn--ghost">
+                Leistungen ansehen
               </a>
             </div>
-            <p className="hero__call">
-              Direkt anrufen: <a href={site.general.phoneHref}>{site.general.phone}</a>
-            </p>
           </div>
           <div className="hero__visual">
             <HeroScene />
           </div>
         </div>
+
+        <div className="container">
+          <ul className="hero__rail" aria-label="Direkter Kontakt">
+            <li>
+              <span>Telefon</span>
+              <a href={site.general.phoneHref}>{site.general.phone}</a>
+            </li>
+            <li>
+              <span>E-Mail</span>
+              <a href={`mailto:${site.general.email}`}>{site.general.email}</a>
+            </li>
+            <li>
+              <span>Vertrieb &amp; neue Projekte</span>
+              <a href="#ansprechpartner">
+                {site.sales.name}, {site.sales.role}
+              </a>
+            </li>
+          </ul>
+        </div>
       </section>
 
       {/* ---------- Betrieb ---------- */}
       <section id="betrieb" className="section intro" aria-labelledby="betrieb-title">
-        <div className="container intro__grid">
-          <div>
-            <p className="eyebrow">Der Betrieb</p>
-            <h2 id="betrieb-title" className="h2">
-              Ein Meisterbetrieb für Ihre gesamte Elektrik.
-            </h2>
-          </div>
-          <div className="intro__body">
-            <p className="lead">
-              Zolarbyte ist ein Elektrotechnik-Meisterbetrieb mit Sitz in Karlsfeld bei München. Wir installieren,
-              prüfen und warten elektrische Anlagen, beheben Störungen und binden Photovoltaik fachgerecht in
-              bestehende Installationen ein.
-            </p>
-            <p>
-              Dabei setzen wir auf persönliche Beratung vor Ort, individuell abgestimmte Lösungen und hochwertige
-              Komponenten. Für Ihr Vorhaben haben Sie einen persönlichen Ansprechpartner.
-            </p>
+        <div className="container">
+          <p className="eyebrow">Der Betrieb</p>
+          <h2 id="betrieb-title" className="intro__statement">
+            Ein Meisterbetrieb für Ihre <em>gesamte</em> Elektrik.
+          </h2>
+          <div className="intro__grid">
+            <div className="intro__body">
+              <p className="lead">
+                Zolarbyte ist ein Elektrotechnik-Meisterbetrieb mit Sitz in Karlsfeld bei München. Wir installieren,
+                prüfen und warten elektrische Anlagen, beheben Störungen und binden Photovoltaik fachgerecht in
+                bestehende Installationen ein.
+              </p>
+              <p>
+                Dabei setzen wir auf persönliche Beratung vor Ort, individuell abgestimmte Lösungen und hochwertige
+                Komponenten. Für Ihr Vorhaben haben Sie einen persönlichen Ansprechpartner.
+              </p>
+            </div>
             <dl className="spec">
               <div>
                 <dt>Betrieb</dt>
@@ -109,32 +131,33 @@ export default function Home() {
       <section id="leistungen" className="section services" aria-labelledby="leistungen-title">
         <div className="container">
           <div className="section-head">
-            <p className="eyebrow">Leistungen</p>
-            <h2 id="leistungen-title" className="h2">
-              Von der Installation bis zur Prüfung.
-            </h2>
+            <div>
+              <p className="eyebrow">Leistungen</p>
+              <h2 id="leistungen-title" className="h2">
+                Von der Installation bis zur Prüfung.
+              </h2>
+            </div>
             <p className="section-head__text">
-              Sechs Leistungsbereiche, ein Ansprechpartner. Photovoltaik ist einer davon – das Fundament bleibt
-              eine sauber geplante und ausgeführte Elektroinstallation.
+              Sechs Leistungsbereiche, ein Ansprechpartner. Photovoltaik ist einer davon – das Fundament bleibt eine
+              sauber geplante und ausgeführte Elektroinstallation.
             </p>
           </div>
 
           <ol className="service-list">
             {services.map((s, i) => (
               <li key={s.id} id={s.id} className="service">
-                <div className="service__index" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <ServiceIcon id={s.id} />
-                <div className="service__main">
-                  <h3 className="service__title">{s.title}</h3>
+                <span className="service__index" aria-hidden="true">
+                  {pad(i + 1)}
+                </span>
+                <h3 className="service__title">{s.title}</h3>
+                <div className="service__body">
                   <p className="service__text">{s.text}</p>
+                  <ul className="service__points" aria-label={`Schwerpunkte ${s.title}`}>
+                    {s.points.map((p) => (
+                      <li key={p}>{p}</li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="service__points" aria-label={`Schwerpunkte ${s.title}`}>
-                  {s.points.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
               </li>
             ))}
           </ol>
@@ -144,7 +167,7 @@ export default function Home() {
       {/* ---------- Ablauf ---------- */}
       <section id="ablauf" className="section process" aria-labelledby="ablauf-title">
         <div className="container">
-          <div className="section-head section-head--split">
+          <div className="section-head">
             <div>
               <p className="eyebrow">Ablauf</p>
               <h2 id="ablauf-title" className="h2">
@@ -158,8 +181,9 @@ export default function Home() {
           <ol className="process__steps">
             {steps.map((step, i) => (
               <li key={step.title} className="process__step">
-                <span className="process__node" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
+                <span className="process__node" aria-hidden="true" />
+                <span className="process__index" aria-hidden="true">
+                  {pad(i + 1)}
                 </span>
                 <h3 className="process__title">{step.title}</h3>
                 <p>{step.text}</p>
@@ -177,9 +201,9 @@ export default function Home() {
             <h2 id="people-title" className="h2">
               Persönlich erreichbar.
             </h2>
-            <p className="lead">
-              Für neue Projekte und Angebote sprechen Sie direkt mit unserem Vertriebsleiter. Allgemeine Anfragen
-              und Störungsmeldungen erreichen uns über den zentralen Kontakt.
+            <p className="lead people__lead">
+              Für neue Projekte und Angebote sprechen Sie direkt mit unserem Vertriebsleiter. Allgemeine Anfragen und
+              Störungsmeldungen erreichen uns über den zentralen Kontakt.
             </p>
             <div className="general-contact">
               <h3 className="general-contact__title">Allgemeiner Kontakt</h3>
@@ -220,18 +244,21 @@ export default function Home() {
       {/* ---------- Abschluss ---------- */}
       <section className="cta" aria-labelledby="cta-title">
         <div className="container cta__inner">
-          <h2 id="cta-title" className="cta__title">
-            Sprechen wir über Ihr Vorhaben.
-          </h2>
-          <p className="cta__text">
-            Beschreiben Sie uns kurz, was Sie planen oder was nicht funktioniert. Wir melden uns persönlich bei
-            Ihnen.
-          </p>
-          <div className="hero__actions">
+          <div>
+            <h2 id="cta-title" className="cta__title">
+              Sprechen wir über <em>Ihr Vorhaben.</em>
+            </h2>
+            <p className="cta__text">
+              Beschreiben Sie uns kurz, was Sie planen oder was nicht funktioniert. Wir melden uns persönlich bei
+              Ihnen.
+            </p>
+          </div>
+          <div className="cta__actions">
             <Link href="/kontakt" className="btn btn--primary">
               Projekt anfragen
             </Link>
-            <a href={site.general.phoneHref} className="btn btn--ghost-light">
+            <a href={site.general.phoneHref} className="cta__phone">
+              <span>Telefon</span>
               {site.general.phone}
             </a>
           </div>
