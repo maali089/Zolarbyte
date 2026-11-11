@@ -11,7 +11,7 @@ export type EnergyService = {
   /** Ein Satz, der den Nutzen erklärt */
   claim: string;
   short: string;
-  /** Was Zolarbyte konkret übernimmt */
+  /** Was ZOLARBYTE ENERGY konkret übernimmt */
   deliverables: string[];
   sections: Array<{ title: string; text: string }>;
   meister: string;
@@ -43,7 +43,7 @@ export const energyServices: EnergyService[] = [
       },
     ],
     meister:
-      "Den elektrischen Anschluss, die Einbindung in Zählerschrank und Hausinstallation und die Inbetriebnahme übernimmt Zolarbyte als Elektrotechnik-Meisterbetrieb – nach den geltenden VDE-Bestimmungen und mit Dokumentation.",
+      "Den elektrischen Anschluss, die Einbindung in Zählerschrank und Hausinstallation und die Inbetriebnahme übernimmt ZOLARBYTE ENERGY als Elektrotechnik-Meisterbetrieb – nach den geltenden VDE-Bestimmungen und mit Dokumentation.",
     combine:
       "Mit einem Stromspeicher nutzen Sie Solarstrom auch am Abend. Mit einer Wärmepumpe kann ein Teil der Heizenergie vom eigenen Dach kommen.",
     faq: [
@@ -121,7 +121,7 @@ export const energyServices: EnergyService[] = [
       },
     ],
     meister:
-      "Speicher, Wechselrichter und Zählerschrank müssen elektrisch zusammenpassen. Die Installation, den Anschluss und die Inbetriebnahme übernimmt Zolarbyte als Elektrotechnik-Meisterbetrieb.",
+      "Speicher, Wechselrichter und Zählerschrank müssen elektrisch zusammenpassen. Die Installation, den Anschluss und die Inbetriebnahme übernimmt ZOLARBYTE ENERGY als Elektrotechnik-Meisterbetrieb.",
     combine: "Ein Speicher ergänzt eine Photovoltaik-Anlage. Ohne eigene Erzeugung ist er für Privathaushalte in der Regel nicht sinnvoll.",
     faq: [
       {
@@ -186,8 +186,8 @@ export const steps = [
 
 export const faqs = [
   {
-    q: "Was bedeutet „Meisterbetrieb“ bei Zolarbyte?",
-    a: "Zolarbyte ist als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen. Planung, elektrischer Anschluss und Inbetriebnahme Ihrer Energietechnik liegen damit bei einem Fachbetrieb, der die handwerklichen und rechtlichen Anforderungen erfüllt.",
+    q: "Was bedeutet „Meisterbetrieb“ bei ZOLARBYTE ENERGY?",
+    a: "ZOLARBYTE ENERGY ist als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen. Planung, elektrischer Anschluss und Inbetriebnahme Ihrer Energietechnik liegen damit bei einem Fachbetrieb, der die handwerklichen und rechtlichen Anforderungen erfüllt.",
   },
   {
     q: "Muss ich alles auf einmal umsetzen?",

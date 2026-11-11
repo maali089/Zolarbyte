@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Elektrotechnik",
   description:
-    "Elektroinstallation, Kundendienst, elektrische Prüfungen, Beratung zur E-Mobilität und Schulungen – vom Elektrotechnik-Meisterbetrieb Zolarbyte in Karlsfeld.",
+    "Elektroinstallation, Kundendienst, elektrische Prüfungen, Beratung zur E-Mobilität und Schulungen – vom Elektrotechnik-Meisterbetrieb ZOLARBYTE ENERGY in Karlsfeld.",
   alternates: { canonical: "/elektrotechnik" },
 };
 

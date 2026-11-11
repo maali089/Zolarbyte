@@ -3,7 +3,7 @@ import { isPreview, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
-  description: "Datenschutzerklärung der Website von Zolarbyte.",
+  description: "Datenschutzerklärung der Website von ZOLARBYTE ENERGY.",
   alternates: { canonical: "/datenschutz" },
 };
 

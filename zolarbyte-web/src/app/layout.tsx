@@ -30,14 +30,14 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Zolarbyte – Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
-    template: "%s – Zolarbyte",
+    default: "ZOLARBYTE ENERGY – Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
+    template: "%s – ZOLARBYTE ENERGY",
   },
   description: site.description,
   openGraph: {
     type: "website",
     locale: "de_DE",
-    siteName: "Zolarbyte",
+    siteName: "ZOLARBYTE ENERGY",
   },
   robots: isPreview ? { index: false, follow: false } : undefined,
 };

@@ -62,7 +62,7 @@ export function Header() {
   return (
     <header className={`site-header${open ? " is-open" : ""}`}>
       <div className="site-header__inner">
-        <Link href="/" className="brand" aria-label="Zolarbyte – zur Startseite">
+        <Link href="/" className="brand" aria-label="ZOLARBYTE ENERGY – zur Startseite">
           <AnimatedMark className="brand__mark" data-zb-mark="" />
           <span className="brand__text">
             <Wordmark className="brand__word" />

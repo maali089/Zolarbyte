@@ -6,7 +6,7 @@ import { isPreview, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Kontakt & Projektanfrage",
   description:
-    "Photovoltaik, Wärmepumpe oder Stromspeicher anfragen – beim Elektrotechnik-Meisterbetrieb Zolarbyte in Karlsfeld bei München.",
+    "Photovoltaik, Wärmepumpe oder Stromspeicher anfragen – beim Elektrotechnik-Meisterbetrieb ZOLARBYTE ENERGY in Karlsfeld bei München.",
   alternates: { canonical: "/kontakt" },
 };
 

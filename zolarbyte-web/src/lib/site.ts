@@ -5,12 +5,12 @@
  */
 
 export const site = {
-  name: "Zolarbyte",
+  name: "ZOLARBYTE ENERGY",
   legalName: "ZOLARBYTE ENERGY",
   url: "https://zolarbyte.de",
   tagline: "Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
   description:
-    "Zolarbyte plant Photovoltaik, Wärmepumpen und Stromspeicher als abgestimmtes Energiesystem – vom Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München. Mit Förderrechner für die KfW-Heizungsförderung.",
+    "ZOLARBYTE ENERGY plant Photovoltaik, Wärmepumpen und Stromspeicher als abgestimmtes Energiesystem – vom Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München. Mit Förderrechner für die KfW-Heizungsförderung.",
   address: {
     street: "Nußbaumstraße 4",
     zip: "85757",

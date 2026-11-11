@@ -42,7 +42,7 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__inner container">
           <div className="hero__copy">
-            <p className="eyebrow hero__eyebrow">Zolarbyte · Elektrotechnik-Meisterbetrieb</p>
+            <p className="eyebrow hero__eyebrow">ZOLARBYTE ENERGY · Elektrotechnik-Meisterbetrieb</p>
             <h1 id="hero-title" className="hero__title">
               <span className="hero__line">Eigener Strom.</span>
               <span className="hero__line">Effiziente Wärme.</span>
@@ -51,7 +51,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="hero__lead">
-              Photovoltaik, Wärmepumpen und Stromspeicher – passend zu Ihrem Zuhause geplant. Zolarbyte verbindet moderne
+              Photovoltaik, Wärmepumpen und Stromspeicher – passend zu Ihrem Zuhause geplant. ZOLARBYTE ENERGY verbindet moderne
               Energietechnik mit elektrotechnischer Meisterkompetenz.
             </p>
             <div className="hero__actions">
@@ -226,7 +226,7 @@ export default function Home() {
               Energietechnik braucht saubere Elektrik.
             </h2>
             <p className="lead people__lead">
-              Photovoltaik, Speicher und Wärmepumpe hängen am Zählerschrank und an der Hausinstallation. Zolarbyte ist
+              Photovoltaik, Speicher und Wärmepumpe hängen am Zählerschrank und an der Hausinstallation. ZOLARBYTE ENERGY ist
               als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen und
               verantwortet Planung, elektrischen Anschluss und Inbetriebnahme.
             </p>

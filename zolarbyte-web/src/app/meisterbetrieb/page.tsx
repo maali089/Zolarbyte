@@ -7,7 +7,7 @@ import { features, isPreview, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Meisterbetrieb",
   description:
-    "Zolarbyte ist Elektrotechnik-Meisterbetrieb in Karlsfeld bei München, eingetragen bei der Handwerkskammer für München und Oberbayern.",
+    "ZOLARBYTE ENERGY ist Elektrotechnik-Meisterbetrieb in Karlsfeld bei München, eingetragen bei der Handwerkskammer für München und Oberbayern.",
   alternates: { canonical: "/meisterbetrieb" },
 };
 
@@ -21,7 +21,7 @@ export default function MeisterbetriebPage() {
           <span className="badge-meister">Elektrotechnik-Meisterbetrieb</span>
           <h1 style={{ marginTop: "1.5rem" }}>Energietechnik mit elektrotechnischer Verantwortung.</h1>
           <p>
-            Zolarbyte ist als Elektrotechnik-Meisterbetrieb in die Handwerksrolle der {site.chamber.name} eingetragen
+            ZOLARBYTE ENERGY ist als Elektrotechnik-Meisterbetrieb in die Handwerksrolle der {site.chamber.name} eingetragen
             (Betriebsnummer {site.chamber.registration}). Sitz ist {site.address.street} in {site.address.zip}{" "}
             {site.address.city} bei München.
           </p>

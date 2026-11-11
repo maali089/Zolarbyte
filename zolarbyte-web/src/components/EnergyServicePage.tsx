@@ -79,7 +79,7 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
               <div className="notice" role="note">
                 <span>
                   <strong>Vorschau – vor Veröffentlichung klären:</strong> Wer übernimmt die heizungstechnische
-                  (hydraulische) Installation – Zolarbyte selbst oder ein Partnerbetrieb aus dem Heizungsbau? Und wer stellt
+                  (hydraulische) Installation – ZOLARBYTE ENERGY selbst oder ein Partnerbetrieb aus dem Heizungsbau? Und wer stellt
                   die „Bestätigung zum Antrag“ für die KfW aus? Der Text oben ist bewusst neutral formuliert.
                 </span>
               </div>
