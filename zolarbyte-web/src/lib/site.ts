@@ -6,7 +6,7 @@
 
 export const site = {
   name: "Zolarbyte",
-  legalName: "Zolarbyte Elektrotechnik Meisterbetrieb",
+  legalName: "ZOLARBYTE ENERGY",
   url: "https://zolarbyte.de",
   tagline: "Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
   description:

@@ -3,7 +3,7 @@ import { isPreview, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum der Zolarbyte Elektrotechnik Meisterbetrieb, Karlsfeld.",
+  description: "Impressum der ZOLARBYTE ENERGY, Elektrotechnik-Meisterbetrieb in Karlsfeld.",
   alternates: { canonical: "/impressum" },
 };
 
