@@ -236,6 +236,12 @@ export default function Home() {
                 <dd>Elektrotechnik-Meisterbetrieb, Handwerkskammer für München und Oberbayern</dd>
               </div>
               <div>
+                <dt>Inhaber</dt>
+                <dd>
+                  {site.management.name}, {site.management.role}
+                </dd>
+              </div>
+              <div>
                 <dt>Sitz</dt>
                 <dd>
                   {site.address.street}, {site.address.zip} {site.address.city}

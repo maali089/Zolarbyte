@@ -21,8 +21,7 @@ export default function ImpressumPage() {
             <div className="notice" role="note">
               <span>
                 <strong>Entwurf – vor Veröffentlichung prüfen lassen.</strong> Die Angaben stammen aus dem bisherigen
-                Impressum und sind nicht rechtlich geprüft. Offen sind insbesondere: Rechtsform und vertretungsberechtigte
-                Person, gesetzliche Berufsbezeichnung mit verleihendem Staat, ggf. Umsatzsteuer-Identifikationsnummer,
+                Impressum und sind nicht rechtlich geprüft. Offen sind insbesondere: Rechtsform, gesetzliche Berufsbezeichnung mit verleihendem Staat, ggf. Umsatzsteuer-Identifikationsnummer,
                 Handelsregistereintrag sowie die Aussage zur Verbraucherschlichtung.
               </span>
             </div>
@@ -37,7 +36,7 @@ export default function ImpressumPage() {
             {site.address.zip} {site.address.city}
           </p>
           <p>
-            Vertreten durch: {site.management.name}
+            {site.management.role}: {site.management.name}
           </p>
 
           <h2>Kontakt</h2>

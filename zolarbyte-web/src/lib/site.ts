@@ -22,7 +22,7 @@ export const site = {
   general: {
     phone: "+49 151 46273201",
     phoneHref: "tel:+4915146273201",
-    email: "kontakt@zolarbyte.de",
+    email: "info@zolarbyte.de",
   },
   /** Persönlicher Vertriebskontakt laut Visitenkarte */
   sales: {
@@ -33,10 +33,10 @@ export const site = {
     phoneHref: "tel:+4915757510000",
     email: "jm@zolarbyte.de",
   },
-  /** Laut bisherigem Impressum – vor Veröffentlichung bestätigen lassen */
+  /** Inhaber und Geschäftsführer (Angabe des Auftraggebers, 11.11.2026) */
   management: {
-    name: "Elzat Ablet",
-    role: "Geschäftsführer",
+    name: "Elzat Ablent",
+    role: "Inhaber und Geschäftsführer",
   },
   chamber: {
     name: "Handwerkskammer für München und Oberbayern",

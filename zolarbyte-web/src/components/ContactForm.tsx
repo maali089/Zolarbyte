@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { BUILDINGS, INTERESTS, STAGES } from "@/lib/content";
+import { site } from "@/lib/site";
 import { INTEREST_VALUES, validateInquiry, type InquiryErrors, type InquiryInput } from "@/lib/validation";
 
 /** Übergabe aus dem Förderrechner – nur, wenn der Nutzer das ausdrücklich auslöst */
@@ -267,13 +268,13 @@ export function ContactForm({ mailConfigured, previewNote }: { mailConfigured: b
         {status === "not_configured" ? (
           <div className="form__status form__status--error">
             Ihre Anfrage wurde nicht gesendet, weil der Formularversand noch nicht eingerichtet ist. Bitte schreiben Sie
-            uns direkt an <a href="mailto:kontakt@zolarbyte.de">kontakt@zolarbyte.de</a>.
+            uns direkt an <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
           </div>
         ) : null}
         {status === "error" ? (
           <div className="form__status form__status--error">
             Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie uns an{" "}
-            <a href="mailto:kontakt@zolarbyte.de">kontakt@zolarbyte.de</a>.
+            <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
           </div>
         ) : null}
       </div>

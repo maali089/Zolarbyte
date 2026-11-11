@@ -23,7 +23,7 @@ export default function MeisterbetriebPage() {
           <p>
             ZOLARBYTE ENERGY ist als Elektrotechnik-Meisterbetrieb in die Handwerksrolle der {site.chamber.name} eingetragen
             (Betriebsnummer {site.chamber.registration}). Sitz ist {site.address.street} in {site.address.zip}{" "}
-            {site.address.city} bei München.
+            {site.address.city} bei München. {site.management.role} ist {site.management.name}.
           </p>
         </div>
       </section>

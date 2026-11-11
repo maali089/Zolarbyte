@@ -32,6 +32,8 @@ export default function DatenschutzPage() {
           <p>
             {site.legalName}
             <br />
+            {site.management.role}: {site.management.name}
+            <br />
             {site.address.street}, {site.address.zip} {site.address.city}
             <br />
             Telefon: {site.general.phone}
