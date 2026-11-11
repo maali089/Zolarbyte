@@ -906,3 +906,44 @@
   text-transform: none;
   color: inherit;
 }
+
+/* Schriftzug „ZOLARBYTE ENERGY“ immer einzeilig */
+.wordmark {
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) and (min-width: 861px) {
+  .brand__word {
+    font-size: 0.98rem;
+    letter-spacing: 0.05em;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand__word {
+    font-size: 0.86rem;
+    letter-spacing: 0.05em;
+  }
+}
+
+.brand__sub {
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .brand__sub {
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+/* Mittlere Breiten: „Kontakt“ steckt im Button „Projekt anfragen“ */
+@media (max-width: 1080px) and (min-width: 861px) {
+  .site-nav ul > li:last-child {
+    display: none;
+  }
+
+  .site-nav .btn {
+    white-space: nowrap;
+  }
+}

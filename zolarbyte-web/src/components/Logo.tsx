@@ -80,5 +80,5 @@ export function AnimatedMark({ className, ...rest }: { className?: string } & Re
 }
 
 export function Wordmark({ className }: { className?: string }) {
-  return <span className={`wordmark${className ? ` ${className}` : ""}`}>Zolarbyte</span>;
+  return <span className={`wordmark${className ? ` ${className}` : ""}`}>Zolarbyte Energy</span>;
 }
