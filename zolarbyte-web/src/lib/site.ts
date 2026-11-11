@@ -8,9 +8,9 @@ export const site = {
   name: "Zolarbyte",
   legalName: "Zolarbyte Elektrotechnik Meisterbetrieb",
   url: "https://zolarbyte.de",
-  tagline: "Elektrotechnik-Meisterbetrieb aus Karlsfeld",
+  tagline: "Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
   description:
-    "Zolarbyte ist Ihr Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München: Elektroinstallation, Kundendienst, E-Check, Photovoltaik, E-Mobilität und Schulungen.",
+    "Zolarbyte plant Photovoltaik, Wärmepumpen und Stromspeicher als abgestimmtes Energiesystem – vom Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München. Mit Förderrechner für die KfW-Heizungsförderung.",
   address: {
     street: "Nußbaumstraße 4",
     zip: "85757",
@@ -53,8 +53,8 @@ export const site = {
  * Bereiche, die erst mit bestätigtem Material öffentlich erscheinen.
  */
 export const features = {
-  /** Rechner: Zweck und Datengrundlage noch offen */
-  calculator: false,
+  /** Förderrechner KfW 458 (Regeln in src/lib/foerderung) */
+  calculator: true,
   /** Referenzprojekte: noch kein freigegebenes Material */
   references: false,
   /** Partner: Liste von 2023 – Aktualität und Freigabe offen */

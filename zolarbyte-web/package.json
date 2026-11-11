@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test src/lib/foerderung/berechnung.test.ts",
+    "render:house": "node scripts/render-house.ts"
   },
   "dependencies": {
     "next": "16.4.5",

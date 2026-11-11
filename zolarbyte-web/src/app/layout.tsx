@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { isPreview, site } from "@/lib/site";
 import "./globals.css";
+import "./relaunch.css";
 
 const display = Archivo({
   subsets: ["latin"],
@@ -29,7 +30,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Zolarbyte – Elektrotechnik-Meisterbetrieb in Karlsfeld bei München",
+    default: "Zolarbyte – Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
     template: "%s – Zolarbyte",
   },
   description: site.description,
@@ -46,25 +47,24 @@ export const viewport: Viewport = {
 };
 
 /*
- * Markenauftritt beim ersten Öffnen der Startseite.
- * Läuft direkt nach dem Header, noch vor dem ersten Bild: misst die Header-Position
- * des Zeichens und lässt genau dieses Element von der Bildmitte dorthin wandern
- * (kein Doppelgänger, kein Ladebildschirm). Navigation bleibt sofort bedienbar.
- * Nicht bei reduzierter Bewegung, Sprungmarken oder erneutem Aufruf in derselben Sitzung.
+ * Markenauftritt beim ersten Öffnen der Startseite (nur große Bildschirme).
+ * Läuft direkt nach dem Header: Das Header-Zeichen erscheint kurz groß über dem
+ * Energiehaus (als „Sonne“ der Szene) und gleitet an seinen Platz. Text, Navigation
+ * und Buttons sind die ganze Zeit sichtbar und bedienbar – keine Ladepause.
+ * Nicht bei reduzierter Bewegung, Sprungmarken, kleinen Bildschirmen oder erneutem Aufruf.
  */
 const INTRO_SCRIPT = `(function(){try{
 var d=document.documentElement;
-if(location.pathname!=="/"||location.hash||sessionStorage.getItem("zb-intro")||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-var m=document.querySelector("[data-zb-mark]"),h=document.querySelector(".site-header");if(!m||!h)return;
-var r=m.getBoundingClientRect(),w=innerWidth,vh=innerHeight,hb=h.getBoundingClientRect().bottom;
-var size=Math.min(w*0.44,(vh-hb)*0.4,250),cx=w/2,cy=hb+(vh-hb)*0.45;
+if(location.pathname!=="/"||location.hash||innerWidth<1000||sessionStorage.getItem("zb-intro")||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+var m=document.querySelector("[data-zb-mark]");if(!m)return;
+var r=m.getBoundingClientRect(),w=innerWidth,vh=innerHeight;
+var size=Math.min(w*0.12,vh*0.2,170),cx=w*0.74,cy=Math.min(vh*0.24,250);
 d.style.setProperty("--zb-dx",(cx-(r.left+r.width/2)).toFixed(1)+"px");
 d.style.setProperty("--zb-dy",(cy-(r.top+r.height/2)).toFixed(1)+"px");
 d.style.setProperty("--zb-s",(size/r.width).toFixed(3));
-d.style.setProperty("--scene-offset","1.25s");
 d.classList.add("zb-intro");
 sessionStorage.setItem("zb-intro","1");
-setTimeout(function(){d.classList.remove("zb-intro")},2800);
+setTimeout(function(){d.classList.remove("zb-intro")},2000);
 }catch(e){}})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

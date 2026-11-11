@@ -6,7 +6,7 @@ import { isPreview, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Kontakt & Projektanfrage",
   description:
-    "Projekt anfragen bei Zolarbyte, Ihrem Elektrotechnik-Meisterbetrieb in Karlsfeld bei München – per Formular, Telefon oder E-Mail.",
+    "Photovoltaik, Wärmepumpe oder Stromspeicher anfragen – beim Elektrotechnik-Meisterbetrieb Zolarbyte in Karlsfeld bei München.",
   alternates: { canonical: "/kontakt" },
 };
 
@@ -20,13 +20,13 @@ export default function KontaktPage() {
           <p className="eyebrow">Kontakt</p>
           <h1>Projekt anfragen</h1>
           <p>
-            Beschreiben Sie kurz Ihr Vorhaben oder Ihr Problem. Wir melden uns persönlich bei Ihnen – oder Sie rufen
-            uns direkt an.
+            Photovoltaik, Wärmepumpe, Speicher oder alles zusammen – ein paar Angaben genügen. Wir melden uns persönlich
+            bei Ihnen. Oder Sie rufen direkt an.
           </p>
         </div>
       </section>
 
-      <section className="section page-body">
+      <section id="anfrage" className="section page-body">
         <div className="container contact-layout">
           <div>
             <h2 className="visually-hidden">Anfrageformular</h2>

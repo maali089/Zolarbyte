@@ -1,4 +1,5 @@
 import "server-only";
+import { interestLabel } from "@/lib/validation";
 
 /**
  * Formularversand über die Resend-API (https://resend.com).
@@ -21,11 +22,15 @@ export function getMailConfig() {
 }
 
 export type Inquiry = {
+  interest: string;
+  building: string;
+  location: string;
+  stage: string;
   name: string;
   email: string;
   phone?: string;
-  service: string;
   message: string;
+  calc: string;
 };
 
 export async function sendInquiry(inquiry: Inquiry) {
@@ -34,15 +39,22 @@ export async function sendInquiry(inquiry: Inquiry) {
     return { ok: false as const, reason: "not_configured" as const };
   }
 
+  const interest = interestLabel(inquiry.interest);
   const text = [
-    `Neue Anfrage über zolarbyte.de`,
+    `Neue Projektanfrage über zolarbyte.de`,
+    ``,
+    `Interesse: ${interest}`,
+    `Gebäude: ${inquiry.building || "–"}`,
+    `Standort: ${inquiry.location || "–"}`,
+    `Projektstand: ${inquiry.stage || "–"}`,
     ``,
     `Name: ${inquiry.name}`,
     `E-Mail: ${inquiry.email}`,
     `Telefon: ${inquiry.phone || "–"}`,
-    `Leistung: ${inquiry.service}`,
     ``,
-    inquiry.message,
+    `Nachricht:`,
+    inquiry.message || "–",
+    ...(inquiry.calc ? [``, `--- Vom Absender freigegebene Angaben aus dem Förderrechner ---`, inquiry.calc] : []),
   ].join("\n");
 
   try {
@@ -56,7 +68,7 @@ export async function sendInquiry(inquiry: Inquiry) {
         from: cfg.from,
         to: [cfg.recipient],
         reply_to: inquiry.email,
-        subject: `Anfrage: ${inquiry.service} – ${inquiry.name}`,
+        subject: `Anfrage ${interest} – ${inquiry.name}`,
         text,
       }),
     });

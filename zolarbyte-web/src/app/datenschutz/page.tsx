@@ -63,25 +63,34 @@ export default function DatenschutzPage() {
           <h2>4. Kontaktformular und Anfragen per E-Mail oder Telefon</h2>
           <p>
             Wenn Sie uns über das Kontaktformular, per E-Mail oder telefonisch kontaktieren, verarbeiten wir Ihre Angaben
-            (Name, E-Mail-Adresse, optional Telefonnummer, gewünschte Leistung und Ihre Nachricht), um Ihre Anfrage zu
+            (Interesse, optional Gebäudeart, PLZ und Ort sowie Projektstand, Name, E-Mail-Adresse, optional Telefonnummer und Nachricht sowie – nur wenn Sie es ausdrücklich übernehmen – die angezeigte Zusammenfassung aus dem Förderrechner), um Ihre Anfrage zu
             bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf einen Vertrag abzielt,
             andernfalls unser berechtigtes Interesse an der Beantwortung (Art. 6 Abs. 1 lit. f DSGVO). Wir löschen die
             Daten, sobald sie nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
           </p>
 
-          <h2>5. Schriftarten</h2>
+          <h2>5. Förderrechner</h2>
+          <p>
+            Der Förderrechner rechnet ausschließlich in Ihrem Browser. Ihre Angaben – auch zum Einkommen und zum Haushalt –
+            werden nicht an uns oder Dritte übertragen und nicht gespeichert. Nur wenn Sie im Ergebnis „In die Anfrage
+            übernehmen“ wählen, wird eine sichtbare Zusammenfassung ohne Einkommensangabe für die Dauer der Browsersitzung
+            im Sitzungsspeicher Ihres Browsers abgelegt und in das Anfrageformular eingefügt. Gesendet wird sie erst, wenn
+            Sie das Formular abschicken; Sie können sie vorher entfernen.
+          </p>
+
+          <h2>6. Schriftarten</h2>
           <p>
             Die auf dieser Website verwendeten Schriftarten werden lokal von unserem Server ausgeliefert. Es wird dabei
             keine Verbindung zu Servern Dritter (etwa Google) hergestellt.
           </p>
 
-          <h2>6. Cookies und Analyse</h2>
+          <h2>7. Cookies und Analyse</h2>
           <p>
             Diese Website setzt keine Cookies zu Analyse- oder Marketingzwecken und verwendet keine Tracking- oder
             Reichweitenmessdienste.
           </p>
 
-          <h2>7. Verschlüsselung</h2>
+          <h2>8. Verschlüsselung</h2>
           <p>
             Diese Website nutzt aus Sicherheitsgründen eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung
             erkennen Sie an „https://“ in der Adresszeile Ihres Browsers.

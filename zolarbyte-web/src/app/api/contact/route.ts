@@ -19,11 +19,15 @@ export async function POST(request: Request) {
   }
 
   const input: InquiryInput = {
+    interest: str(body.interest, 40),
+    building: str(body.building, 80),
+    location: str(body.location, 200),
+    stage: str(body.stage, 80),
     name: str(body.name, 200),
     email: str(body.email, 200),
     phone: str(body.phone, 50),
-    service: str(body.service, 200),
     message: str(body.message, 6000),
+    calc: str(body.calc, 4500),
   };
 
   const errors = validateInquiry(input);
@@ -32,11 +36,13 @@ export async function POST(request: Request) {
   }
 
   const result = await sendInquiry({
+    ...input,
     name: input.name.trim(),
     email: input.email.trim(),
     phone: input.phone.trim(),
-    service: input.service,
+    location: input.location.trim(),
     message: input.message.trim(),
+    calc: input.calc.trim(),
   });
 
   if (!result.ok) {

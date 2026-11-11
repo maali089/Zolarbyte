@@ -23,19 +23,27 @@ Formularversand: siehe `.env.example` (Resend). Ohne Konfiguration meldet das Fo
 
 ## Wo was liegt
 
-- `src/lib/site.ts` – Unternehmensdaten, Kontakte, Feature-Schalter (Rechner, Referenzen, Partner, Kundenstimmen – alle aus)
-- `src/lib/content.ts` – Leistungen, Ablauf, FAQ
-- `src/components/hero/` – Elektroanimation (SVG + CSS, reduzierte Bewegung = statischer Endzustand)
-- `src/components/calculator/StepWizard.tsx` – modulare Rechner-Bedienung ohne Berechnungslogik
-- `src/app/intern/rechner` – Konzeptansicht (nur Vorschau)
-- `next.config.ts` – Weiterleitungen der alten WordPress-Adressen
+- `src/lib/site.ts` – Unternehmensdaten, Kontakte, Schalter (Förderrechner an; Referenzen, Partner, Kundenstimmen aus)
+- `src/lib/content.ts` – Schwerpunkte Photovoltaik, Wärmepumpe, Stromspeicher; ergänzende Elektrotechnik; Ablauf, FAQ
+- `src/components/house/` – Energiehaus: `geometry.ts` (3D-Modell in Metern + Perspektiv-Projektion → SVG beim Build), `house.css` (Intro, Tag/Abend, Auswahl), `EnergyExplorer.tsx` (interaktive Erklärung)
+- `src/lib/foerderung/regeln-458.ts` – **Förderregeln KfW 458 mit Quellen und Gültigkeit (Stand 11.11.2026)**
+- `src/lib/foerderung/berechnung.ts` + `.test.ts` – Berechnung und Tests (`npm test`)
+- `src/lib/foerderung/pv-info.ts` – Hinweise PV/Speicher mit Quellen
+- `docs/foerderrechner-quellen.md` – vollständige Recherche mit Originalzitaten; `docs/referenzen-analyse.md`
+- `scripts/render-house.ts` – Energiehaus als PNG prüfen (`npm run render:house -- datei.png [evening]`)
+- `next.config.ts` – Weiterleitungen (alte WordPress-Adressen, /intern/rechner → /foerderrechner)
+
+## Förderregeln aktualisieren
+
+Bei neuen KfW-Merkblättern: Werte in `regeln-458.ts` anpassen (mit Quelle), `STAND` ändern, Tests anpassen, `npm test`.
+Offen angekündigt: Änderungen „ab 1. Quartal 2027“ (Grundförderung 15 % + EU-Bonus) – erst einpflegen, wenn das Startdatum offiziell feststeht.
 
 ## Vor dem Livegang offen
 
-- Original-Logo als Vektordatei (SVG/PDF/AI) inkl. Wortmarke – aktuelles Zeichen ist aus der JPEG-Referenz nachgezeichnet (`public/brand/zolarbyte-zeichen-vorlaeufig.svg`)
+- Original-Logo als Vektordatei (SVG/PDF/AI) inkl. Wortmarke
 - Impressum: Rechtsform, vertretungsberechtigte Person, Berufsbezeichnung, ggf. USt-IdNr., Verbraucherschlichtung
 - Datenschutz: Hosting-Anbieter und Versanddienst benennen, rechtlich prüfen
-- Empfängeradresse für Formularanfragen
-- Nutzung der Bezeichnung „E-Check“ (Marke des ZVEH, Innungsmitgliedschaft) bestätigen
-- Rechner: Zweck und Datengrundlage
-- Referenzen, Projektfotos, Partner, Kundenstimmen, Öffnungszeiten, WhatsApp-Nummer
+- Empfängeradresse und Zugang für den Formularversand
+- Wärmepumpe: Rollenverteilung bei der heizungstechnischen Installation und wer die KfW-„Bestätigung zum Antrag“ ausstellt
+- Name der Meisterin/des Meisters, Team-, Montage- und Projektfotos, Referenzen, Partner
+- Wallbox, E-Check-Bezeichnung, Öffnungszeiten, WhatsApp-Nummer

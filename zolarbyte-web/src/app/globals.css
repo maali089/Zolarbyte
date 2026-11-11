@@ -699,7 +699,7 @@ main:focus {
 /* Dasselbe Header-Zeichen startet groß in der Bildmitte und gleitet an seinen Platz */
 .zb-intro .brand__mark {
   z-index: 60;
-  animation: zb-mark-intro 1.85s both;
+  animation: zb-mark-intro 1.5s both;
 }
 
 @keyframes zb-mark-intro {
@@ -724,7 +724,7 @@ main:focus {
 }
 
 .zb-intro .brand__word {
-  animation: zb-word 0.6s 1.3s var(--ease) both;
+  animation: zb-word 0.5s 1s var(--ease) both;
 }
 
 @keyframes zb-word {
@@ -735,7 +735,7 @@ main:focus {
 }
 
 .zb-intro .site-header {
-  animation: zb-line 0.6s 1.2s both;
+  animation: zb-line 0.5s 0.9s both;
 }
 
 @keyframes zb-line {
@@ -744,62 +744,15 @@ main:focus {
   }
 }
 
-/* Überschrift steigt zeilenweise aus ihrer Kante */
-.zb-intro .hero__line > span {
-  animation: zb-rise 0.8s var(--ease) both;
-}
-
-.zb-intro .hero__line:nth-child(1) > span {
-  animation-delay: 1.05s;
-}
-
-.zb-intro .hero__line:nth-child(2) > span {
-  animation-delay: 1.15s;
-}
-
-@keyframes zb-rise {
-  from {
-    transform: translateY(105%);
-  }
-}
-
-.zb-intro .hero__eyebrow,
-.zb-intro .hero__lead,
-.zb-intro .hero__actions,
-.zb-intro .hero__rail {
-  animation: zb-fade 0.7s var(--ease) both;
-}
-
-.zb-intro .hero__eyebrow {
-  animation-delay: 0.95s;
-}
-
-.zb-intro .hero__lead {
-  animation-delay: 1.3s;
-}
-
-.zb-intro .hero__actions {
-  animation-delay: 1.4s;
-}
-
-.zb-intro .hero__rail {
-  animation-delay: 1.55s;
-}
-
-.zb-intro .hero__visual {
-  animation: zb-fade-only 0.9s 1.2s ease-out both;
+/* Inhalte sind sofort da – nur ein kurzes Einblenden, keine Wartezeit */
+.zb-intro .hero__copy {
+  animation: zb-fade 0.5s var(--ease) 0.05s both;
 }
 
 @keyframes zb-fade {
   from {
     opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
-@keyframes zb-fade-only {
-  from {
-    opacity: 0;
+    transform: translateY(8px);
   }
 }
 

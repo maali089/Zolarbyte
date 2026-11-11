@@ -1,0 +1,908 @@
+/* ==========================================================
+   Relaunch 11/2026 – Energielösungen
+   Ergänzt globals.css (Grundlagen, Farben, Typografie bleiben dort).
+   ========================================================== */
+
+/* ---------- Kopfbereich: Wortmarke mit Meisterbetrieb, Untermenü ---------- */
+
+.brand__text {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.brand__sub {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--magenta-text);
+  line-height: 1;
+}
+
+.site-nav ul a,
+.site-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  font: 500 0.97rem/1.4 var(--font-body), system-ui, sans-serif;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+
+.site-nav__link.is-current,
+.site-nav__link:hover {
+  color: #fff;
+}
+
+.site-nav__toggle svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s var(--ease);
+}
+
+.is-sub-open .site-nav__toggle svg {
+  transform: rotate(180deg);
+}
+
+.has-sub {
+  position: relative;
+}
+
+.site-nav .subnav {
+  display: none;
+}
+
+.site-nav .subnav a {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.site-nav .subnav a::after {
+  display: none;
+}
+
+.site-nav .subnav a span {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.site-nav .subnav a:hover,
+.site-nav .subnav a[aria-current="page"] {
+  background: var(--ink-3);
+}
+
+@media (min-width: 861px) {
+  .is-sub-open > .subnav {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: -1rem;
+    z-index: 60;
+    display: grid !important;
+    gap: 0.15rem;
+    width: 18rem;
+    padding: 0.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    background: var(--ink-1);
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  }
+}
+
+@media (max-width: 1080px) and (min-width: 861px) {
+  .brand__sub {
+    display: none;
+  }
+
+  .site-nav,
+  .site-nav ul {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .brand__sub {
+    font-size: 0.55rem;
+  }
+
+  .site-nav ul a.site-nav__link,
+  .site-nav__link {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 1rem 0;
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-stretch: 108%;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .is-sub-open > .subnav {
+    display: grid !important;
+    padding: 0.5rem 0 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-nav .subnav a {
+    border-bottom: 0 !important;
+    padding: 0.6rem 0.25rem;
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 1rem;
+  }
+}
+
+/* ---------- Einstieg ---------- */
+
+.hero__title {
+  font-size: clamp(2.1rem, 2.4vw + 1.1rem, 3.9rem);
+  max-width: none;
+}
+
+.hero__line {
+  display: block;
+}
+
+.hero__title em {
+  font-style: normal;
+  color: var(--magenta);
+}
+
+@media (min-width: 1000px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  }
+}
+
+@media (max-width: 999px) {
+  .hero__visual {
+    max-width: 720px;
+  }
+}
+
+.hero__rail li {
+  padding: 0;
+}
+
+.hero__rail .hero__service {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.9rem;
+  align-items: start;
+  padding: 1.15rem 0;
+  border: 0;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.hero__service strong {
+  display: block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-stretch: 108%;
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+.hero__rail .hero__service > span > span {
+  display: block;
+  margin: 0.2rem 0 0;
+  font: 400 0.92rem/1.45 var(--font-body), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+}
+
+.hero__rail .hero__service:hover {
+  color: inherit;
+}
+
+.hero__service:hover strong {
+  color: var(--magenta-text);
+}
+
+.service-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--magenta-text);
+}
+
+.hero__rail .hero__meister {
+  display: grid;
+  gap: 0.45rem;
+  align-content: center;
+  padding: 1.15rem 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.hero__rail .hero__meister-k {
+  display: inline-block;
+  width: fit-content;
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid var(--magenta);
+  border-radius: 6px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+@media (min-width: 760px) {
+  .hero__rail {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero__rail li,
+  .hero__rail li:first-child {
+    padding: 0 1.5rem;
+    border-bottom: 0;
+  }
+
+  .hero__rail li:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .hero__rail li:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (min-width: 1100px) {
+  .hero__rail {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .hero__rail li:nth-child(n) {
+    border-top: 0;
+    padding: 0 1.5rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .hero__rail li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* ---------- Links und kleine Bedienelemente ---------- */
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.text-link::after {
+  content: "→";
+  color: var(--magenta-text);
+  transition: transform 0.25s var(--ease);
+}
+
+.text-link:hover::after {
+  transform: translateX(4px);
+}
+
+.text-button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.2rem;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: 600 0.95rem/1.2 var(--font-body), system-ui, sans-serif;
+  text-decoration: underline;
+  text-decoration-color: var(--magenta);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.ticks {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticks li {
+  position: relative;
+  padding-left: 1.8rem;
+  color: var(--text);
+}
+
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 1.05rem;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--magenta);
+}
+
+/* ---------- Übersicht der drei Bausteine ---------- */
+
+.overview {
+  background: var(--ink-1);
+  border-top: 1px solid var(--line);
+}
+
+.overview__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+
+.overview__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 2rem;
+  gap: 0.6rem 1rem;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.overview__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--magenta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+
+.overview__item:hover::before,
+.overview__item:focus-within::before {
+  transform: scaleX(1);
+}
+
+.overview__index {
+  padding-top: 0.5rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: var(--magenta-text);
+}
+
+.overview__title {
+  font-size: clamp(1.8rem, 4.2vw, 3.4rem);
+  font-stretch: 112%;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.overview__title a {
+  text-decoration: none;
+}
+
+.overview__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.overview__text {
+  grid-column: 2 / 4;
+  max-width: 40rem;
+  color: var(--text-muted);
+}
+
+.overview__arrow {
+  grid-row: 1;
+  grid-column: 3;
+  align-self: center;
+  font-size: 1.6rem;
+  color: var(--text-dim);
+  transition: transform 0.3s var(--ease), color 0.3s;
+}
+
+.overview__item:hover .overview__arrow {
+  color: var(--magenta-text);
+  transform: translateX(6px);
+}
+
+@media (min-width: 900px) {
+  .overview__item {
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 1fr) 2.5rem;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2.2rem 0;
+  }
+
+  .overview__text {
+    grid-column: 3;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .overview__arrow {
+    grid-column: 4;
+  }
+}
+
+.overview__more {
+  margin-top: 1.75rem;
+  color: var(--text-muted);
+}
+
+.overview__more a {
+  color: var(--text);
+  text-decoration-color: var(--magenta);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Zusammenspiel ---------- */
+
+.system {
+  background: var(--black);
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Leistungen im Einzelnen ---------- */
+
+.feature {
+  background: var(--black);
+  border-top: 1px solid var(--line);
+}
+
+.feature--flip {
+  background: var(--ink-1);
+}
+
+.feature__grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.feature__visual {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #070708;
+  border: 1px solid var(--line);
+}
+
+.feature__title {
+  max-width: 18ch;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+}
+
+.feature__text {
+  margin-top: 1.4rem;
+  max-width: 36rem;
+  color: var(--text-muted);
+}
+
+.feature__meister {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 36rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.15rem;
+  border-left: 3px solid var(--magenta);
+  background: var(--ink-2);
+  border-radius: 0 10px 10px 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.feature__meister span {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--magenta-text);
+}
+
+.feature__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+@media (min-width: 960px) {
+  .feature__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 5rem;
+  }
+
+  .feature--flip .feature__visual {
+    order: 2;
+  }
+}
+
+/* Detailansichten: zugehörige Komponente markiert */
+.house--detail .hl {
+  stroke-width: 2;
+}
+
+.house--detail[data-part="photovoltaik"] .hl-pv,
+.house--detail[data-part="waermepumpe"] .hl-hp,
+.house--detail[data-part="stromspeicher"] .hl-bat {
+  opacity: 1;
+}
+
+/* ---------- Förderrechner-Abschnitt ---------- */
+
+.calc-section {
+  background: var(--ink-1);
+  border-top: 1px solid var(--line);
+}
+
+.section-head__text a {
+  color: var(--text);
+  text-decoration-color: var(--magenta);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Ansprechpartner ---------- */
+
+.people .spec {
+  margin-top: 2rem;
+}
+
+.people__more {
+  margin-top: 1rem;
+}
+
+.preview-gap {
+  padding-block: 2.5rem;
+  background: var(--black);
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Anfrage ---------- */
+
+.inquiry {
+  background: var(--black);
+  border-top: 1px solid var(--line);
+}
+
+.inquiry__grid {
+  display: grid;
+  gap: 3rem;
+}
+
+.inquiry__text {
+  max-width: 28rem;
+  margin: 1.4rem 0 2rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+@media (min-width: 1000px) {
+  .inquiry__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 5rem;
+  }
+}
+
+.choice {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.choice legend {
+  margin-bottom: 0.75rem;
+}
+
+.choice__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.choice__item {
+  position: relative;
+  cursor: pointer;
+}
+
+.choice__item input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.choice__item span {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--ink-2);
+  font-weight: 600;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.choice__item:hover span {
+  border-color: #4a4a53;
+}
+
+.choice__item input:checked + span {
+  border-color: var(--magenta);
+  background: var(--magenta-tint);
+}
+
+.choice__item input:focus-visible + span {
+  box-shadow: 0 0 0 3px rgba(199, 28, 132, 0.4);
+}
+
+@media (min-width: 760px) {
+  .form__row--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.form__row--2 textarea {
+  min-height: 3.25rem;
+}
+
+.handoff {
+  padding: 1.1rem 1.2rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--ink-2);
+}
+
+.handoff__title {
+  margin: 0 0 0.2rem;
+  font-weight: 600;
+}
+
+.handoff__hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.handoff__text {
+  margin: 0.75rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--black);
+  font: 0.85rem/1.55 var(--font-mono), ui-monospace, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.handoff__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+/* ---------- Unterseiten der Leistungen ---------- */
+
+.lp-hero {
+  background: var(--black);
+  padding-block: clamp(3rem, 7vw, 5rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.lp-hero__grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.lp-hero h1 {
+  font-size: clamp(2.2rem, 4.2vw + 1rem, 4.6rem);
+  font-stretch: 112%;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  max-width: 14ch;
+  hyphens: auto;
+}
+
+.lp-hero__claim {
+  max-width: 34rem;
+  margin-top: 1.4rem;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  color: var(--text-muted);
+}
+
+@media (min-width: 960px) {
+  .lp-hero__grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 4rem;
+  }
+}
+
+.lp-sections {
+  background: var(--ink-1);
+}
+
+.lp-sections__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+
+.lp-sections__list li {
+  display: grid;
+  gap: 0.75rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.lp-sections__list h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+}
+
+.lp-sections__list p {
+  max-width: 44rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 900px) {
+  .lp-sections__list li {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 3rem;
+    padding: 2.6rem 0;
+  }
+}
+
+.lp-meister {
+  background: var(--black);
+}
+
+.lp-meister__box {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--ink-2), var(--black));
+}
+
+.lp-meister__box h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  max-width: 22ch;
+}
+
+.lp-meister__box p {
+  max-width: 46rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Meisterbetrieb ---------- */
+
+.badge-meister {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.8rem;
+  border: 1.5px solid var(--magenta);
+  border-radius: 8px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.roles {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roles li {
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--ink-1);
+}
+
+.roles h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.roles p {
+  color: var(--text-muted);
+}
+
+@media (min-width: 900px) {
+  .roles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.site-footer__meister {
+  color: #fff;
+  font-weight: 600;
+}
+
+.info-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.info-card {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--ink-2);
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.info-card p,
+.info-card li {
+  color: var(--text-muted);
+  font-size: 0.97rem;
+}
+
+.info-card ul {
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+.info-card .src {
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.info-card a {
+  color: var(--text);
+  text-decoration-color: var(--magenta);
+  text-underline-offset: 3px;
+}
+
+/* alte Faktenleisten-Stile für die Leistungsleiste neutralisieren */
+.hero__rail .hero__service > span,
+.hero__rail .hero__meister > span:not(.hero__meister-k) {
+  display: block;
+  margin: 0;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+  color: inherit;
+}

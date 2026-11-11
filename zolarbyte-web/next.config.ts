@@ -6,8 +6,8 @@ import type { NextConfig } from "next";
  */
 const legacy: Array<[string, string]> = [
   ["/services", "/#leistungen"],
-  ["/ueber-uns", "/#betrieb"],
-  ["/about-us", "/#leistungen"],
+  ["/ueber-uns", "/meisterbetrieb"],
+  ["/about-us", "/meisterbetrieb"],
   ["/unsere-partner", "/"],
   ["/disclaimer", "/impressum"],
   ["/hello-world", "/"],
@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...legacy.map(([source, destination]) => ({ source, destination, permanent: true })),
+      // früheres internes Rechner-Konzept
+      { source: "/intern/rechner", destination: "/foerderrechner", permanent: false },
+      { source: "/rechner", destination: "/foerderrechner", permanent: true },
+      { source: "/foerderung", destination: "/foerderrechner", permanent: true },
       // AGB: alte Vorlage nicht übernommen – Ziel nach Klärung festlegen
       { source: "/agb", destination: "/kontakt", permanent: false },
     ];

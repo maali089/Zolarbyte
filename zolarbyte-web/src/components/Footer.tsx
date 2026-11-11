@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { LogoMark, Wordmark } from "@/components/Logo";
-import { services } from "@/lib/content";
+import { energyServices } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export function Footer() {
@@ -13,22 +13,28 @@ export function Footer() {
             <Wordmark />
           </span>
           <p>
-            Elektrotechnik-Meisterbetrieb
+            <strong className="site-footer__meister">Elektrotechnik-Meisterbetrieb</strong>
             <br />
-            {site.address.street}
+            eingetragen bei der Handwerkskammer für München und Oberbayern
             <br />
-            {site.address.zip} {site.address.city} bei München
+            {site.address.street}, {site.address.zip} {site.address.city} bei München
           </p>
         </div>
 
         <div>
-          <h2 className="site-footer__title">Leistungen</h2>
+          <h2 className="site-footer__title">Energielösungen</h2>
           <ul>
-            {services.map((s) => (
+            {energyServices.map((s) => (
               <li key={s.id}>
-                <Link href={`/#${s.id}`}>{s.title}</Link>
+                <Link href={s.href}>{s.name}</Link>
               </li>
             ))}
+            <li>
+              <Link href="/elektrotechnik">Elektrotechnik</Link>
+            </li>
+            <li>
+              <Link href="/foerderrechner">Förderrechner</Link>
+            </li>
           </ul>
         </div>
 
@@ -42,7 +48,10 @@ export function Footer() {
               <a href={`mailto:${site.general.email}`}>{site.general.email}</a>
             </li>
             <li>
-              <Link href="/kontakt">Projekt anfragen</Link>
+              <Link href="/kontakt#anfrage">Projekt anfragen</Link>
+            </li>
+            <li>
+              <Link href="/meisterbetrieb">Meisterbetrieb</Link>
             </li>
           </ul>
         </div>
@@ -60,7 +69,9 @@ export function Footer() {
         </div>
       </div>
       <div className="container site-footer__base">
-        <p>© {site.copyrightYear} {site.legalName}</p>
+        <p>
+          © {site.copyrightYear} {site.legalName}
+        </p>
       </div>
     </footer>
   );
