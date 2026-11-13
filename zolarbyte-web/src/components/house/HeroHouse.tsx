@@ -13,11 +13,14 @@ type Anchor = { left: number; top: number };
 export function HeroHouse({
   children,
   ratio,
+  houseStart,
   anchors,
 }: {
   children: React.ReactNode;
   ratio: string;
-  anchors: { pv: Anchor; battery: Anchor; hp: Anchor };
+  /** Anteil links vom Haus (0–1), daraus ergibt sich der mobile Ausschnitt */
+  houseStart: number;
+  anchors: { pv: Anchor; battery: Anchor; hp: Anchor; wallbox: Anchor };
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [skipped, setSkipped] = useState(false);
@@ -41,7 +44,11 @@ export function HeroHouse({
   const at = (a: Anchor) => ({ left: `${a.left}%`, top: `${a.top}%` });
 
   return (
-    <div ref={ref} className={`house house--hero${skipped ? " is-skipped" : ""}`} style={{ aspectRatio: ratio }}>
+    <div
+      ref={ref}
+      className={`house house--hero${skipped ? " is-skipped" : ""}`}
+      style={{ aspectRatio: ratio, ["--house-start" as string]: houseStart }}
+    >
       {children}
       <ul className="house__tags" aria-hidden="true">
         <li style={at(anchors.pv)} className="house__tag t-pv">
@@ -52,6 +59,9 @@ export function HeroHouse({
         </li>
         <li style={at(anchors.hp)} className="house__tag t-hp">
           Wärmepumpe
+        </li>
+        <li style={at(anchors.wallbox)} className="house__tag t-wb">
+          Wallbox
         </li>
       </ul>
       {!introDone && !skipped ? (

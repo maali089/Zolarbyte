@@ -4,6 +4,7 @@ import { ContactPerson } from "@/components/ContactPerson";
 import { ContactForm } from "@/components/ContactForm";
 import { FoerderRechner } from "@/components/foerderrechner/FoerderRechner";
 import { ServiceIcon } from "@/components/ServiceIcon";
+import { PartnerMarquee } from "@/components/Partners";
 import { energyServices, faqs, steps } from "@/lib/content";
 import { getMailConfig } from "@/lib/mail";
 import { features, isPreview, site } from "@/lib/site";
@@ -56,7 +57,7 @@ export default function Home() {
             </p>
             <div className="hero__actions">
               <Link href="/kontakt#anfrage" className="btn btn--primary">
-                Projekt anfragen
+                Anfrage jetzt senden
               </Link>
               <Link href="/foerderrechner" className="btn btn--ghost">
                 Förderung berechnen
@@ -237,20 +238,12 @@ export default function Home() {
               </div>
               <div>
                 <dt>Inhaber</dt>
-                <dd>
-                  {site.management.name}, {site.management.role}
-                </dd>
+                <dd>{site.management.name} – berät Sie persönlich zu neuen Projekten</dd>
               </div>
               <div>
                 <dt>Sitz</dt>
                 <dd>
                   {site.address.street}, {site.address.zip} {site.address.city}
-                </dd>
-              </div>
-              <div>
-                <dt>Ansprechpartner</dt>
-                <dd>
-                  {site.sales.name}, {site.sales.role} – berät Sie zu neuen Projekten
                 </dd>
               </div>
             </dl>
@@ -262,14 +255,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- 7 Referenzen (nur mit freigegebenem Material) ---------- */}
+      {/* ---------- 7 Partner ---------- */}
+      {features.partners ? (
+        <section id="partner" className="section partners" aria-labelledby="partner-title">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <p className="eyebrow">Partner &amp; Hersteller</p>
+                <h2 id="partner-title" className="h2">
+                  Starke Marken. Saubere Installation.
+                </h2>
+              </div>
+              <p className="section-head__text">
+                Für Module, Wechselrichter, Speicher, Montagesysteme, Wärmepumpen und Energiemanagement arbeiten wir mit
+                diesen Herstellern zusammen.
+              </p>
+            </div>
+            <PartnerMarquee />
+          </div>
+        </section>
+      ) : null}
+
+      {/* ---------- Referenzen (nur mit freigegebenem Material) ---------- */}
       {isPreview && !features.references ? (
         <section className="section preview-gap" aria-label="Hinweis Referenzen">
           <div className="container">
             <div className="notice" role="note">
               <span>
-                <strong>Vorschau – Platz für Referenzen:</strong> Hier erscheinen echte Projekte, Fotos und bestätigte
-                Partner, sobald sie freigegeben sind. Bis dahin bleibt der Bereich auf der öffentlichen Seite
+                <strong>Vorschau – Platz für Referenzen:</strong> Hier erscheinen echte Projekte und Fotos, sobald sie
+                freigegeben sind. Bis dahin bleibt der Bereich auf der öffentlichen Seite
                 ausgeblendet.
               </span>
             </div>
@@ -340,9 +354,9 @@ export default function Home() {
             <p className="inquiry__text">
               Ein paar Angaben genügen. Wir melden uns persönlich – oder Sie rufen direkt an.
             </p>
-            <a href={site.general.phoneHref} className="cta__phone">
-              <span>Telefon</span>
-              {site.general.phone}
+            <a href={site.project.phoneHref} className="cta__phone">
+              <span>Telefon für Projektanfragen</span>
+              {site.project.phone}
             </a>
           </div>
           <ContactForm mailConfigured={configured} previewNote={isPreview} />

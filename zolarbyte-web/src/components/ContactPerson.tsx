@@ -2,7 +2,7 @@ import { site } from "@/lib/site";
 
 /** Kontaktkarte im Stil der Visitenkarte */
 export function ContactPerson() {
-  const p = site.sales;
+  const p = site.project;
   return (
     <article className="card-person" aria-labelledby="person-name">
       <div className="card-person__shapes" aria-hidden="true">
@@ -13,11 +13,7 @@ export function ContactPerson() {
         <h3 id="person-name" className="card-person__name">
           {p.name}
         </h3>
-        <p className="card-person__role">
-          {p.role}
-          <br />
-          <span lang="en">{p.roleEn}</span>
-        </p>
+        <p className="card-person__role">{p.role}</p>
         <ul className="card-person__lines">
           <li>
             <svg viewBox="0 0 20 20" aria-hidden="true">

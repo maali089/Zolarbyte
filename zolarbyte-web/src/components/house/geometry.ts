@@ -34,12 +34,14 @@ function raw(p: V): [number, number] {
   return [dot(d, RIGHT) / zc, -dot(d, UP) / zc];
 }
 
-/* Bildausschnitt: Haus, Anbau, Wärmepumpe und etwas Umgebung */
+/* Bildausschnitt (Gesamtansicht): Haus, Anbau, Garage mit Stellplatz, Wärmepumpe */
 const FRAME: V[] = [
   [-1.6, 0, -2.4],
   [-1.6, 9.3, 4.25],
-  [16.8, 0, -2.6],
-  [16.8, 3.2, 6.2],
+  [16.8, 0, -3.4],
+  [22.9, 0, -0.6],
+  [22.9, 1.6, 5.2],
+  [19.4, 3.1, 6.6],
   [-2.8, 6.5, 6],
   [11.4, 9.2, 4.25],
 ];
@@ -59,6 +61,9 @@ export function P(p: V): Pt {
   const [x, y] = raw(p);
   return { x: r1((x - bounds.x0) * SCALE + PAD), y: r1((y - bounds.y0) * SCALE + PAD) };
 }
+
+/** Horizont: Projektion eines sehr fernen Punkts auf Augenhöhe */
+const HORIZON_Y = P([CAM[0], CAM[1], 4000]).y;
 
 export const poly = (pts: V[]) => pts.map((p, i) => `${i ? "L" : "M"}${P(p).x} ${P(p).y}`).join("") + "Z";
 export const line = (pts: V[]) => pts.map((p, i) => `${i ? "L" : "M"}${P(p).x} ${P(p).y}`).join("");
@@ -211,6 +216,42 @@ function shrub(x: number, z: number, r: number, seed: number) {
     .join("");
 }
 
+/** Laubbaum: Stamm mit Ästen und weicher Krone */
+function tree(x: number, z: number, height: number, tone = 0) {
+  const base = P([x, 0, z]);
+  const top = P([x, height, z]);
+  const h = base.y - top.y;
+  const out: string[] = [];
+  out.push(
+    `<path d="M${base.x} ${base.y}L${r1(base.x + h * 0.02)} ${r1(base.y - h * 0.55)}M${r1(base.x + h * 0.01)} ${r1(base.y - h * 0.3)}L${r1(base.x - h * 0.12)} ${r1(base.y - h * 0.62)}M${r1(base.x + h * 0.015)} ${r1(base.y - h * 0.4)}L${r1(base.x + h * 0.14)} ${r1(base.y - h * 0.66)}" stroke="#3b342c" stroke-width="${r1(h * 0.025)}" stroke-linecap="round" fill="none"/>`,
+  );
+  const shades = tone ? ["#1c271f", "#18221b", "#202d23", "#253327"] : ["#223024", "#1d291f", "#26352a", "#2b3b2d"];
+  const crowns = [
+    [0, 0.72, 0.3],
+    [-0.15, 0.66, 0.22],
+    [0.16, 0.64, 0.22],
+    [0.03, 0.86, 0.2],
+  ] as const;
+  crowns.forEach(([dx, dy, r], i) => {
+    out.push(`<circle cx="${r1(base.x + dx * h)}" cy="${r1(base.y - dy * h)}" r="${r1(r * h)}" fill="${shades[i]}"/>`);
+  });
+  return out.join("");
+}
+
+/** Hecke als Quader mit weicher Oberkante */
+function hedge(x0: number, x1: number, z0: number, z1: number, h: number) {
+  const bumps: string[] = [];
+  const n = Math.max(2, Math.round((x1 - x0) / 0.9));
+  for (let i = 0; i <= n; i++) {
+    const x = x0 + ((x1 - x0) * i) / n;
+    const c = P([x, h, z0]);
+    const e = P([x + 0.5, h, z0]);
+    const r = Math.max(1.5, Math.abs(e.x - c.x));
+    bumps.push(`<ellipse cx="${c.x}" cy="${c.y}" rx="${r1(r)}" ry="${r1(r * 0.42)}" fill="#2a3826"/>`);
+  }
+  return box(x0, x1, 0, h, z0, z1, "#2c3a29") + bumps.join("");
+}
+
 /* ---------- Maße des Hauses ---------- */
 
 const T35 = Math.tan((35 * Math.PI) / 180);
@@ -242,6 +283,15 @@ const ATOP = 3.05;
 /* Wärmepumpe vor der Fassade */
 const HP = { x0: 0.75, x1: 1.95, y0: 0.18, y1: 1.08, z0: -1.45, z1: -1.0 };
 
+/* Garage rechts neben dem Anbau, Stellplatz mit Wallbox daneben */
+const G = { x0: 15.75, x1: 19.15, z0: 0, z1: 6.4, wall: 2.7, top: 2.95 };
+const DOOR = { x0: 16.2, x1: 18.7, y1: 2.15 };
+/** Wallbox an der Garagen-Seitenwand, Gehäusemitte ca. 1,2 m über Boden */
+const WB = { x0: G.x1, x1: G.x1 + 0.14, y0: 0.97, y1: 1.45, z0: 0.5, z1: 0.86 };
+/** Auto auf dem Stellplatz, Heck zur Straße, Ladeanschluss hinten links */
+const CAR = { x0: 19.8, x1: 21.6, z0: 0.35, z1: 4.85 };
+const PORT: V = [20.02, 0.8, CAR.z0 - 0.01];
+
 /* PV-Feld: 2 Reihen × 7 Module hochkant */
 const MOD_W = 1.134;
 const MOD_H = 1.722;
@@ -253,12 +303,30 @@ const PV_T0 = 0.95;
 
 /* ---------- Energiefluss-Pfade (3D) ---------- */
 
-const pvExit: V = roofPt(PV_S0 + COLS * (MOD_W + GAP) - GAP - 0.25, PV_T0, 0.05);
+const PV_SR = PV_S0 + COLS * (MOD_W + GAP) - GAP; // rechte Kante des Feldes
+const rowMid = (r: number) => PV_T0 + r * (MOD_H + GAP) + MOD_H / 2;
+
+/**
+ * Solarstrom als Schlange über alle Module: obere Reihe von rechts nach links,
+ * Wendung im linken Modul, untere Reihe von links nach rechts, dann hinunter
+ * zum Wechselrichter. Schematisch, kein Verdrahtungsplan.
+ */
+function pvString(): V[] {
+  const pts: V[] = [];
+  const turn = 0.32; // Wendepunkte liegen innerhalb des äußeren Moduls
+  for (let r = ROWS - 1, dir = -1; r >= 0; r--, dir = -dir) {
+    const a = dir < 0 ? PV_SR - turn : PV_S0 + turn;
+    const b = dir < 0 ? PV_S0 + turn : PV_SR - turn;
+    pts.push(roofPt(a, rowMid(r), 0.06), roofPt(b, rowMid(r), 0.06));
+  }
+  return pts;
+}
 
 export const FLOW_POINTS = {
-  /** PV → Wechselrichter */
+  /** PV-Feld → Wechselrichter */
   pv: [
-    pvExit,
+    ...pvString(),
+    roofPt(10.75, rowMid(0), 0.05),
     roofPt(10.75, 0.05, 0.05),
     [10.75, 2.62, -0.06],
     [11.02, 2.62, 0.0],
@@ -294,14 +362,23 @@ export const FLOW_POINTS = {
     [2.45, 0.3, -1.22],
     [HP.x1 + 0.01, 0.5, -1.22],
   ] as V[],
-  /** Verteilung ↔ Netz */
+  /** Verteilung ↔ Netz (Hausanschluss von der Straße) */
   grid: [
     [11.75, 0.42, 1.94],
     [11.75, AFLOOR + 0.01, 1.94],
     [11.75, AFLOOR + 0.01, 0.0],
     [11.75, 0.03, -0.12],
-    [11.75, 0.03, -2.3],
-    [16.4, 0.03, -2.3],
+    [11.75, 0.03, -3.3],
+  ] as V[],
+  /** Verteilung → Wallbox an der Garage */
+  wb: [
+    [12.2, 0.42, 1.94],
+    [12.2, AFLOOR + 0.01, 1.94],
+    [12.2, AFLOOR + 0.01, 0.0],
+    [12.2, 0.03, -0.14],
+    [G.x1 + 0.04, 0.03, -0.14],
+    [G.x1 + 0.04, 0.03, 0.68],
+    [G.x1 + 0.04, WB.y0, 0.68],
   ] as V[],
   /** Wärmepumpe → Heizung/Warmwasser (Wärme, nicht Strom) */
   heat: [
@@ -335,21 +412,22 @@ export const ANCHORS = {
   battery: pct([13.92, 1.15, 1.75]),
   hp: pct([1.35, 0.7, -1.45]),
   house: pct([7.4, 3.9, -0.02]),
-  grid: pct([16.2, 0.03, -2.3]),
+  grid: pct([11.75, 0.03, -3.3]),
+  wallbox: pct([WB.x1, (WB.y0 + WB.y1) / 2, (WB.z0 + WB.z1) / 2]),
   env: pct([-0.9, 0.95, -1.25]),
 };
 
 /* ---------- Szene ---------- */
 
-export function buildHouseSvg(id: string) {
+export function buildHouseSvg(id: string, opts: { backdrop?: boolean } = {}) {
   const o: Part[] = [];
 
   /* Verläufe */
   const g = (p: V) => P(p);
-  const groundC = g([7, 0, 2]);
+  const groundC = g([5, 0, 1]);
   o.push(`<defs>
-<radialGradient id="${id}ground" cx="${groundC.x}" cy="${groundC.y}" r="${r1(VIEW_W * 0.62)}" gradientUnits="userSpaceOnUse" gradientTransform="translate(${groundC.x} ${groundC.y}) scale(1 0.42) translate(${-groundC.x} ${-groundC.y})">
-<stop offset="0" stop-color="#262b25"/><stop offset="0.55" stop-color="#151815"/><stop offset="1" stop-color="#050506" stop-opacity="0"/></radialGradient>
+<radialGradient id="${id}ground" cx="${groundC.x}" cy="${groundC.y}" r="${r1(VIEW_W * 0.9)}" gradientUnits="userSpaceOnUse" gradientTransform="translate(${groundC.x} ${groundC.y}) scale(1 0.42) translate(${-groundC.x} ${-groundC.y})">
+<stop offset="0" stop-color="#2c3823"/><stop offset="0.6" stop-color="#1a2116"/><stop offset="1" stop-color="#0b0d0b" stop-opacity="0"/></radialGradient>
 <linearGradient id="${id}glassF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5d6a78"/><stop offset="0.45" stop-color="#2a323d"/><stop offset="0.5" stop-color="#3b4553"/><stop offset="1" stop-color="#161b22"/></linearGradient>
 <linearGradient id="${id}glassS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46505c"/><stop offset="0.5" stop-color="#20262e"/><stop offset="1" stop-color="#12161c"/></linearGradient>
 <linearGradient id="${id}pv" x1="0" y1="1" x2="0.4" y2="0"><stop offset="0" stop-color="#151b2c"/><stop offset="0.6" stop-color="#1d2640"/><stop offset="1" stop-color="#2a3557"/></linearGradient>
@@ -357,43 +435,70 @@ export function buildHouseSvg(id: string) {
 <linearGradient id="${id}night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05060c"/><stop offset="1" stop-color="#05060c" stop-opacity="0.7"/></linearGradient>
 <linearGradient id="${id}eave" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.32"/></linearGradient>
 <radialGradient id="${id}warm"><stop offset="0" stop-color="#ffd7a1"/><stop offset="1" stop-color="#f3a35c"/></radialGradient>
+<radialGradient id="${id}lamp"><stop offset="0" stop-color="#ffd9a6" stop-opacity="0.5"/><stop offset="1" stop-color="#ffd9a6" stop-opacity="0"/></radialGradient>
+<linearGradient id="${id}sky" x1="0" y1="${r1(HORIZON_Y - 700)}" x2="0" y2="${r1(HORIZON_Y + 4)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050506"/><stop offset="0.62" stop-color="#0d0710"/><stop offset="0.9" stop-color="#1d0b19"/><stop offset="1" stop-color="#2c1126"/></linearGradient>
+<linearGradient id="${id}far" x1="0" y1="${r1(HORIZON_Y)}" x2="0" y2="${r1(HORIZON_Y + 260)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#17121a"/><stop offset="1" stop-color="#0b0d0b"/></linearGradient>
+<linearGradient id="${id}carbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9ccd2"/><stop offset="1" stop-color="#8e929a"/></linearGradient>
 </defs>`);
+
+  /* Hintergrund (nur Einstieg): Abendhimmel, ferne Baumreihe, Wiese bis zum Horizont */
+  if (opts.backdrop) {
+    o.push(`<g class="h-backdrop">`);
+    o.push(`<rect x="-4000" y="${r1(HORIZON_Y - 3000)}" width="9000" height="3002" fill="url(#${id}sky)"/>`);
+    o.push(`<rect x="-4000" y="${r1(HORIZON_Y)}" width="9000" height="3000" fill="url(#${id}far)"/>`);
+    const far: string[] = [];
+    for (let i = 0; i < 60; i++) {
+      const x = -90 + i * 3.6 + Math.sin(i * 2.7) * 1.2;
+      const z = 70 + Math.sin(i * 1.9) * 8;
+      const h = 8 + Math.abs(Math.sin(i * 0.83)) * 7;
+      const b = P([x, 0, z]);
+      const t = P([x, h, z]);
+      const r = (b.y - t.y) * 0.42;
+      far.push(`<circle cx="${b.x}" cy="${r1(t.y + r * 0.8)}" r="${r1(r)}"/>`);
+      far.push(`<rect x="${r1(b.x - r * 0.08)}" y="${r1(t.y + r)}" width="${r1(Math.max(1, r * 0.16))}" height="${r1(b.y - t.y - r)}"/>`);
+    }
+    o.push(`<g fill="#0c0b0e">${far.join("")}</g>`);
+    o.push(`</g>`);
+  }
 
   /* Boden */
   o.push(`<g class="h-env-ground">`);
-  o.push(path(poly([[-14, 0, -14], [30, 0, -14], [30, 0, 22], [-14, 0, 22]]), `url(#${id}ground)`));
-  // Terrasse, Weg, Zufahrt
+  o.push(path(poly([[-40, 0, -16], [60, 0, -16], [60, 0, 60], [-40, 0, 60]]), `url(#${id}ground)`));
+  // Gehweg an der Grundstücksgrenze
+  o.push(path(poly([[-24, 0.015, -6.4], [40, 0.015, -6.4], [40, 0.015, -4.9], [-24, 0.015, -4.9]]), "#2b2a28"));
+  o.push(`<path d="${line([[-24, 0.02, -4.9], [40, 0.02, -4.9]])}" stroke="#3d3c38" stroke-width="1.2"/>`);
+  // Terrasse
   o.push(path(poly([[5.6, 0.02, -2.7], [10.6, 0.02, -2.7], [10.6, 0.02, 0], [5.6, 0.02, 0]]), "#45433f"));
   for (let i = 1; i < 6; i++) {
     const x = 5.6 + i * 0.83;
     o.push(`<path d="${line([[x, 0.025, -2.7], [x, 0.025, 0]])}" stroke="#46443f" stroke-width="1"/>`);
   }
-  o.push(path(poly([[3.25, 0.02, -3.6], [4.55, 0.02, -3.6], [4.55, 0.02, 0], [3.25, 0.02, 0]]), "#3a3936"));
-  o.push(path(poly([[11, 0.02, -3.6], [15.6, 0.02, -3.6], [15.6, 0.02, 0], [11, 0.02, 0]]), "#2c2c2a"));
+  // Weg zur Haustür
+  o.push(path(poly([[3.25, 0.02, -4.9], [4.55, 0.02, -4.9], [4.55, 0.02, 0], [3.25, 0.02, 0]]), "#3a3936"));
+  // Zufahrt vor Anbau und Garage, Stellplatz neben der Garage
+  {
+    const drive: V[] = [[11, 0.02, -4.9], [22.6, 0.02, -4.9], [22.6, 0.02, 5.5], [G.x1 + 0.25, 0.02, 5.5], [G.x1 + 0.25, 0.02, 0], [11, 0.02, 0]];
+    o.push(path(poly(drive), "#34332f"));
+    const joints: string[] = [];
+    for (let z = -4.4; z < 5.5; z += 0.5) {
+      const xa = z < 0 ? 11 : G.x1 + 0.25;
+      joints.push(line([[xa, 0.025, z], [22.6, 0.025, z]]));
+    }
+    o.push(`<path d="${joints.join("")}" stroke="#3b3a35" stroke-width="0.8"/>`);
+    // Stellplatz-Markierung
+    o.push(`<path d="${line([[CAR.x0 - 0.35, 0.03, -0.4], [CAR.x0 - 0.35, 0.03, 5.3]])}${line([[CAR.x1 + 0.4, 0.03, -0.4], [CAR.x1 + 0.4, 0.03, 5.3]])}" stroke="#77756e" stroke-width="1.4" opacity="0.6"/>`);
+  }
   // Kontaktschatten
   o.push(path(poly([[-0.4, 0.01, -0.35], [15.9, 0.01, -0.35], [15.9, 0.01, 8.9], [-0.4, 0.01, 8.9]]), "#000", 'opacity="0.35"'));
   o.push(`</g>`);
 
-  /* Baum hinten links (dezent, hinter dem Haus) */
-  {
-    const base = P([-3.4, 0, 3.4]);
-    const top = P([-3.4, 6.2, 3.4]);
-    const h = base.y - top.y;
-    o.push(`<g class="h-plant" opacity="0.9">`);
-    o.push(
-      `<path d="M${base.x} ${base.y}L${r1(base.x + h * 0.02)} ${r1(base.y - h * 0.55)}M${r1(base.x + h * 0.01)} ${r1(base.y - h * 0.3)}L${r1(base.x - h * 0.12)} ${r1(base.y - h * 0.62)}M${r1(base.x + h * 0.015)} ${r1(base.y - h * 0.4)}L${r1(base.x + h * 0.14)} ${r1(base.y - h * 0.66)}" stroke="#3b342c" stroke-width="${r1(h * 0.025)}" stroke-linecap="round" fill="none"/>`,
-    );
-    const crowns = [
-      [0, 0.72, 0.3, "#223024"],
-      [-0.15, 0.66, 0.22, "#1d291f"],
-      [0.16, 0.64, 0.22, "#26352a"],
-      [0.03, 0.86, 0.2, "#2b3b2d"],
-    ] as const;
-    for (const [dx, dy, r, c] of crowns) {
-      o.push(`<circle cx="${r1(base.x + dx * h)}" cy="${r1(base.y - dy * h)}" r="${r1(r * h)}" fill="${c}"/>`);
-    }
-    o.push(`</g>`);
-  }
+  /* Hintergrund: Hecke an der Grundstücksgrenze, Bäume hinter Haus und Garage */
+  o.push(`<g class="h-plant">`);
+  o.push(hedge(-9, 25, 11.2, 12, 1.5));
+  o.push(tree(-6.8, 8.8, 5.2, 1));
+  o.push(tree(-3.4, 3.4, 6.2));
+  o.push(tree(20.8, 13.5, 6.4, 1));
+  o.push(`</g>`);
 
   /* Haus: Giebelseite (x = 11) */
   o.push(`<g class="h-house">`);
@@ -569,6 +674,96 @@ export function buildHouseSvg(id: string) {
   o.push(`<path class="h-cutline" d="${cutFaces.join("")}" fill="none" stroke="#c71c84" stroke-width="1.1" opacity="0.6"/>`);
   o.push(`</g>`);
 
+  /* Garage */
+  o.push(`<g class="h-garage">`);
+  o.push(path(poly([[G.x1, 0, G.z0], [G.x1, 0, G.z1], [G.x1, G.wall, G.z1], [G.x1, G.wall, G.z0]]), lit(M.plaster, N.right)));
+  o.push(path(poly([[G.x0, 0, G.z0], [G.x1, 0, G.z0], [G.x1, G.wall, G.z0], [G.x0, G.wall, G.z0]]), lit(M.plaster, N.front)));
+  o.push(path(poly([[G.x0, 0, -0.005], [G.x1, 0, -0.005], [G.x1, 0.25, -0.005], [G.x0, 0.25, -0.005]]), lit(M.plinth, N.front)));
+  o.push(path(poly([[G.x1 + 0.005, 0, 0], [G.x1 + 0.005, 0, G.z1], [G.x1 + 0.005, 0.25, G.z1], [G.x1 + 0.005, 0.25, 0]]), lit(M.plinth, N.right)));
+  // Sektionaltor
+  o.push(path(poly([[DOOR.x0 - 0.06, 0, -0.008], [DOOR.x1 + 0.06, 0, -0.008], [DOOR.x1 + 0.06, DOOR.y1 + 0.06, -0.008], [DOOR.x0 - 0.06, DOOR.y1 + 0.06, -0.008]]), M.frame));
+  o.push(path(poly([[DOOR.x0, 0, -0.012], [DOOR.x1, 0, -0.012], [DOOR.x1, DOOR.y1, -0.012], [DOOR.x0, DOOR.y1, -0.012]]), lit("#4b4e55", N.front)));
+  {
+    const grooves: string[] = [];
+    for (let y = 0.53; y < DOOR.y1; y += 0.53) grooves.push(line([[DOOR.x0, y, -0.014], [DOOR.x1, y, -0.014]]));
+    o.push(`<path d="${grooves.join("")}" stroke="#30333a" stroke-width="1.1"/>`);
+  }
+  // Flachdach mit Attika
+  o.push(box(G.x0, G.x1 + 0.12, G.wall, G.top, -0.12, G.z1 + 0.12, "#3e4046"));
+  // Außenleuchte neben dem Tor
+  {
+    const l = P([18.93, 2.3, -0.02]);
+    o.push(path(poly([[18.86, 2.22, -0.03], [19.0, 2.22, -0.03], [19.0, 2.4, -0.03], [18.86, 2.4, -0.03]]), "#1f2025"));
+    o.push(`<ellipse class="h-lamp" cx="${l.x}" cy="${r1(l.y + 30)}" rx="30" ry="44" fill="url(#${id}lamp)"/>`);
+  }
+  o.push(`</g>`);
+
+  /* Wallbox an der Garagen-Seitenwand */
+  o.push(`<g class="h-wb">`);
+  o.push(box(WB.x0, WB.x1, WB.y0, WB.y1, WB.z0, WB.z1, "#f1f1ef"));
+  o.push(
+    path(
+      poly([[WB.x1 + 0.003, WB.y0 + 0.07, WB.z0 + 0.06], [WB.x1 + 0.003, WB.y0 + 0.07, WB.z1 - 0.06], [WB.x1 + 0.003, WB.y1 - 0.07, WB.z1 - 0.06], [WB.x1 + 0.003, WB.y1 - 0.07, WB.z0 + 0.06]]),
+      "#26282e",
+    ),
+  );
+  o.push(
+    `<path class="h-wb-led" d="${line([[WB.x1 + 0.006, WB.y1 - 0.13, WB.z0 + 0.1], [WB.x1 + 0.006, WB.y1 - 0.13, WB.z1 - 0.1]])}" stroke="#ff5cb8" stroke-width="2.4" stroke-linecap="round"/>`,
+  );
+  o.push(`</g>`);
+
+  /* Auto auf dem Stellplatz */
+  o.push(`<g class="h-car">`);
+  {
+    const { x0, x1, z0, z1 } = CAR;
+    const yb = 0.3; // Unterkante Karosserie
+    const yw = 0.95; // Gürtellinie
+    o.push(path(poly([[x0 - 0.1, 0.01, z0 - 0.1], [x1 + 0.15, 0.01, z0 - 0.1], [x1 + 0.15, 0.01, z1 + 0.1], [x0 - 0.1, 0.01, z1 + 0.1]]), "#000", 'opacity="0.45"'));
+    // Karosserie unten
+    o.push(path(poly([[x0, yw, z0], [x1, yw, z0], [x1, yw, z1], [x0, yw, z1]]), lit("#c3c6cc", N.top)));
+    o.push(path(poly([[x1, yb, z0], [x1, yb, z1], [x1, yw, z1], [x1, yw, z0]]), `url(#${id}carbody)`));
+    o.push(path(poly([[x0, yb, z0], [x1, yb, z0], [x1, yw, z0], [x0, yw, z0]]), lit("#b3b6bd", N.front)));
+    // Räder mit Radhaus (rechte Seite sichtbar)
+    for (const zc of [z0 + 0.85, z1 - 0.95]) {
+      o.push(
+        `<g transform="${frameMatrix([x1 + 0.002, 0.33, zc], [0, 0, 1], [0, -1, 0])}"><path d="M-0.42 0.03A0.42 0.42 0 0 1 0.42 0.03Z" fill="#1d1e22"/><circle r="0.31" fill="#141518"/><circle r="0.18" fill="#7a7e86"/><circle r="0.06" fill="#2a2c31"/></g>`,
+      );
+    }
+    // Heckleuchte und Kennzeichenfeld
+    o.push(path(poly([[x0 + 0.06, 0.8, z0 - 0.005], [x1 - 0.06, 0.8, z0 - 0.005], [x1 - 0.06, 0.86, z0 - 0.005], [x0 + 0.06, 0.86, z0 - 0.005]]), "#8a1b2e"));
+    o.push(path(poly([[20.45, 0.5, z0 - 0.006], [20.95, 0.5, z0 - 0.006], [20.95, 0.62, z0 - 0.006], [20.45, 0.62, z0 - 0.006]]), "#e9e9e6"));
+    // Kabine: Seitenfläche, Seitenfenster, Dach, Heckscheibe
+    const c0 = x0 + 0.14;
+    const c1 = x1 - 0.14;
+    const yr = 1.47;
+    const zr0 = z0 + 0.75;
+    const zr1 = z0 + 1.35;
+    const zf0 = z1 - 1.45;
+    const zf1 = z1 - 0.85;
+    o.push(path(poly([[x1, yw, zr0], [x1, yw, zf1], [c1, yr, zf0], [c1, yr, zr1]]), lit("#9da1a9", N.right)));
+    o.push(path(poly([[x1 - 0.03, yw + 0.06, zr0 + 0.18], [x1 - 0.03, yw + 0.06, zf1 - 0.2], [c1 + 0.01, yr - 0.06, zf0 - 0.05], [c1 + 0.01, yr - 0.06, zr1 + 0.05]]), `url(#${id}glassS)`));
+    o.push(path(poly([[c0, yr, zr1], [c1, yr, zr1], [c1, yr, zf0], [c0, yr, zf0]]), lit("#b9bcc3", N.top)));
+    o.push(path(poly([[x0 + 0.04, yw, zr0], [x1 - 0.04, yw, zr0], [c1, yr, zr1], [c0, yr, zr1]]), `url(#${id}glassF)`));
+    // Ladeanschluss hinten links
+    o.push(path(poly([[PORT[0] - 0.08, PORT[1] - 0.07, PORT[2]], [PORT[0] + 0.08, PORT[1] - 0.07, PORT[2]], [PORT[0] + 0.08, PORT[1] + 0.07, PORT[2]], [PORT[0] - 0.08, PORT[1] + 0.07, PORT[2]]]), "#1b1c20"));
+  }
+  o.push(`</g>`);
+
+  /* Ladekabel: hängt vom Gerät durch, liegt kurz auf dem Boden, führt zum Anschluss */
+  {
+    const a: V = [WB.x1 - 0.02, WB.y0 + 0.02, (WB.z0 + WB.z1) / 2];
+    const b: V = [PORT[0] - 0.02, PORT[1], PORT[2] - 0.02];
+    const pts: V[] = [];
+    for (let i = 0; i <= 18; i++) {
+      const t = i / 18;
+      const x = a[0] + (b[0] - a[0]) * t;
+      const z = a[2] + (b[2] - a[2]) * t;
+      const y = Math.max(0.035, a[1] + (b[1] - a[1]) * t - 3.9 * t * (1 - t));
+      pts.push([x, y, z]);
+    }
+    o.push(`<path class="h-cable" d="${line(pts)}" fill="none" stroke="#18191d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
+  }
+
   /* Wärmepumpe (Außeneinheit) */
   o.push(`<g class="h-hp">`);
   o.push(box(HP.x0 - 0.1, HP.x1 + 0.1, 0, HP.y0, HP.z0 - 0.1, HP.z1 + 0.08, M.pad));
@@ -608,10 +803,14 @@ export function buildHouseSvg(id: string) {
   o.push(tuft(5.25, -1.0, 0.65, 2, "#77845f"));
   o.push(tuft(10.85, -0.8, 0.6, 3));
   o.push(tuft(-0.35, -2.0, 0.55, 4, "#77845f"));
+  o.push(shrub(-3.2, -1.6, 0.6, 3));
+  o.push(tuft(-2.2, -3.6, 0.6, 5));
+  o.push(tuft(10.7, -3.9, 0.55, 6, "#77845f"));
+  o.push(shrub(22.9, 6.2, 0.75, 4));
   o.push(`</g>`);
 
   /* Abendzustand: Szene abdunkeln, Fenster leuchten */
-  o.push(`<rect class="h-night" x="0" y="0" width="${VIEW_W}" height="${VIEW_H}" fill="url(#${id}night)"/>`);
+  o.push(`<rect class="h-night" x="-4000" y="-4000" width="9000" height="9000" fill="#05060c"/>`);
   o.push(glowMarkup);
 
   /* Energieflüsse */
@@ -621,6 +820,7 @@ export function buildHouseSvg(id: string) {
   };
   o.push(`<g class="flows" fill="none" stroke-linecap="round" stroke-linejoin="round">`);
   o.push(flow("grid", "f-grid"));
+  o.push(flow("wb", "f-wb"));
   o.push(flow("hp", "f-hp"));
   o.push(flow("house", "f-house"));
   o.push(flow("bat", "f-bat"));
@@ -646,10 +846,38 @@ export function buildHouseSvg(id: string) {
   o.push(
     hl("hl-hp", poly([[HP.x0 - 0.06, HP.y0 - 0.04, HP.z0 - 0.06], [HP.x1 + 0.06, HP.y0 - 0.04, HP.z0 - 0.06], [HP.x1 + 0.06, HP.y1 + 0.06, HP.z0 - 0.06], [HP.x0 - 0.06, HP.y1 + 0.06, HP.z0 - 0.06]])),
   );
+  o.push(hl("hl-wb", poly([[WB.x1 + 0.02, WB.y0 - 0.06, WB.z0 - 0.06], [WB.x1 + 0.02, WB.y0 - 0.06, WB.z1 + 0.06], [WB.x1 + 0.02, WB.y1 + 0.06, WB.z1 + 0.06], [WB.x1 + 0.02, WB.y1 + 0.06, WB.z0 - 0.06]])));
   o.push(`</g>`);
 
   return o.join("");
 }
+
+/* ---------- Einstieg: breiter Ausschnitt mit Himmel und Umgebung ---------- */
+
+/** Seitenverhältnis des Einstiegsbildes (Breite / Höhe) */
+const HERO_RATIO = 2.05;
+const heroRight = VIEW_W + 6;
+const heroW = 1360;
+const heroBottom = P([12, 0, -5.4]).y;
+const heroH = Math.round(heroW / HERO_RATIO);
+
+export const HERO = {
+  viewBox: `${heroRight - heroW} ${r1(heroBottom - heroH)} ${heroW} ${heroH}`,
+  ratio: `${heroW} / ${heroH}`,
+  /** Anteil des Bildes links vom Haus – für den mobilen Ausschnitt */
+  houseStart: r1(((P([-2.2, 0, -1.5]).x - (heroRight - heroW)) / heroW) * 1000) / 1000,
+  pct(p: V) {
+    const q = P(p);
+    return { left: r1(((q.x - (heroRight - heroW)) / heroW) * 1000) / 10, top: r1(((q.y - (heroBottom - heroH)) / heroH) * 1000) / 10 };
+  },
+};
+
+export const HERO_ANCHORS = {
+  pv: HERO.pct(roofPt(HW / 2, PV_T0 + MOD_H * 1.05)),
+  battery: HERO.pct([13.92, 1.15, 1.75]),
+  hp: HERO.pct([1.35, 0.7, -1.45]),
+  wallbox: HERO.pct([WB.x1, (WB.y0 + WB.y1) / 2, (WB.z0 + WB.z1) / 2]),
+};
 
 /* ---------- Bildausschnitte für Detailansichten ---------- */
 

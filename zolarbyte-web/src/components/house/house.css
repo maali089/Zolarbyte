@@ -36,7 +36,15 @@
   animation: zb-pulse var(--pd, 3.2s) linear var(--pdel, 0s) infinite;
 }
 
-.house .f-pv .flow__pulse { --pd: 3.4s; }
+/* Solarstrom: ein deutlicher, leuchtender Impuls läuft über alle Module */
+.house .f-pv .flow__pulse {
+  --pd: 6.5s;
+  stroke-dasharray: 3.2 96.8;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 3px rgba(255, 92, 184, 0.9));
+}
+.house .f-pv .flow__base { opacity: 0.42; }
+.house .f-wb .flow__pulse { --pd: 4.6s; --pdel: 1.8s; }
 .house .f-inv .flow__pulse { --pd: 1.4s; --pdel: 0.9s; }
 .house .f-house .flow__pulse { --pd: 3.6s; --pdel: 1.4s; }
 .house .f-bat .flow__pulse { --pd: 2s; --pdel: 0.5s; }
@@ -120,6 +128,8 @@
 }
 
 .house .h-inv-led { opacity: 1; }
+.house .h-lamp { opacity: 0.55; transition: opacity 0.7s var(--ease); }
+.house .h-wb-led { animation: zb-blink 3.2s ease-in-out infinite; }
 
 /* Ladeanzeige: tagsüber lädt der Speicher (oberstes Segment blinkt) */
 .house .h-bat-seg { opacity: 1; transition: opacity 0.4s; }
@@ -158,6 +168,9 @@
 
 .house[data-focus="pv"] :is(.h-bat, .h-hp, .f-bat, .f-hp, .heat),
 .house[data-focus="storage"] :is(.h-hp, .f-hp, .heat),
+.house[data-focus="pv"] :is(.f-wb, .h-wb, .h-car),
+.house[data-focus="storage"] :is(.f-wb, .h-car),
+.house[data-focus="heat"] :is(.f-wb, .h-wb, .h-car),
 .house[data-focus="heat"] :is(.h-bat, .f-bat, .f-grid) {
   opacity: 0.22;
 }
@@ -171,6 +184,9 @@
 .house[data-time="evening"] .h-night { opacity: 0.55; }
 .house[data-time="evening"] .h-glow { opacity: 0.6; }
 .house[data-time="evening"] :is(.f-pv, .f-inv) { opacity: 0.08; }
+/* nachts keine Solarerzeugung: kein Impuls auf dem Dach */
+.house[data-time="evening"] :is(.f-pv, .f-inv) .flow__pulse { animation: none; opacity: 0; }
+.house[data-time="evening"] .h-lamp { opacity: 1; }
 .house[data-time="evening"] .h-inv-led { opacity: 0.25; }
 .house[data-time="evening"] .h-sheen { animation: none; }
 .house[data-time="evening"] .f-bat .flow__pulse,
@@ -236,7 +252,8 @@
     animation: zb-fade-in 0.6s ease-out 4.4s both;
   }
 
-  .house--hero .f-pv .flow__base { --ds: 1.9s; --dd: 0.8s; }
+  .house--hero .f-pv .flow__base { --ds: 1.2s; --dd: 1.5s; }
+  .house--hero .f-wb .flow__base { --ds: 3.3s; --dd: 0.9s; }
   .house--hero .f-inv .flow__base { --ds: 2.6s; --dd: 0.3s; }
   .house--hero .f-bat .flow__base { --ds: 2.9s; --dd: 0.45s; }
   .house--hero .f-house .flow__base { --ds: 3s; --dd: 0.7s; }
@@ -249,7 +266,7 @@
   /* der erste, deutliche Impuls PV → Wechselrichter */
   .house--hero .f-pv .flow__pulse {
     animation:
-      zb-pulse 0.9s linear 1.9s both,
+      zb-pulse 2.4s linear 1.3s both,
       zb-pulse var(--pd) linear 5.2s infinite;
   }
 
@@ -288,6 +305,7 @@
   .house--hero .t-pv { animation-delay: 1.3s; }
   .house--hero .t-bat { animation-delay: 3.3s; }
   .house--hero .t-hp { animation-delay: 4s; }
+  .house--hero .t-wb { animation-delay: 4.3s; }
 
   /* Überspringen: sofort Endzustand, Impulse laufen normal */
   .house--hero.is-skipped :is(.house__svg, .h-night, .h-glow, .flow__base, .h-inv-led, .hl, .h-bat-seg, .heat, .house__tag) {
@@ -381,6 +399,8 @@
 .house__tag.t-pv { margin-top: -70px; }
 .house__tag.t-bat { margin-top: -78px; }
 .house__tag.t-hp { margin-top: -40px; }
+.house__tag.t-wb { margin-top: -52px; }
+.house__tag.t-wb::after { height: 50px; }
 
 .house__tag.t-pv::after { height: 68px; }
 .house__tag.t-bat::after { height: 76px; }
@@ -400,10 +420,17 @@
   .house__tag.t-hp::after { height: 24px; }
 }
 
+/* Smartphone-Einstieg: Bild ist zu klein für Beschriftungen */
+@media (max-width: 999px) {
+  .house--hero .house__tags {
+    display: none;
+  }
+}
+
 .house__skip {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 1rem;
+  top: 1rem;
   min-height: 2.5rem;
   padding: 0.4rem 0.9rem;
   border: 1px solid var(--line-strong);

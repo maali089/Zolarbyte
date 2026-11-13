@@ -23,7 +23,7 @@ export default function MeisterbetriebPage() {
           <p>
             ZOLARBYTE ENERGY ist als Elektrotechnik-Meisterbetrieb in die Handwerksrolle der {site.chamber.name} eingetragen
             (Betriebsnummer {site.chamber.registration}). Sitz ist {site.address.street} in {site.address.zip}{" "}
-            {site.address.city} bei München. {site.management.role} ist {site.management.name}.
+            {site.address.city} bei München. Inhaber ist {site.management.name}.
           </p>
         </div>
       </section>
@@ -37,8 +37,8 @@ export default function MeisterbetriebPage() {
             <li>
               <h3>Beratung & Angebot</h3>
               <p>
-                {site.sales.name}, {site.sales.role}, ist Ihr persönlicher Ansprechpartner für neue Projekte – vom ersten
-                Gespräch bis zum Angebot.
+                {site.project.name}, {site.project.role}, ist Ihr persönlicher Ansprechpartner für neue Projekte – vom
+                ersten Gespräch bis zum Angebot.
               </p>
             </li>
             <li>
@@ -58,7 +58,7 @@ export default function MeisterbetriebPage() {
             <div className="notice" role="note" style={{ marginTop: "2rem" }}>
               <span>
                 <strong>Vorschau – fehlt noch:</strong> Name der Meisterin bzw. des Meisters, echte Team- und
-                Montagefotos, Projektbeispiele und bestätigte Partner. Bewusst wurden keine Fotos, Siegel oder Zahlen
+                Montagefotos und Projektbeispiele. Bewusst wurden keine Fotos, Siegel oder Zahlen
                 ergänzt, die nicht belegt sind.
               </span>
             </div>
@@ -74,8 +74,8 @@ export default function MeisterbetriebPage() {
               Persönlich erreichbar.
             </h2>
             <p className="lead people__lead">
-              Für neue Projekte sprechen Sie direkt mit unserem Vertriebsleiter. Allgemeine Anfragen und Störungen
-              erreichen uns über den zentralen Kontakt.
+              Für neue Projekte sprechen Sie direkt mit dem Inhaber. Allgemeine Anfragen und Störungen erreichen uns
+              über den zentralen Kontakt.
             </p>
             <div className="general-contact">
               <h3 className="general-contact__title">Allgemeiner Kontakt</h3>

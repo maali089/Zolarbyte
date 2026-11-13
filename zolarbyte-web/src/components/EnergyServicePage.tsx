@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HouseDetail } from "@/components/house/Scenes";
 import { energyServices, type EnergyService } from "@/lib/content";
+import { ContactLinks } from "@/components/ContactLinks";
 import { isPreview, site } from "@/lib/site";
 
 /** Gemeinsame Vorlage für Photovoltaik, Wärmepumpe und Stromspeicher */
@@ -84,13 +85,12 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
                 </span>
               </div>
             ) : null}
-            <p>
-              Ihr Ansprechpartner für neue Projekte: {site.sales.name}, {site.sales.role},{" "}
-              <a href={site.sales.phoneHref} className="inline-link">
-                {site.sales.phone}
-              </a>
-              .
-            </p>
+            <div className="lp-meister__contact">
+              <p>
+                Ihr Ansprechpartner für neue Projekte: <strong>{site.project.name}</strong>, {site.project.role}
+              </p>
+              <ContactLinks />
+            </div>
           </div>
         </div>
       </section>
@@ -129,9 +129,9 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
             <Link href={`/kontakt?interesse=${s.id}#anfrage`} className="btn btn--primary">
               Projekt anfragen
             </Link>
-            <a href={site.general.phoneHref} className="cta__phone">
-              <span>Telefon</span>
-              {site.general.phone}
+            <a href={site.project.phoneHref} className="cta__phone">
+              <span>Telefon für Projektanfragen</span>
+              {site.project.phone}
             </a>
           </div>
         </div>

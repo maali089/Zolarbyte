@@ -24,19 +24,21 @@ export const site = {
     phoneHref: "tel:+4915146273201",
     email: "info@zolarbyte.de",
   },
-  /** Persönlicher Vertriebskontakt laut Visitenkarte */
-  sales: {
-    name: "Jörg Mißfeldt",
-    role: "Vertriebsleiter",
-    roleEn: "Chief Sales Officer (CSO)",
+  /**
+   * Ansprechpartner für Projekte (Anfragen, Beratung, Angebote).
+   * Diese Nummer gilt für alle projektbezogenen Kontaktwege inkl. WhatsApp.
+   */
+  project: {
+    name: "Elzat Ablet",
+    role: "Geschäftsinhaber",
     phone: "+49 157 57510000",
     phoneHref: "tel:+4915757510000",
-    email: "jm@zolarbyte.de",
+    email: "info@zolarbyte.de",
   },
-  /** Inhaber und Geschäftsführer (Angabe des Auftraggebers, 11.11.2026) */
+  /** Inhaber (Angabe des Auftraggebers, 13.11.2026) */
   management: {
-    name: "Elzat Ablent",
-    role: "Inhaber und Geschäftsführer",
+    name: "Elzat Ablet",
+    role: "Geschäftsinhaber",
   },
   chamber: {
     name: "Handwerkskammer für München und Oberbayern",
@@ -44,8 +46,8 @@ export const site = {
     city: "80333 München",
     registration: "7216270",
   },
-  /** WhatsApp erst eintragen, wenn die Nummer bestätigt ist */
-  whatsapp: null as string | null,
+  /** WhatsApp – Nummer vom Auftraggeber bestätigt (13.11.2026), gleiche Nummer wie Projektanfragen */
+  whatsapp: "4915757510000",
   copyrightYear: 2026,
 } as const;
 
@@ -57,8 +59,8 @@ export const features = {
   calculator: true,
   /** Referenzprojekte: noch kein freigegebenes Material */
   references: false,
-  /** Partner: Liste von 2023 – Aktualität und Freigabe offen */
-  partners: false,
+  /** Partner: Liste vom Auftraggeber bestätigt (13.11.2026) */
+  partners: true,
   /** Kundenstimmen: keine freigegebenen Stimmen */
   testimonials: false,
 } as const;
@@ -67,3 +69,7 @@ export const features = {
 export const isPreview = process.env.NEXT_PUBLIC_SITE_MODE !== "production";
 
 export const fullAddress = `${site.address.street}, ${site.address.zip} ${site.address.city}`;
+
+/** Vorbereiteter WhatsApp-Text – enthält nie Angaben aus Formular oder Rechner */
+export const WHATSAPP_TEXT = "Hallo Zolarbyte-Team, ich interessiere mich für ein Projekt und möchte mich beraten lassen.";
+export const whatsappHref = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;

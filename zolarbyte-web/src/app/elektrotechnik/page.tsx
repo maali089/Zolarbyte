@@ -45,8 +45,8 @@ export default function ElektrotechnikPage() {
             <Link href="/kontakt?interesse=elektrotechnik#anfrage" className="btn btn--primary">
               Anfrage senden
             </Link>
-            <a href={site.general.phoneHref} className="btn btn--ghost">
-              {site.general.phone}
+            <a href={site.project.phoneHref} className="btn btn--ghost">
+              {site.project.phone}
             </a>
           </div>
         </div>

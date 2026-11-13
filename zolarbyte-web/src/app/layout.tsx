@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { FloatingContact } from "@/components/FloatingContact";
 import { isPreview, site } from "@/lib/site";
 import "./globals.css";
 import "./relaunch.css";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
         </main>
         <Footer />
+        <FloatingContact />
       </body>
     </html>
   );

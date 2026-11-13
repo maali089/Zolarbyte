@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { getMailConfig } from "@/lib/mail";
-import { isPreview, site } from "@/lib/site";
+import { isPreview, site, whatsappHref } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Kontakt & Projektanfrage",
@@ -35,21 +35,27 @@ export default function KontaktPage() {
 
           <aside className="contact-aside" aria-label="Direkter Kontakt">
             <div className="contact-block">
-              <h2>Allgemeiner Kontakt</h2>
+              <h2>E-Mail</h2>
               <p>
-                <a href={site.general.phoneHref}>{site.general.phone}</a>
-                <br />
                 <a href={`mailto:${site.general.email}`}>{site.general.email}</a>
               </p>
             </div>
             <div className="contact-block">
-              <h2>Vertrieb &amp; neue Projekte</h2>
+              <h2>Allgemeiner Kontakt &amp; Störungen</h2>
               <p>
-                {site.sales.name}, {site.sales.role}
+                <a href={site.general.phoneHref}>{site.general.phone}</a>
+              </p>
+            </div>
+            <div className="contact-block">
+              <h2>Projektanfragen</h2>
+              <p>
+                {site.project.name}, {site.project.role}
                 <br />
-                <a href={site.sales.phoneHref}>{site.sales.phone}</a>
+                <a href={site.project.phoneHref}>{site.project.phone}</a>
                 <br />
-                <a href={`mailto:${site.sales.email}`}>{site.sales.email}</a>
+                <a href={whatsappHref} target="_blank" rel="noopener">
+                  WhatsApp
+                </a>
               </p>
             </div>
             <div className="contact-block">

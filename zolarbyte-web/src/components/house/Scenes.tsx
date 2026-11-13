@@ -1,17 +1,17 @@
-import { ANCHORS, CROPS } from "./geometry";
+import { ANCHORS, CROPS, HERO, HERO_ANCHORS } from "./geometry";
 import { HouseSvg, HOUSE_RATIO } from "./HouseSvg";
 import { HeroHouse } from "./HeroHouse";
 import { EnergyExplorer } from "./EnergyExplorer";
 import "./house.css";
 
 const LABEL =
-  "Beispielhafte Darstellung eines Wohnhauses mit Photovoltaik auf dem Dach, Wärmepumpe vor dem Haus und einem Technikraum im Schnitt mit Zählerschrank, Wechselrichter und Stromspeicher. Linien zeigen, wie Strom und Wärme fließen.";
+  "Beispielhafte Darstellung eines Wohnhauses mit Photovoltaik auf dem Dach, Wärmepumpe vor dem Haus, einem Technikraum im Schnitt mit Zählerschrank, Wechselrichter und Stromspeicher sowie einer Garage mit Wallbox, an der ein Auto lädt. Linien zeigen, wie Strom und Wärme fließen.";
 
 /** Energiehaus im Einstieg (Server-Teil, Geometrie wird hier erzeugt) */
 export function HeroHouseScene() {
   return (
-    <HeroHouse ratio={HOUSE_RATIO} anchors={{ pv: ANCHORS.pv, battery: ANCHORS.battery, hp: ANCHORS.hp }}>
-      <HouseSvg id="hh-" label={LABEL} />
+    <HeroHouse ratio={HERO.ratio} houseStart={HERO.houseStart} anchors={HERO_ANCHORS}>
+      <HouseSvg id="hh-" label={LABEL} viewBox={HERO.viewBox} backdrop />
     </HeroHouse>
   );
 }

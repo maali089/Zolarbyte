@@ -80,19 +80,31 @@ export default function DatenschutzPage() {
             Sie das Formular abschicken; Sie können sie vorher entfernen.
           </p>
 
-          <h2>6. Schriftarten</h2>
+          <h2>6. WhatsApp und Links zu Herstellern</h2>
+          <p>
+            Der WhatsApp-Knopf ist ein einfacher Link. Erst wenn Sie ihn antippen, öffnet sich WhatsApp (ein Dienst der
+            WhatsApp Ireland Limited bzw. Meta) mit einer vorbereiteten, allgemeinen Nachricht. Die Website überträgt dabei
+            keine Angaben aus dem Kontaktformular oder dem Förderrechner. Gesendet wird die Nachricht nur, wenn Sie sie
+            selbst abschicken; dann gelten die Datenschutzbestimmungen von WhatsApp.
+          </p>
+          <p>
+            Die Logos unserer Partner sind auf dieser Website gespeichert. Ein Klick auf ein Logo öffnet die Website des
+            jeweiligen Herstellers in einem neuen Fenster; erst dann werden Daten an diesen Anbieter übertragen.
+          </p>
+
+          <h2>7. Schriftarten</h2>
           <p>
             Die auf dieser Website verwendeten Schriftarten werden lokal von unserem Server ausgeliefert. Es wird dabei
             keine Verbindung zu Servern Dritter (etwa Google) hergestellt.
           </p>
 
-          <h2>7. Cookies und Analyse</h2>
+          <h2>8. Cookies und Analyse</h2>
           <p>
             Diese Website setzt keine Cookies zu Analyse- oder Marketingzwecken und verwendet keine Tracking- oder
             Reichweitenmessdienste.
           </p>
 
-          <h2>8. Verschlüsselung</h2>
+          <h2>9. Verschlüsselung</h2>
           <p>
             Diese Website nutzt aus Sicherheitsgründen eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung
             erkennen Sie an „https://“ in der Adresszeile Ihres Browsers.

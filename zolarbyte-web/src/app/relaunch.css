@@ -947,3 +947,512 @@
     white-space: nowrap;
   }
 }
+
+/* ==========================================================
+   Kontaktwege (Projekt) und schwebende Kontaktknöpfe
+   ========================================================== */
+
+.contact-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.contact-icon--wa .contact-icon__fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.contact-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-links__item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 3.5rem;
+  height: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.contact-links__item > span {
+  display: grid;
+  gap: 0.1rem;
+  font-weight: 600;
+}
+
+.contact-links__k {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.contact-links__item .contact-icon {
+  color: var(--magenta-text);
+}
+
+.contact-links__item:hover {
+  border-color: var(--magenta);
+  background: var(--magenta-tint);
+}
+
+.contact-links__item--mail {
+  border-color: var(--magenta);
+}
+
+.lp-meister__contact {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.lp-meister__contact strong {
+  color: var(--text);
+}
+
+/* Schwebende Knöpfe */
+.fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+  transition:
+    opacity 0.25s,
+    transform 0.25s var(--ease);
+}
+
+.fab.is-hidden {
+  opacity: 0;
+  transform: translateY(1rem);
+  pointer-events: none;
+}
+
+.fab__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3.25rem;
+  min-width: 3.25rem;
+  padding: 0 1.1rem 0 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(12, 12, 14, 0.94);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition:
+    border-color 0.2s,
+    transform 0.2s var(--ease);
+}
+
+.fab__btn .contact-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.fab__btn--wa .contact-icon {
+  color: #25d366;
+}
+
+.fab__btn--mail {
+  background: var(--magenta);
+  border-color: var(--magenta);
+}
+
+.fab__btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.fab__btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Smartphone: runde Knöpfe mit kurzer Beschriftung darunter, Seitenende bleibt frei */
+@media (max-width: 640px) {
+  .fab {
+    gap: 0.5rem;
+  }
+
+  .fab__btn {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    min-height: 0;
+    padding: 0;
+    border-radius: 18px;
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+
+  .fab__btn .contact-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  /* letzte Zeilen der Seite nicht unter den Knöpfen verstecken */
+  .site-footer {
+    padding-bottom: 8.5rem;
+  }
+}
+
+@media print {
+  .fab {
+    display: none;
+  }
+}
+
+/* ==========================================================
+   Einstieg mit eingebetteter Szene
+   Desktop: Szene über die ganze Fläche, Text links auf Abdunklung.
+   Smartphone: Kurzbotschaft → Hausausschnitt → Anfrageknopf.
+   ========================================================== */
+
+.hero {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (min-width: 1000px) {
+  .hero__visual {
+    position: absolute;
+    /* Szene endet über der Schwerpunkt-Leiste */
+    inset: 0 0 8.4rem;
+    z-index: -1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  .hero__visual .house--hero {
+    width: min(80%, 1480px);
+    flex: none;
+    pointer-events: auto;
+    /* linker Rand der Szene läuft weich in den Hintergrund */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+  }
+
+  /* Abdunklung hinter dem Text und am unteren Rand (Schwerpunkt-Leiste) */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(5, 5, 6, 0.92) 0%, rgba(5, 5, 6, 0.78) 30%, rgba(5, 5, 6, 0.15) 50%, transparent 60%),
+      linear-gradient(0deg, rgba(5, 5, 6, 0.92) 0%, rgba(5, 5, 6, 0.4) 14%, transparent 26%);
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 41rem) minmax(0, 1fr);
+    align-items: center;
+    padding-block: clamp(2.5rem, 6vh, 4.5rem) clamp(4rem, 12vh, 8rem);
+  }
+
+  .hero__lead {
+    max-width: 30rem;
+  }
+
+  .hero__copy {
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+  }
+
+  .hero__rail {
+    position: relative;
+    background: rgba(5, 5, 6, 0.55);
+    backdrop-filter: blur(6px);
+  }
+}
+
+@media (max-width: 999px) {
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-block: 1.1rem 1.75rem;
+  }
+
+  .hero__copy {
+    display: contents;
+  }
+
+  .hero__eyebrow {
+    order: 1;
+    margin-bottom: 0.7rem;
+    font-size: 0.66rem;
+  }
+
+  .hero__title {
+    order: 2;
+    font-size: clamp(1.75rem, 6.6vw, 2.6rem);
+  }
+
+  .hero__visual {
+    order: 3;
+    max-width: none;
+    width: auto;
+    margin: 0.5rem calc(-1 * var(--gutter)) 0;
+    overflow: hidden;
+  }
+
+  /* Ausschnitt: nur der Teil ab dem Haus, Himmel oben etwas gekürzt */
+  .hero__visual .house--hero {
+    --keep: calc(1 - var(--house-start));
+    width: calc(100% / var(--keep));
+    margin-left: calc(-100% * var(--house-start) / var(--keep));
+    margin-top: -9%;
+  }
+
+  .hero__actions {
+    order: 4;
+    margin-top: 0.75rem;
+  }
+
+  .hero__lead {
+    order: 5;
+    margin-top: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .hero__rail {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Platz für die schwebenden Kontaktknöpfe rechts */
+  .hero__actions {
+    padding-right: 4.25rem;
+  }
+
+  .hero__actions .btn {
+    flex: 1 1 100%;
+    padding-inline: 1rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 999px) {
+  .house--hero .house__skip {
+    display: none;
+  }
+}
+
+/* kurze Displays: Szene etwas flacher, Überzeile ausblenden */
+@media (max-width: 999px) and (max-height: 700px) {
+  .hero__eyebrow {
+    display: none;
+  }
+
+  .hero__visual .house--hero {
+    margin-top: -13%;
+    margin-bottom: -4%;
+  }
+}
+
+/* ==========================================================
+   Partner – laufendes Logoband
+   ========================================================== */
+
+.partners {
+  background: var(--ink-1);
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.partners .section-head {
+  margin-bottom: 2.25rem;
+}
+
+.marquee {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.marquee__viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: zb-marquee 60s linear infinite;
+}
+
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track,
+.marquee.is-paused .marquee__track {
+  animation-play-state: paused;
+}
+
+/* Beide Listen gleich breit inkl. Endabstand → nahtlose Wiederholung bei -50 % */
+.marquee__list {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 1rem 0 0;
+  list-style: none;
+}
+
+@keyframes zb-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee__tile {
+  display: grid;
+  place-items: center;
+  width: 12.5rem;
+  height: 6.25rem;
+  padding: 1rem 1.5rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s,
+    border-color 0.25s;
+}
+
+.marquee__tile img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.marquee__tile--light {
+  background: #f4f4f2;
+}
+
+.marquee__tile--dark {
+  background: #1d1d22;
+  border-color: var(--line-strong);
+}
+
+/* Buderus zeigt seine Wortmarke auf diesem Blau */
+.marquee__tile--navy {
+  background: #002d59;
+}
+
+.marquee__tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+
+.marquee__tile:focus-visible {
+  outline: 3px solid var(--magenta);
+  outline-offset: 3px;
+}
+
+.marquee__toggle {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: 500 0.85rem/1 var(--font-body), system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.marquee__toggle svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: currentColor;
+}
+
+.marquee__toggle:hover {
+  color: #fff;
+  border-color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .marquee__tile {
+    width: 9.5rem;
+    height: 5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .marquee__tile img {
+    transform: scale(0.82);
+  }
+}
+
+/* Reduzierte Bewegung: alle Logos ruhig als Raster, Kopie ausgeblendet */
+@media (prefers-reduced-motion: reduce) {
+  .marquee__viewport {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .marquee__track {
+    animation: none;
+    width: auto;
+  }
+
+  .marquee__list {
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .marquee__list[aria-hidden="true"],
+  .marquee__toggle {
+    display: none;
+  }
+}
+
+/* sehr schmale Displays: Kopfzeile ohne Überstand */
+@media (max-width: 360px) {
+  .site-header__inner {
+    gap: 0.5rem;
+  }
+
+  .brand__word {
+    font-size: 0.8rem;
+  }
+}
