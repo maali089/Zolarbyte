@@ -1,11 +1,11 @@
 import { InquiryAssistant } from "@/components/assistant/InquiryAssistant";
-import { HouseStageLazy } from "@/components/stage/HouseStageLazy";
+import { EnergyHouse } from "@/components/house/EnergyHouse";
 import { getMailConfig } from "@/lib/mail";
 import { isPreview } from "@/lib/site";
 
-/** 3D-Hausmodell (lädt verzögert, mit SVG-Poster als Fallback). */
+/** Isometrisches Energiehaus der Bühne (SVG, Kamera folgt der Tagesphase). */
 export function HouseSlot() {
-  return <HouseStageLazy className="house" />;
+  return <EnergyHouse />;
 }
 
 /** Anfrage-Assistent mit serverseitig ermitteltem Versandstatus. */

@@ -58,6 +58,16 @@
   inset: 0;
 }
 
+/* Desktop: Haus rechts neben dem Text, unter dem Sonnenbogen */
+@media (min-width: 1024px) {
+  .stage__house {
+    left: 36%;
+    right: 2vw;
+    top: calc(var(--header-h) + 12vh);
+    bottom: 4vh;
+  }
+}
+
 /* Textschutz: Linien des Bogens laufen hinter dem Text weich aus */
 .stage__flow :is(.hero__lead, .hero__start-label, .hero__call, .day__phase-title, .day__phase-text, .day__time) {
   text-shadow:

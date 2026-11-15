@@ -189,7 +189,7 @@ export function Header() {
                               }}
                             >
                               <span className="mega__thumb" aria-hidden="true">
-                                <Image src={`/renders/${sv.id}.webp`} alt="" width={320} height={240} sizes="(min-width: 901px) 132px, 64px" quality={85} />
+                                <Image src={`/renders/${sv.id}.webp`} alt="" width={320} height={240} sizes="(min-width: 901px) 132px, 64px" />
                               </span>
                               <span className="mega__text">
                                 <span className="mega__title">{sv.title}</span>
