@@ -18,6 +18,13 @@ const legacy: Array<[string, string]> = [
   ["/category/:slug*", "/"],
   ["/2020/:slug*", "/"],
   ["/2021/:slug*", "/"],
+  // Adressen der Zwischenversion auf main (Bagy)
+  ["/photovoltaik", "/leistungen/photovoltaik"],
+  ["/waermepumpe", "/leistungen/waermepumpe"],
+  ["/stromspeicher", "/leistungen/stromspeicher"],
+  ["/elektrotechnik", "/leistungen"],
+  ["/meisterbetrieb", "/betrieb"],
+  ["/foerderrechner", "/foerderung"],
 ];
 
 const nextConfig: NextConfig = {

@@ -6,13 +6,16 @@ export type Box = [number, number, number, number];
  * und je eine Ansicht pro Leistung (Leistungs-IDs aus content.ts).
  */
 export const VIEWS: Record<string, Box> = {
-  overview: [-60, -70, 1060, 706.7],
+  overview: [-130, -80, 1150, 766.7],
   pv: [116.9, -17.6, 366.5, 244.3],
   verteiler: [354.8, 239.7, 304.7, 203.1],
+  speicher: [420, 255, 255, 170],
+  waermepumpe: [-12, 232, 252, 168],
   wallbox: [639.8, 296.6, 315.4, 210.3],
   netz: [250, 210, 470, 313.3],
   // Leistungen
   photovoltaik: [96, -40, 410, 273.3],
+  stromspeicher: [400, 245, 300, 200],
   "e-mobilitaet": [600, 270, 380, 253.3],
   elektroinstallation: [330, 215, 345, 230],
   kundendienst: [60, 150, 620, 413.3],
@@ -27,7 +30,10 @@ export const HIGHLIGHT: Record<string, string> = {
   verteiler: "verteiler",
   wallbox: "wallbox",
   netz: "netz",
+  speicher: "speicher",
+  waermepumpe: "waermepumpe",
   photovoltaik: "pv",
+  stromspeicher: "speicher",
   "e-mobilitaet": "wallbox",
   elektroinstallation: "verteiler",
   kundendienst: "netz",
@@ -38,7 +44,9 @@ export const HIGHLIGHT: Record<string, string> = {
 /** Beschriftungen: Ankerpunkt im Haus (SVG-Koordinaten) und Fokus, zu dem sie gehören. */
 export const TAGS: Array<{ id: string; label: string; x: number; y: number }> = [
   { id: "pv", label: "Photovoltaik", x: 296, y: 64 },
+  { id: "waermepumpe", label: "Wärmepumpe", x: 114, y: 302 },
   { id: "verteiler", label: "Zählerschrank", x: 481, y: 286 },
+  { id: "speicher", label: "Speicher", x: 552, y: 312 },
   { id: "wallbox", label: "Wallbox", x: 769, y: 380 },
   { id: "netz", label: "Netzanschluss", x: 384, y: 425 },
 ];

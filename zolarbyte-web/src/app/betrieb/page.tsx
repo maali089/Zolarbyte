@@ -8,7 +8,7 @@ import { businessLd } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "Elektro-Meisterbetrieb in Karlsfeld",
   description:
-    "Zolarbyte ist Elektrotechnik-Meisterbetrieb in Karlsfeld bei München, eingetragen bei der Handwerkskammer für München und Oberbayern. Arbeitsweise, Ablauf und Ansprechpartner.",
+    "ZOLARBYTE ENERGY ist Elektrotechnik-Meisterbetrieb in Karlsfeld bei München, eingetragen bei der Handwerkskammer für München und Oberbayern. Arbeitsweise, Ablauf und Ansprechpartner.",
   alternates: { canonical: "/betrieb" },
 };
 

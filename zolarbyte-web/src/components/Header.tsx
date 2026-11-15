@@ -131,7 +131,7 @@ export function Header() {
       className={`site-header${open ? " is-open" : ""}${scrolled ? " is-scrolled" : ""}${hidden && !mega ? " is-hidden" : ""}${mega ? " has-mega" : ""}`}
     >
       <div className="site-header__inner">
-        <Link href="/" className="site-header__brand" aria-label="Zolarbyte – zur Startseite" data-cursor="Start">
+        <Link href="/" className="site-header__brand" aria-label="ZOLARBYTE ENERGY – zur Startseite" data-cursor="Start">
           <Logo />
         </Link>
 
@@ -223,7 +223,7 @@ export function Header() {
                             }}
                           >
                             <span className="mega__promo-title">Förder-Check</span>
-                            <span className="mega__promo-text">Welche Förderung passt zu PV, Speicher oder Wallbox?</span>
+                            <span className="mega__promo-text">Welche Förderung passt zu PV, Wärmepumpe, Speicher oder Wallbox?</span>
                           </Link>
                         ) : null}
                         <p className="mega__phone">

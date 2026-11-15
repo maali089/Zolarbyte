@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export const alt =
-  "Zolarbyte – Vom Dach bis zur Steckdose. Elektrotechnik-Meisterbetrieb in Karlsfeld bei München.";
+  "ZOLARBYTE ENERGY – Vom Dach bis zur Steckdose. Elektrotechnik-Meisterbetrieb in Karlsfeld bei München.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -93,7 +93,7 @@ export default async function Image() {
             letterSpacing: 0.2,
           }}
         >
-          Zolarbyte · Elektrotechnik-Meisterbetrieb · Karlsfeld bei München
+          ZOLARBYTE ENERGY · Elektrotechnik-Meisterbetrieb · Karlsfeld bei München
         </div>
       </div>
     ),

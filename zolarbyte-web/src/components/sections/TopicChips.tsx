@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 
 export const HERO_TOPICS = [
   { slug: "photovoltaik", label: "Photovoltaik" },
+  { slug: "waermepumpe", label: "Wärmepumpe" },
+  { slug: "stromspeicher", label: "Speicher" },
   { slug: "wallbox", label: "Wallbox & E-Auto" },
   { slug: "elektroinstallation", label: "Elektroinstallation" },
   { slug: "stoerung", label: "Störung" },
-  { slug: "pruefung", label: "Prüfung / E-Check" },
 ] as const;
 
 /** Startet den Anfrage-Assistenten mit vorgewähltem Anliegen. */

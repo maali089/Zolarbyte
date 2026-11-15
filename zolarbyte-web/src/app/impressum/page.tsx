@@ -3,7 +3,7 @@ import { isPreview, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum der Zolarbyte Elektrotechnik Meisterbetrieb, Nußbaumstraße 4 in Karlsfeld: Anbieterangaben, Kontakt, Handwerkskammer und Verantwortliche.",
+  description: "Impressum der ZOLARBYTE ENERGY, Nußbaumstraße 4 in Karlsfeld: Anbieterangaben, Kontakt, Handwerkskammer und Verantwortliche.",
   alternates: { canonical: "/impressum" },
 };
 
@@ -37,7 +37,7 @@ export default function ImpressumPage() {
             {site.address.zip} {site.address.city}
           </p>
           <p>
-            Vertreten durch: {site.management.name}
+            {site.management.role}: {site.management.name}
           </p>
 
           <h2>Kontakt</h2>

@@ -33,10 +33,16 @@ export const businessLd = {
       email: site.general.email,
       availableLanguage: "de",
     },
+    {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      telephone: site.project.phone,
+      email: site.project.email,
+      availableLanguage: "de",
+    },
   ],
-  employee: [
-    { "@type": "Person", name: site.sales.name, jobTitle: site.sales.role },
-  ],
+  founder: { "@type": "Person", name: site.management.name, jobTitle: site.management.role },
+  employee: [{ "@type": "Person", name: site.sales.name, jobTitle: site.sales.role }],
   knowsAbout: services.map((s) => s.title),
   hasOfferCatalog: {
     "@type": "OfferCatalog",

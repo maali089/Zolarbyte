@@ -28,16 +28,16 @@ const tech = Barlow_Semi_Condensed({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Photovoltaik & Elektroinstallation in Karlsfeld – Zolarbyte",
-    template: "%s – Zolarbyte",
+    default: "Photovoltaik, Wärmepumpe & Speicher in Karlsfeld – ZOLARBYTE ENERGY",
+    template: "%s – ZOLARBYTE ENERGY",
   },
   description: site.description,
-  applicationName: "Zolarbyte",
+  applicationName: "ZOLARBYTE ENERGY",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
-    siteName: "Zolarbyte",
+    siteName: "ZOLARBYTE ENERGY",
   },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },

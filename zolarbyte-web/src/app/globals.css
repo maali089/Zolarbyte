@@ -460,6 +460,19 @@ html[data-ground="night"] .site-header.is-scrolled:not(.is-open) {
   font-size: 1.125rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.logo__suffix {
+  font-weight: 500;
+  color: var(--magenta-ink);
+}
+
+@media (max-width: 380px) {
+  .logo__word {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
 }
 
 .site-nav {
@@ -1514,4 +1527,17 @@ body:has(main .closing:last-child) .site-footer__grid {
   .site-footer__base .footer-credit {
     margin-left: auto;
   }
+}
+
+/* Partnerband: Logos, die es offiziell nur hell gibt, auf dunkler Kachel */
+.pband__plate[data-tile="dark"] {
+  background: var(--nacht);
+}
+
+.pband__plate[data-tile="navy"] {
+  background: #002d59;
+}
+
+.pband__plate[data-tile] .pband__logo {
+  filter: grayscale(1) brightness(1.4);
 }

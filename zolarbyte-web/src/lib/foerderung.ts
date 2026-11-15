@@ -4,8 +4,10 @@
  * Keine Beträge ohne Quelle. Öffentlich erst mit features.foerdercheck (Freigabe durch Zolarbyte).
  */
 
+import { HOECHSTKOSTEN_WE1, HOECHSTKOSTEN_WEITERE, SOURCES, STAND as STAND_458, STEUER_35C } from "@/lib/foerderung458/regeln-458";
+
 export type FoerderArt = "zuschuss" | "kredit" | "steuer" | "verguetung" | "netzentgelt";
-export type Vorhaben = "pv" | "speicher" | "wallbox" | "zaehler";
+export type Vorhaben = "pv" | "speicher" | "wallbox" | "zaehler" | "waermepumpe";
 export type Gebaeude = "efh" | "mfh" | "gewerbe";
 export type Nutzung = "selbst" | "vermietet";
 
@@ -156,6 +158,44 @@ export const programme: Programm[] = [
       url: "https://www.umweltpakt.bayern.de/werkzeuge/foerderfibel/programme/391/energiekredit-regenerativ",
     },
     stand: "15.01.2026",
+  },
+  {
+    id: "kfw458",
+    name: "KfW 458 – Heizungsförderung (Wärmepumpe)",
+    ebene: "Bund",
+    art: "zuschuss",
+    fuer: ["waermepumpe"],
+    gebaeude: ["efh", "mfh"],
+    vorBeginn: true,
+    kurz: "Zuschuss für den Einbau einer Wärmepumpe in ein bestehendes Wohngebäude: 30 % Grundförderung. Selbstnutzende Eigentümer:innen können Boni bekommen, insgesamt höchstens 70 % (bei geringem Einkommen 80 %).",
+    hoehe: "Berechnung im Förder-Check, Rechenstand " + STAND_458,
+    bedingungen: [
+      "Antrag vor Vorhabenbeginn: Vor dem Antrag darf nur ein Vertrag mit Förderbedingung bestehen.",
+      "Das Bauantragsdatum des Gebäudes liegt mindestens fünf Jahre zurück.",
+      `Förderfähige Kosten sind gedeckelt: bei Antrag bis 31.01.2027 ${HOECHSTKOSTEN_WE1[0].amount.toLocaleString("de-DE")} € für die erste Wohnung, ${HOECHSTKOSTEN_WEITERE.we2bis6.toLocaleString("de-DE")} € je weitere bis zur sechsten, ab der siebten ${HOECHSTKOSTEN_WEITERE.abWe7.toLocaleString("de-DE")} €. Der Höchstbetrag sinkt danach halbjährlich.`,
+      "Gerät auf der BAFA-Liste, Jahresarbeitszahl ab 3,0, hydraulischer Abgleich, Schnittstelle zur netzdienlichen Steuerung.",
+      "Vor dem Antrag braucht es eine „Bestätigung zum Antrag“ von einer Energieeffizienz-Expertin, einem Energieeffizienz-Experten oder einem Fachunternehmen.",
+    ],
+    quelle: { label: "KfW-Merkblatt 458", url: SOURCES.merkblatt.url },
+    stand: STAND_458,
+  },
+  {
+    id: "est35c",
+    name: "Steuerermäßigung § 35c EStG",
+    ebene: "Bund",
+    art: "steuer",
+    fuer: ["waermepumpe"],
+    gebaeude: ["efh", "mfh"],
+    nutzung: ["selbst"],
+    kurz: "Alternative zum KfW-Zuschuss: Die Kosten für energetische Maßnahmen an selbstgenutztem Wohneigentum mindern über drei Jahre die Einkommensteuer. Für dieselbe Maßnahme nicht mit dem Zuschuss kombinierbar.",
+    hoehe: `${STEUER_35C.percentTotal} % der Kosten über drei Jahre, höchstens ${STEUER_35C.maxReduction.toLocaleString("de-DE")} € Steuerermäßigung`,
+    bedingungen: [
+      "Nur für selbstgenutztes Wohneigentum.",
+      `Das Gebäude ist bei Beginn der Maßnahme älter als ${STEUER_35C.minBuildingAgeYears} Jahre.`,
+      "Die Maßnahme ist vor dem 1. Januar 2030 abgeschlossen.",
+    ],
+    quelle: { label: "§ 35c EStG", url: SOURCES.estg35c.url },
+    stand: STAND_458,
   },
 ];
 

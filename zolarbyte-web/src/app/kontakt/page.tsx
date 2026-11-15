@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { InquirySlot } from "@/components/sections/Slots";
-import { site } from "@/lib/site";
+import { site, whatsappHref } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Anfrage & Kontakt in Karlsfeld",
   description:
-    "Photovoltaik, Wallbox, Elektroinstallation, Störung oder Prüfung anfragen: in drei Schritten beim Elektro-Meisterbetrieb Zolarbyte in Karlsfeld. Oder direkt anrufen.",
+    "Photovoltaik, Wärmepumpe, Speicher, Wallbox oder Elektroarbeiten anfragen: Schritt für Schritt beim Elektro-Meisterbetrieb ZOLARBYTE ENERGY in Karlsfeld. Oder direkt anrufen.",
   alternates: { canonical: "/kontakt" },
 };
 
@@ -15,7 +15,7 @@ export default function KontaktPage() {
       <section className="page-head" data-ground="day">
         <div className="container">
           <h1>Anfrage starten</h1>
-          <p>Drei kurze Schritte. Wir melden uns persönlich – oder Sie rufen uns direkt an.</p>
+          <p>Ein paar kurze Fragen, eine pro Schritt. Wir melden uns persönlich – oder Sie rufen uns direkt an.</p>
         </div>
         <svg className="page-head__arc" viewBox="0 0 520 200" fill="none" aria-hidden="true">
           <path d="M0 199 C 130 20, 390 20, 520 199" stroke="currentColor" />
@@ -42,13 +42,24 @@ export default function KontaktPage() {
               </a>
             </div>
             <div className="contact__block">
-              <h2 className="tech">Neue Projekte &amp; Angebote</h2>
+              <h2 className="tech">Projekte &amp; Beratung</h2>
+              <p className="contact__name">
+                {site.project.name}, {site.project.role}
+              </p>
+              <a className="contact__phone" href={site.project.phoneHref} data-cursor="Anrufen">
+                {site.project.phone}
+              </a>
+              {whatsappHref ? (
+                <a className="link-line" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  Per WhatsApp schreiben
+                </a>
+              ) : null}
+            </div>
+            <div className="contact__block">
+              <h2 className="tech">Angebote</h2>
               <p className="contact__name">
                 {site.sales.name}, {site.sales.role}
               </p>
-              <a className="contact__phone" href={site.sales.phoneHref} data-cursor="Anrufen">
-                {site.sales.phone}
-              </a>
               <a className="link-line" href={`mailto:${site.sales.email}`}>
                 {site.sales.email}
               </a>

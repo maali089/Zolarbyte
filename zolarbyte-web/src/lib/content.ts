@@ -18,8 +18,8 @@ export type Service = {
 };
 
 /**
- * Leistungen laut bisheriger Website, sprachlich überarbeitet. Reihenfolge: Energie-Themen zuerst (Schwerpunkt Hausbesitzer).
- * Keine zusätzlichen Angebote ergänzen, solange sie nicht bestätigt sind.
+ * Schwerpunkte (vom Auftraggeber bestätigt 11/2026): Photovoltaik, Wärmepumpen, Stromspeicher.
+ * Dazu die Elektrotechnik-Leistungen der bisherigen Website. Keine Angebote ergänzen, die nicht bestätigt sind.
  */
 export const services: Service[] = [
   {
@@ -27,13 +27,39 @@ export const services: Service[] = [
     headline: "Strom vom Dach, sauber im Haus angekommen.",
     seoTitle: "Photovoltaik in Karlsfeld: Montage & Anschluss",
     seoDescription: "Photovoltaik vom Elektro-Meisterbetrieb in Karlsfeld bei München: Montage, elektrischer Anschluss und Einbindung in Ihre Hausinstallation. Jetzt anfragen.",
-    related: ["e-mobilitaet", "elektroinstallation"],
+    related: ["stromspeicher", "waermepumpe"],
     lead: "Montage, elektrischer Anschluss und Einbindung in Ihre Hausinstallation – damit der Strom vom Dach im Haus ankommt.",
     topic: "photovoltaik",
     title: "Photovoltaik & Solaranlagen",
     short: "Photovoltaik",
     text: "Wir montieren Photovoltaikanlagen und binden sie fachgerecht in Ihre Elektroinstallation ein. So erzeugen Sie Strom vom eigenen Dach und nutzen ihn direkt im Haus.",
     points: ["Montage", "Elektrischer Anschluss", "Einbindung in die Hausinstallation"],
+  },
+  {
+    id: "waermepumpe",
+    headline: "Heizen mit Umweltwärme – passend zu Gebäude und Wärmeverteilung.",
+    seoTitle: "Wärmepumpe in Karlsfeld: Prüfung & Anschluss",
+    seoDescription: "Wärmepumpe vom Elektrotechnik-Meisterbetrieb in Karlsfeld bei München: Prüfung von Gebäude und Heizsystem, elektrische Einbindung, Zusammenspiel mit Photovoltaik und Speicher.",
+    related: ["photovoltaik", "stromspeicher"],
+    lead: "Wir prüfen Gebäude und Heizsystem, binden die Wärmepumpe elektrisch ein und stimmen sie auf Photovoltaik und Speicher ab.",
+    topic: "waermepumpe",
+    title: "Wärmepumpe",
+    short: "Wärmepumpe",
+    text: "Eine Wärmepumpe nutzt Wärme aus der Umgebung und hebt sie mit Strom auf Heiztemperatur. Entscheidend sind Heizlast, Vorlauftemperatur und die vorhandene Wärmeverteilung – deshalb steht am Anfang eine sorgfältige Prüfung, nicht ein Gerätevorschlag. Tagsüber kann ein Teil des Stroms vom eigenen Dach kommen.",
+    points: ["Prüfung von Gebäude und Heizsystem", "Elektrische Einbindung und Anschluss", "Abstimmung mit Photovoltaik und Speicher"],
+  },
+  {
+    id: "stromspeicher",
+    headline: "Solarstrom vom Mittag für den Abend.",
+    seoTitle: "Stromspeicher in Karlsfeld: Auslegung & Installation",
+    seoDescription: "Batteriespeicher vom Elektrotechnik-Meisterbetrieb in Karlsfeld bei München: Auslegung nach Verbrauch und Anlage, Nachrüstung bestehender PV-Anlagen, Installation und Einbindung.",
+    related: ["photovoltaik", "waermepumpe"],
+    lead: "Wir legen den Speicher nach Verbrauch und Anlage aus, prüfen die Nachrüstung und binden ihn sauber ein.",
+    topic: "stromspeicher",
+    title: "Stromspeicher",
+    short: "Speicher",
+    text: "Ein Batteriespeicher hält tagsüber erzeugten Überschuss vor und gibt ihn ab, wenn die Sonne nicht mehr scheint. Die Größe richtet sich nach Ihrem Verbrauch, dem Verbrauchszeitpunkt und der Leistung Ihrer PV-Anlage. Speicher, Wechselrichter und Zählerschrank müssen elektrisch zusammenpassen.",
+    points: ["Auslegung nach Verbrauch und Anlage", "Nachrüstung an bestehende Anlagen prüfen", "Installation und Einbindung"],
   },
   {
     id: "e-mobilitaet",
@@ -52,7 +78,7 @@ export const services: Service[] = [
     id: "elektroinstallation",
     headline: "Die Leitungen hinter allem.",
     seoTitle: "Elektroinstallation & Montage in Karlsfeld",
-    seoDescription: "Elektroinstallation, Montagearbeiten und Wartung vom Elektrotechnik-Meisterbetrieb Zolarbyte in Karlsfeld bei München – sorgfältig und nach geltenden Normen.",
+    seoDescription: "Elektroinstallation, Montagearbeiten und Wartung vom Elektrotechnik-Meisterbetrieb ZOLARBYTE ENERGY in Karlsfeld bei München – sorgfältig und nach geltenden Normen.",
     related: ["kundendienst", "pruefung"],
     lead: "Hausinstallation, Montagearbeiten und Wartung – sorgfältig und nach den geltenden Normen.",
     topic: "elektroinstallation",
@@ -65,7 +91,7 @@ export const services: Service[] = [
     id: "kundendienst",
     headline: "Wenn etwas nicht mehr läuft.",
     seoTitle: "Elektriker-Kundendienst & Störung in Karlsfeld",
-    seoDescription: "Strom weg, Sicherung fliegt? Zolarbyte sucht die Ursache systematisch, behebt die Störung und dokumentiert sauber. Elektro-Meisterbetrieb in Karlsfeld.",
+    seoDescription: "Strom weg, Sicherung fliegt? ZOLARBYTE ENERGY sucht die Ursache systematisch, behebt die Störung und dokumentiert sauber. Elektro-Meisterbetrieb in Karlsfeld.",
     related: ["elektroinstallation", "pruefung"],
     lead: "Strom weg, Sicherung fliegt? Wir suchen die Ursache systematisch, beheben sie und dokumentieren sauber.",
     topic: "stoerung",
@@ -90,14 +116,14 @@ export const services: Service[] = [
   {
     id: "schulungen",
     headline: "Elektrotechnik, verständlich weitergegeben.",
-    seoTitle: "Schulungen Elektrotechnik – Zolarbyte Karlsfeld",
-    seoDescription: "Schulungen im Bereich Elektrotechnik vom Meisterbetrieb Zolarbyte aus Karlsfeld bei München. Inhalte und Termine stimmen wir mit Ihnen ab.",
+    seoTitle: "Schulungen Elektrotechnik – ZOLARBYTE ENERGY Karlsfeld",
+    seoDescription: "Schulungen im Bereich Elektrotechnik vom Meisterbetrieb ZOLARBYTE ENERGY aus Karlsfeld bei München. Inhalte und Termine stimmen wir mit Ihnen ab.",
     related: ["pruefung", "elektroinstallation"],
     lead: "Wissen aus der Elektrotechnik, weitergegeben vom Meisterbetrieb – Inhalte und Termine nach Absprache.",
     topic: "schulung",
     title: "Schulungen",
     short: "Schulungen",
-    text: "Wir geben unser Wissen weiter: Zolarbyte bietet Schulungen im Bereich Elektrotechnik an. Sprechen Sie uns zu Inhalten und Terminen an.",
+    text: "Wir geben unser Wissen weiter: ZOLARBYTE ENERGY bietet Schulungen im Bereich Elektrotechnik an. Sprechen Sie uns zu Inhalten und Terminen an.",
     points: ["Elektrotechnik", "Inhalte nach Absprache"],
   },
 ];
@@ -125,22 +151,33 @@ export const steps = [
   },
 ];
 
-/** Die vier Momente der „Ein Tag am Haus“-Erzählung (rein illustrativ, keine Messwerte). */
-export const dayPhases: Array<{ hour: number; focus: "pv" | "verteiler" | "wallbox" | "netz"; title: string; text: string }> = [
+/** Die Momente der „Ein Tag am Haus“-Erzählung (rein illustrativ, keine Messwerte). */
+export const dayPhases: Array<{
+  hour: number;
+  focus: "pv" | "speicher" | "waermepumpe" | "wallbox" | "netz";
+  title: string;
+  text: string;
+}> = [
   {
     hour: 9,
     focus: "pv",
     title: "Morgens arbeitet das Dach.",
-    text: "Sobald Licht auf die Module fällt, entsteht Strom. Wir montieren die Anlage und schließen sie fachgerecht an.",
+    text: "Sobald Licht auf die Module fällt, entsteht Strom. Wir planen die Anlage nach Dach und Verbrauch und schließen sie fachgerecht an.",
   },
   {
     hour: 12.5,
-    focus: "verteiler",
-    title: "Mittags verteilt der Zählerschrank.",
-    text: "Der Strom fließt über Ihre Hausinstallation dorthin, wo er gebraucht wird – abgesichert nach VDE.",
+    focus: "speicher",
+    title: "Mittags füllt sich der Speicher.",
+    text: "Was das Haus gerade nicht braucht, lädt den Speicher im Technikraum – über den Zählerschrank, abgesichert nach VDE.",
   },
   {
-    hour: 17,
+    hour: 15.5,
+    focus: "waermepumpe",
+    title: "Nachmittags heizt die Wärmepumpe mit.",
+    text: "Ein Teil ihres Stroms kommt vom eigenen Dach. Ob eine Wärmepumpe zu Ihrem Haus passt, prüfen wir vorher.",
+  },
+  {
+    hour: 17.5,
     focus: "wallbox",
     title: "Abends lädt das Auto mit.",
     text: "Wir prüfen, was Ihre Installation für das Laden zu Hause leisten muss, und denken Wallbox und Photovoltaik zusammen.",
@@ -148,21 +185,36 @@ export const dayPhases: Array<{ hour: number; focus: "pv" | "verteiler" | "wallb
   {
     hour: 20.75,
     focus: "netz",
-    title: "Nachts übernimmt das Netz.",
-    text: "Ohne Sonne kommt der Strom aus dem Netz. Die Installation dahinter muss beides können – das ist unser Handwerk.",
+    title: "Nachts liefert der Speicher.",
+    text: "Ist er leer, kommt der Strom wie gewohnt aus dem Netz. Die Installation dahinter muss beides können – das ist unser Handwerk.",
   },
 ];
 
 /** `services`: auf welchen Leistungsseiten die Frage erscheint (leer = überall). */
 export const faqs: Array<{ q: string; a: string; services?: string[] }> = [
   {
-    q: "Was bedeutet „Meisterbetrieb“ bei Zolarbyte?",
-    a: "Zolarbyte ist als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen. Ihre Anlage wird also von einem Fachbetrieb geplant, ausgeführt und geprüft, der die handwerklichen und rechtlichen Anforderungen erfüllt.",
+    q: "Was bedeutet „Meisterbetrieb“ bei ZOLARBYTE ENERGY?",
+    a: "ZOLARBYTE ENERGY ist als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen. Ihre Anlage wird also von einem Fachbetrieb geplant, ausgeführt und geprüft, der die handwerklichen und rechtlichen Anforderungen erfüllt.",
   },
   {
-    services: ["photovoltaik", "e-mobilitaet"],
-    q: "Ist Zolarbyte nur für Photovoltaik zuständig?",
-    a: "Nein. Photovoltaik ist ein Leistungsbereich von mehreren. Wir übernehmen ebenso Elektroinstallationen, Montagearbeiten, Wartung, Störungsbehebung, elektrische Prüfungen, Beratung zur E-Mobilität und Schulungen.",
+    services: ["photovoltaik", "e-mobilitaet", "waermepumpe", "stromspeicher"],
+    q: "Ist ZOLARBYTE ENERGY nur für Energiethemen zuständig?",
+    a: "Nein. Schwerpunkt sind Photovoltaik, Wärmepumpen und Stromspeicher. Als Elektrotechnik-Meisterbetrieb übernehmen wir ebenso Elektroinstallationen, Montagearbeiten, Wartung, Störungsbehebung, elektrische Prüfungen, Beratung zur E-Mobilität und Schulungen.",
+  },
+  {
+    services: ["waermepumpe"],
+    q: "Funktioniert eine Wärmepumpe auch im Altbau?",
+    a: "Oft ja, aber nicht automatisch. Es kommt auf Heizlast, Vorlauftemperatur und Heizflächen an. Wir prüfen das vorher und sagen Ihnen offen, wenn zuerst andere Maßnahmen sinnvoll sind.",
+  },
+  {
+    services: ["stromspeicher", "photovoltaik"],
+    q: "Kann ich einen Speicher später nachrüsten?",
+    a: "In vielen Fällen ja. Es hängt vom vorhandenen Wechselrichter, vom Platz und vom Zählerschrank ab. Schicken Sie uns gern Fotos von Typenschild und Zählerschrank.",
+  },
+  {
+    services: ["stromspeicher"],
+    q: "Habe ich mit Speicher Strom bei einem Stromausfall?",
+    a: "Nur, wenn das System ausdrücklich für Ersatzstrom ausgelegt und so installiert ist. Bei einem Stromausfall schaltet sich eine netzgekoppelte Anlage aus Sicherheitsgründen ab. Das klären wir bei der Planung.",
   },
   {
     services: ["pruefung", "kundendienst", "elektroinstallation"],
@@ -175,7 +227,7 @@ export const faqs: Array<{ q: string; a: string; services?: string[] }> = [
   },
   {
     q: "Wen erreiche ich wofür?",
-    a: "Für allgemeine Anfragen und Störungen erreichen Sie uns über die allgemeine Telefonnummer und kontakt@zolarbyte.de. Für Angebote und neue Projekte ist Jörg Mißfeldt, unser Vertriebsleiter, Ihr persönlicher Ansprechpartner.",
+    a: "Für Projekte und Beratung ist Elzat Ablet, unser Geschäftsinhaber, Ihr Ansprechpartner – telefonisch oder per WhatsApp. Allgemeine Anfragen und Störungen erreichen uns über die allgemeine Telefonnummer und info@zolarbyte.de. Für Angebote ist zudem Jörg Mißfeldt, unser Vertriebsleiter, per E-Mail erreichbar.",
   },
 ];
 
@@ -183,23 +235,30 @@ export const serviceById = (id: string) => services.find((s) => s.id === id);
 export const faqsFor = (id: string) => faqs.filter((f) => !f.services || f.services.includes(id));
 
 /**
- * Partner laut bisheriger Website (Stand 01/2023). Aktualität und Logo-Freigabe offen →
- * öffentlich erst mit features.partners = true. Hersteller: noch keine bestätigte Liste.
+ * Partner und Hersteller – vom Auftraggeber bestätigt (13.11.2026), Quellen der Logos: docs/partner-logos.md.
+ * `ratio` = Breite/Höhe des Logos. `tile`: dunkle Kachel für Logos, die es offiziell nur hell gibt.
  */
 export type Partner = {
   id: string;
   name: string;
-  kind: "partner" | "hersteller";
   logo: string;
-  width: number;
-  height: number;
+  ratio: number;
+  tile?: "dark" | "navy";
 };
 
 export const partners: Partner[] = [
-  { id: "sick", name: "SICK", kind: "partner", logo: "/partners/sick.webp", width: 153, height: 62 },
-  { id: "fuwa", name: "FUWA", kind: "partner", logo: "/partners/fuwa.webp", width: 225, height: 115 },
-  { id: "ekd", name: "Energiekonzepte Deutschland", kind: "partner", logo: "/partners/ekd.webp", width: 344, height: 89 },
-  { id: "fe", name: "FE Energiesysteme", kind: "partner", logo: "/partners/fe.webp", width: 253, height: 156 },
-  { id: "gruenauer", name: "Grünauer GmbH", kind: "partner", logo: "/partners/gruenauer.webp", width: 1024, height: 406 },
-  { id: "kolping", name: "Die Kolping Akademie", kind: "partner", logo: "/partners/kolping.webp", width: 246, height: 90 },
+  { id: "aiko", name: "AIKO", logo: "/partners/aiko.svg", ratio: 3.81, tile: "dark" },
+  { id: "jolywood", name: "Jolywood", logo: "/partners/jolywood.png", ratio: 6.46 },
+  { id: "solar-fabrik", name: "Solar Fabrik", logo: "/partners/solar-fabrik.png", ratio: 1 },
+  { id: "sigenergy", name: "Sigenergy", logo: "/partners/sigenergy.webp", ratio: 5.14, tile: "dark" },
+  { id: "huawei", name: "Huawei", logo: "/partners/huawei.svg", ratio: 4.58 },
+  { id: "k2", name: "K2 Systems", logo: "/partners/k2-systems.svg", ratio: 1 },
+  { id: "sl-rack", name: "SL Rack", logo: "/partners/sl-rack.svg", ratio: 2.32 },
+  { id: "fronius", name: "Fronius", logo: "/partners/fronius.webp", ratio: 3.51 },
+  { id: "bosch", name: "Bosch Home Comfort", logo: "/partners/bosch.svg", ratio: 4.46 },
+  { id: "vaillant", name: "Vaillant", logo: "/partners/vaillant.svg", ratio: 3.78 },
+  { id: "viessmann", name: "Viessmann", logo: "/partners/viessmann.svg", ratio: 4.74 },
+  { id: "buderus", name: "Buderus", logo: "/partners/buderus.svg", ratio: 4.93, tile: "navy" },
+  { id: "spotmyenergy", name: "SpotmyEnergy", logo: "/partners/spotmyenergy.png", ratio: 2.53 },
+  { id: "solar-manager", name: "Solar Manager", logo: "/partners/solar-manager.svg", ratio: 1.27 },
 ];

@@ -3,7 +3,7 @@ import { isPreview, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
-  description: "Datenschutzerklärung der Website von Zolarbyte.",
+  description: "Datenschutzerklärung der Website von ZOLARBYTE ENERGY.",
   alternates: { canonical: "/datenschutz" },
 };
 
@@ -77,7 +77,7 @@ export default function DatenschutzPage() {
 
           <h2>4. Anfrage-Assistent, Kontaktformular und Anfragen per E-Mail oder Telefon</h2>
           <p>
-            Über den Anfrage-Assistenten können Sie uns in drei Schritten eine Anfrage senden. Wir verarbeiten dabei die
+            Über den Anfrage-Assistenten können Sie uns Schritt für Schritt eine Anfrage senden. Wir verarbeiten dabei die
             Angaben, die Sie eingeben: Anliegen, optional Objektart, Zeitraum, PLZ oder Ort und Zusatzangaben, Ihren
             Namen und Ihre E-Mail-Adresse sowie optional Ihre Telefonnummer und eine Nachricht. Pflichtangaben sind im
             Formular gekennzeichnet. Ohne diese Angaben können wir Ihre Anfrage nicht bearbeiten; gesetzlich
@@ -151,11 +151,18 @@ export default function DatenschutzPage() {
             Einwilligungsabfrage (Cookie-Banner) ist deshalb nicht erforderlich.
           </p>
 
-          <h2>10. Links zu anderen Websites</h2>
+          <h2>10. WhatsApp und Links zu anderen Websites</h2>
           <p>
-            Wenn Sie einem Link zu einer anderen Website folgen, etwa zur Handwerkskammer, gilt dort die
-            Datenschutzerklärung des jeweiligen Betreibers. Erst mit dem Klick wird Ihre IP-Adresse an diesen Betreiber
-            übermittelt.
+            Der Link „Per WhatsApp schreiben“ ist ein einfacher Link. Erst wenn Sie ihn antippen, öffnet sich WhatsApp (ein
+            Dienst der WhatsApp Ireland Limited bzw. Meta) mit einer vorbereiteten, allgemeinen Nachricht. Die Website
+            überträgt dabei keine Angaben aus dem Anfrage-Assistenten oder dem Förder-Check. Gesendet wird die Nachricht
+            nur, wenn Sie sie selbst abschicken; dann gelten die Datenschutzbestimmungen von WhatsApp.
+          </p>
+          <p>
+            Die Logos unserer Partner und Hersteller sind auf dieser Website gespeichert; beim Anzeigen werden keine Daten an
+            die Hersteller übertragen. Wenn Sie einem Link zu einer anderen Website folgen, etwa zur Handwerkskammer, gilt
+            dort die Datenschutzerklärung des jeweiligen Betreibers. Erst mit dem Klick wird Ihre IP-Adresse an diesen
+            Betreiber übermittelt.
           </p>
 
           <h2>11. Verschlüsselung</h2>

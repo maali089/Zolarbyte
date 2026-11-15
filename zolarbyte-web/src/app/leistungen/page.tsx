@@ -5,9 +5,9 @@ import { services } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Leistungen: Photovoltaik, Wallbox, Elektro",
+  title: "Leistungen: Photovoltaik, Wärmepumpe, Speicher",
   description:
-    "Photovoltaik, E-Mobilität, Elektroinstallation, Kundendienst, E-Check und Schulungen – alle Leistungen des Elektrotechnik-Meisterbetriebs Zolarbyte in Karlsfeld bei München.",
+    "Photovoltaik, Wärmepumpe, Stromspeicher, E-Mobilität, Elektroinstallation, Kundendienst, E-Check und Schulungen – alle Leistungen des Elektrotechnik-Meisterbetriebs ZOLARBYTE ENERGY in Karlsfeld bei München.",
   alternates: { canonical: "/leistungen" },
 };
 

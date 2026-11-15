@@ -5,12 +5,13 @@
  */
 
 export const site = {
-  name: "Zolarbyte",
-  legalName: "Zolarbyte Elektrotechnik Meisterbetrieb",
+  /** Firmierung vom Auftraggeber bestätigt (11/2026, Branch main) */
+  name: "ZOLARBYTE ENERGY",
+  legalName: "ZOLARBYTE ENERGY",
   url: "https://zolarbyte.de",
-  tagline: "Elektrotechnik-Meisterbetrieb aus Karlsfeld",
+  tagline: "Photovoltaik, Wärmepumpen und Stromspeicher vom Elektrotechnik-Meisterbetrieb",
   description:
-    "Zolarbyte, Elektrotechnik-Meisterbetrieb in Karlsfeld bei München: Photovoltaik, E-Mobilität, Elektroinstallation, Störungsbehebung, E-Check und Schulungen.",
+    "ZOLARBYTE ENERGY plant Photovoltaik, Wärmepumpen und Stromspeicher als abgestimmtes Energiesystem – vom Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München. Dazu Wallbox, Elektroinstallation, Störungsbehebung, E-Check und Schulungen.",
   address: {
     street: "Nußbaumstraße 4",
     zip: "85757",
@@ -18,25 +19,33 @@ export const site = {
     region: "Bayern",
     country: "DE",
   },
-  /** Allgemeiner Kontakt laut bisheriger Website */
+  /** Zentrale / allgemeine Anfragen (E-Mail vom Auftraggeber bestätigt, 11.11.2026) */
   general: {
     phone: "+49 151 46273201",
     phoneHref: "tel:+4915146273201",
-    email: "kontakt@zolarbyte.de",
+    email: "info@zolarbyte.de",
   },
-  /** Persönlicher Vertriebskontakt laut Visitenkarte */
+  /**
+   * Ansprechpartner für Projekte (Anfragen, Beratung, Angebote) – vom Auftraggeber bestätigt (13.11.2026).
+   * Diese Nummer gilt für alle projektbezogenen Kontaktwege inkl. WhatsApp.
+   */
+  project: {
+    name: "Elzat Ablet",
+    role: "Geschäftsinhaber",
+    phone: "+49 157 57510000",
+    phoneHref: "tel:+4915757510000",
+    email: "info@zolarbyte.de",
+  },
+  /** Vertrieb laut Visitenkarte, bleibt laut Sir auf der Seite (15.11.2026) */
   sales: {
     name: "Jörg Mißfeldt",
     role: "Vertriebsleiter",
-    roleEn: "Chief Sales Officer (CSO)",
-    phone: "+49 157 57510000",
-    phoneHref: "tel:+4915757510000",
     email: "jm@zolarbyte.de",
   },
-  /** Laut bisherigem Impressum – vor Veröffentlichung bestätigen lassen */
+  /** Inhaber (Angabe des Auftraggebers, 13.11.2026) */
   management: {
     name: "Elzat Ablet",
-    role: "Geschäftsführer",
+    role: "Geschäftsinhaber",
   },
   chamber: {
     name: "Handwerkskammer für München und Oberbayern",
@@ -44,8 +53,8 @@ export const site = {
     city: "80333 München",
     registration: "7216270",
   },
-  /** WhatsApp erst eintragen, wenn die Nummer bestätigt ist */
-  whatsapp: null as string | null,
+  /** WhatsApp – Nummer vom Auftraggeber bestätigt (13.11.2026), gleiche Nummer wie Projektanfragen */
+  whatsapp: "4915757510000" as string | null,
   copyrightYear: 2026,
 } as const;
 
@@ -57,11 +66,11 @@ export const features = {
   calculator: false,
   /** Referenzprojekte: noch kein freigegebenes Material */
   references: false,
-  /** Partner: Liste von 2023 – Aktualität und Freigabe offen */
-  partners: false,
+  /** Partner und Hersteller: Liste vom Auftraggeber bestätigt (13.11.2026) */
+  partners: true,
   /** Kundenstimmen: keine freigegebenen Stimmen */
   testimonials: false,
-  /** Förder-Check: Datenstand (src/lib/foerderung.ts) muss vor Livegang von Zolarbyte freigegeben werden */
+  /** Förder-Check: Datenstand (src/lib/foerderung.ts) muss vor Livegang von ZOLARBYTE ENERGY freigegeben werden */
   foerdercheck: false,
 } as const;
 
@@ -69,3 +78,7 @@ export const features = {
 export const isPreview = process.env.NEXT_PUBLIC_SITE_MODE !== "production";
 
 export const fullAddress = `${site.address.street}, ${site.address.zip} ${site.address.city}`;
+
+/** Vorbereiteter WhatsApp-Text – enthält nie Angaben aus Formular oder Rechner */
+export const WHATSAPP_TEXT = "Hallo ZOLARBYTE ENERGY, ich interessiere mich für ein Projekt und möchte mich beraten lassen.";
+export const whatsappHref = site.whatsapp ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(WHATSAPP_TEXT)}` : null;

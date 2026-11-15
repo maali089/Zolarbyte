@@ -5,9 +5,9 @@ import { features, isPreview } from "@/lib/site";
 /**
  * Laufband der Partner/Hersteller. Logos ruhig in Graustufen, beim Überfahren in Farbe;
  * das Band hält an, sobald Zeiger oder Fokus darauf liegen. Reduzierte Bewegung → statisches Raster.
- * Öffentlich erst mit features.partners (Freigabe der Liste ausstehend).
+ * Liste vom Auftraggeber bestätigt (features.partners).
  */
-export function PartnerBand({ title = "Mit wem wir arbeiten" }: { title?: string }) {
+export function PartnerBand({ title = "Hersteller, mit denen wir arbeiten" }: { title?: string }) {
   if (!features.partners && !isPreview) return null;
   if (!partners.length) return null;
 
@@ -15,14 +15,15 @@ export function PartnerBand({ title = "Mit wem wir arbeiten" }: { title?: string
     <ul className="pband__row" aria-hidden={hidden || undefined}>
       {partners.map((p) => (
         <li key={p.id} className="pband__item">
-          <span className="pband__plate" data-cursor={hidden ? undefined : p.name}>
+          <span className="pband__plate" data-tile={p.tile} data-cursor={hidden ? undefined : p.name}>
             <Image
               src={p.logo}
               alt=""
-              width={p.width}
-              height={p.height}
+              width={Math.round(p.ratio * 120)}
+              height={120}
               className="pband__logo"
               sizes="180px"
+              unoptimized={p.logo.endsWith(".svg")}
             />
           </span>
           <span className="pband__name tech">{p.name}</span>
@@ -38,10 +39,10 @@ export function PartnerBand({ title = "Mit wem wir arbeiten" }: { title?: string
           {title}
         </h2>
         {!features.partners && isPreview ? (
-          <p className="pband__note tech">Vorschau · Liste von 2023, Freigabe offen</p>
+          <p className="pband__note tech">Vorschau · Freigabe offen</p>
         ) : null}
       </div>
-      <div className="pband__track" tabIndex={0} aria-label="Partner (Laufband, hält bei Fokus an)">
+      <div className="pband__track" tabIndex={0} aria-label={`Partner und Hersteller: ${partners.map((p) => p.name).join(", ")}`}>
         <div className="pband__marquee">
           {row(false)}
           {row(true)}

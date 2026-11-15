@@ -175,8 +175,8 @@ export function DayStage({ house }: { house: React.ReactNode }) {
             <Words text={"Vom Dach bis\nzur Steckdose."} accent={["Steckdose"]} delay={150} />
           </h1>
           <p className="hero__lead lead" data-reveal style={{ "--i": 4 } as React.CSSProperties}>
-            Photovoltaik, E-Mobilität und Ihre Hauselektrik als ein System – vom Elektro-Meisterbetrieb aus Karlsfeld
-            bei München.
+            Photovoltaik, Wärmepumpe und Speicher als ein System – geplant und angeschlossen vom
+            Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München.
           </p>
           <div className="hero__start" data-reveal style={{ "--i": 6 } as React.CSSProperties}>
             <p id="hero-start" className="hero__start-label">

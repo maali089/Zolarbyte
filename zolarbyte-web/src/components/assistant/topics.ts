@@ -5,6 +5,8 @@ export const HANDOFF_KEY = "zb-calculator-handoff";
 
 export type InquiryTopicSlug =
   | "photovoltaik"
+  | "waermepumpe"
+  | "stromspeicher"
   | "wallbox"
   | "elektroinstallation"
   | "stoerung"
@@ -24,6 +26,8 @@ const title = (id: string) => services.find((s) => s.id === id)?.title ?? "Sonst
 
 export const INQUIRY_TOPICS: InquiryTopic[] = [
   { slug: "photovoltaik", label: "Photovoltaik", service: title("photovoltaik") },
+  { slug: "waermepumpe", label: "Wärmepumpe", service: title("waermepumpe") },
+  { slug: "stromspeicher", label: "Stromspeicher", service: title("stromspeicher") },
   { slug: "wallbox", label: "Wallbox & E-Auto", service: title("e-mobilitaet") },
   { slug: "elektroinstallation", label: "Elektroinstallation", service: title("elektroinstallation") },
   { slug: "stoerung", label: "Störung / Reparatur", service: title("kundendienst") },

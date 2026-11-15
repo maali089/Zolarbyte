@@ -82,9 +82,10 @@ export function formatHour(h: number) {
 /**
  * Welches Bauteil die 3D-Szene gerade zeigt/hervorhebt.
  * overview = ganzes Haus; pv = Dach/Module; verteiler = Zählerschrank & Leitungen in die Räume;
- * wallbox = Carport/Wallbox/Auto; netz = Hausanschluss/Netz (abends).
+ * speicher = Batteriespeicher im Technikraum; waermepumpe = Außengerät;
+ * wallbox = Garage/Wallbox/Auto; netz = Hausanschluss/Netz (abends).
  */
-export type StageFocus = "overview" | "pv" | "verteiler" | "wallbox" | "netz";
+export type StageFocus = "overview" | "pv" | "verteiler" | "speicher" | "waermepumpe" | "wallbox" | "netz";
 
 type FocusListener = (f: StageFocus) => void;
 let focus: StageFocus = "overview";

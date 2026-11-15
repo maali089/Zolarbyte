@@ -66,7 +66,9 @@ export function Logo({ animated = true }: { animated?: boolean }) {
   return (
     <span className="logo">
       {animated ? <AnimatedLogoMark className="logo__mark" /> : <LogoMark className="logo__mark" />}
-      <span className="logo__word">Zolarbyte</span>
+      <span className="logo__word">
+        Zolarbyte <span className="logo__suffix">Energy</span>
+      </span>
     </span>
   );
 }

@@ -34,7 +34,7 @@ function record(name) {
 const VIEWS = record("VIEWS");
 const HIGHLIGHT = record("HIGHLIGHT");
 
-const ids = ["photovoltaik", "e-mobilitaet", "elektroinstallation", "kundendienst", "pruefung", "schulungen"];
+const ids = ["photovoltaik", "waermepumpe", "stromspeicher", "e-mobilitaet", "elektroinstallation", "kundendienst", "pruefung", "schulungen"];
 const [W, H] = [800, 600]; // ×2 = 1600×1200
 
 const html = (id) => `<!doctype html><html><head><style>

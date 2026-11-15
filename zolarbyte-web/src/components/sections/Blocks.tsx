@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Words } from "@/components/fx/Words";
 import { InquirySlot } from "@/components/sections/Slots";
 import { Stamp } from "@/components/sections/Stamp";
-import { site } from "@/lib/site";
+import { site, whatsappHref } from "@/lib/site";
 
 /** Seitenkopf der Unterseiten mit Brotkrumen und Sonnenbogen-Motiv. */
 export function PageHead({
@@ -76,7 +76,7 @@ export function ClosingInquiry({
             <Words text={title} accent={accent} />
           </h2>
           <p className="closing__lead" data-reveal>
-            Drei kurze Schritte, keine Pflichtfragen zu Technik oder Budget. Wir melden uns persönlich bei Ihnen.
+            Eine Frage pro Schritt, keine Pflichtfragen zu Technik oder Budget. Wir melden uns persönlich bei Ihnen.
           </p>
           <div className="closing__direct" data-reveal style={{ "--i": 2 } as React.CSSProperties}>
             <a href={site.general.phoneHref} className="closing__phone" data-cursor="Anrufen">
@@ -146,16 +146,28 @@ export function People() {
         <Words text={"Persönlich\nerreichbar."} />
       </h2>
       <div className="people__card" data-reveal>
-        <p className="people__name">{site.sales.name}</p>
-        <p className="people__sub">{site.sales.role} · neue Projekte &amp; Angebote</p>
-        <a className="people__phone" href={site.sales.phoneHref} data-cursor="Anrufen">
-          {site.sales.phone}
+        <p className="people__name">{site.project.name}</p>
+        <p className="people__sub">{site.project.role} · Projekte &amp; Beratung</p>
+        <a className="people__phone" href={site.project.phoneHref} data-cursor="Anrufen">
+          {site.project.phone}
         </a>
+        {whatsappHref ? (
+          <a className="people__mail link-line" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+            Per WhatsApp schreiben
+          </a>
+        ) : null}
+        <a className="people__mail link-line" href={`mailto:${site.project.email}`}>
+          {site.project.email}
+        </a>
+      </div>
+      <div className="people__card" data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+        <p className="people__name">{site.sales.name}</p>
+        <p className="people__sub">{site.sales.role} · Angebote</p>
         <a className="people__mail link-line" href={`mailto:${site.sales.email}`}>
           {site.sales.email}
         </a>
       </div>
-      <div className="people__card" data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+      <div className="people__card" data-reveal style={{ "--i": 2 } as React.CSSProperties}>
         <p className="people__name">Zentrale</p>
         <p className="people__sub">Allgemeine Anfragen &amp; Störungen</p>
         <a className="people__phone" href={site.general.phoneHref} data-cursor="Anrufen">

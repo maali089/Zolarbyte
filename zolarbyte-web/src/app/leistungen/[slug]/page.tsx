@@ -103,7 +103,7 @@ export default async function LeistungPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
           <div className="svc-hero__visual" data-reveal="fade">
-            <HouseScene view={s.id} className="sv sv--house" label={`Modell: ${s.title} am Zolarbyte-Hausmodell`} />
+            <HouseScene view={s.id} className="sv sv--house" label={`Modell: ${s.title} am Hausmodell`} />
           </div>
         </div>
       </section>

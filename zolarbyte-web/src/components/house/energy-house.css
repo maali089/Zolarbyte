@@ -206,14 +206,18 @@
 .ehouse[data-focus="verteiler"] :is(.hl-dist, .hl-inv),
 .ehouse[data-focus="wallbox"] .hl-wb,
 .ehouse[data-focus="netz"] .hl-dist,
-.ehouse[data-focus="pruefung"] .hl-dist {
+.ehouse[data-focus="pruefung"] .hl-dist,
+.ehouse[data-focus="speicher"] :is(.hl-bat, .hl-inv),
+.ehouse[data-focus="waermepumpe"] .hl-hp {
   opacity: 1;
 }
 .ehouse[data-focus="pv"] :is(.h-bat, .h-hp, .f-bat, .f-hp, .heat, .f-wb, .h-wb, .h-car),
 .ehouse[data-focus="verteiler"] :is(.h-hp, .f-hp, .heat, .f-wb, .h-car),
 .ehouse[data-focus="wallbox"] :is(.h-hp, .f-hp, .heat, .f-bat),
 .ehouse[data-focus="netz"] :is(.h-hp, .f-hp, .heat, .f-pv, .f-inv),
-.ehouse[data-focus="pruefung"] :is(.h-bat, .h-inv, .f-bat, .f-inv, .f-pv) {
+.ehouse[data-focus="pruefung"] :is(.h-bat, .h-inv, .f-bat, .f-inv, .f-pv),
+.ehouse[data-focus="speicher"] :is(.h-hp, .f-hp, .heat, .f-wb, .h-car),
+.ehouse[data-focus="waermepumpe"] :is(.f-wb, .h-wb, .h-car, .h-bat, .f-bat, .f-grid) {
   opacity: 0.22;
 }
 
@@ -340,6 +344,12 @@
   .ehouse.is-intro .ehouse__tag[data-tag="pv"] {
     animation-delay: 1.3s;
   }
+  .ehouse.is-intro .ehouse__tag[data-tag="speicher"] {
+    animation-delay: 3.3s;
+  }
+  .ehouse.is-intro .ehouse__tag[data-tag="waermepumpe"] {
+    animation-delay: 3.9s;
+  }
   .ehouse.is-intro .ehouse__tag[data-tag="verteiler"] {
     animation-delay: 2.9s;
   }
@@ -430,7 +440,9 @@
 .ehouse[data-focus="pv"] .ehouse__tag[data-tag="pv"][data-inside="true"],
 .ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"][data-inside="true"],
 .ehouse[data-focus="wallbox"] .ehouse__tag[data-tag="wallbox"][data-inside="true"],
-.ehouse[data-focus="netz"] .ehouse__tag[data-tag="netz"][data-inside="true"] {
+.ehouse[data-focus="netz"] .ehouse__tag[data-tag="netz"][data-inside="true"],
+.ehouse[data-focus="speicher"] .ehouse__tag[data-tag="speicher"][data-inside="true"],
+.ehouse[data-focus="waermepumpe"] .ehouse__tag[data-tag="waermepumpe"][data-inside="true"] {
   opacity: 1;
 }
 .ehouse__tag::before {
@@ -480,6 +492,12 @@
 .ehouse__tag[data-tag="wallbox"] {
   --lead: 48px;
 }
+.ehouse__tag[data-tag="speicher"] {
+  --lead: 104px;
+}
+.ehouse[data-focus="speicher"] .ehouse__tag[data-tag="speicher"] {
+  --lead: 120px;
+}
 .ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"] {
   --lead: 120px;
 }
@@ -493,6 +511,12 @@
   }
   .ehouse__tag[data-tag="wallbox"] {
     --lead: 30px;
+  }
+  .ehouse__tag[data-tag="speicher"] {
+    --lead: 66px;
+  }
+  .ehouse[data-focus="speicher"] .ehouse__tag[data-tag="speicher"] {
+    --lead: 70px;
   }
   .ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"] {
     --lead: 70px;

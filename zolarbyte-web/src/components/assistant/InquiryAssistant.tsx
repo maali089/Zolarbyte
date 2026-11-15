@@ -47,7 +47,9 @@ const STEP_LABEL: Record<StepId, string> = {
 };
 
 const TOPIC_HINT: Record<string, string> = {
-  photovoltaik: "Montage & Anschluss",
+  photovoltaik: "Planung, Montage & Anschluss",
+  waermepumpe: "Prüfung & elektrische Einbindung",
+  stromspeicher: "Auslegung & Nachrüstung",
   wallbox: "Laden zu Hause",
   elektroinstallation: "Installation & Wartung",
   stoerung: "Fehlersuche & Reparatur",
@@ -83,6 +85,8 @@ const PV_OPTS: Opt[] = [
 
 const PLACEHOLDERS: Record<string, string> = {
   photovoltaik: "Zum Beispiel: Einfamilienhaus mit Satteldach. Ich möchte wissen, ob der Zählerschrank dafür geeignet ist.",
+  waermepumpe: "Zum Beispiel: Gasheizung von 2004, Heizkörper im ganzen Haus. Passt eine Wärmepumpe?",
+  stromspeicher: "Zum Beispiel: PV-Anlage mit 8 kWp seit 2021. Lässt sich ein Speicher nachrüsten?",
   wallbox: "Zum Beispiel: Stellplatz in der Garage, etwa 15 Meter vom Zählerschrank entfernt. Reicht die Hausinstallation?",
   elektroinstallation: "Zum Beispiel: Zusätzliche Steckdosen im Wohnzimmer und neue Beleuchtung in der Küche.",
   stoerung: "Zum Beispiel: Die Sicherung im Keller löst immer wieder aus, sobald die Waschmaschine läuft.",
@@ -94,7 +98,7 @@ const PLACEHOLDERS: Record<string, string> = {
 function stepsFor(topic: string): StepId[] {
   const s: StepId[] = ["anliegen"];
   if (topic !== "schulung") s.push("objekt");
-  if (topic === "photovoltaik" || topic === "wallbox") s.push("details");
+  if (topic === "photovoltaik" || topic === "wallbox" || topic === "stromspeicher") s.push("details");
   s.push("zeitraum", "ort", "kontakt", "nachricht");
   return s;
 }
@@ -530,7 +534,7 @@ export function InquiryAssistant({
         return values.topic === "photovoltaik" ? (
           <Cards legend="Laden mit eigenem Solarstrom – das planen wir gern zusammen." name={`${uid}-extra`} options={WALLBOX_OPTS} value={values.extra} onChange={(v) => set("extra", v)} onEnter={next} />
         ) : (
-          <Cards legend="Dann denken wir Wallbox und Photovoltaik zusammen." name={`${uid}-extra`} options={PV_OPTS} value={values.extra} onChange={(v) => set("extra", v)} onEnter={next} />
+          <Cards legend={values.topic === "stromspeicher" ? "Ein Speicher ergänzt eine PV-Anlage – vorhanden oder geplant." : "Dann denken wir Wallbox und Photovoltaik zusammen."} name={`${uid}-extra`} options={PV_OPTS} value={values.extra} onChange={(v) => set("extra", v)} onEnter={next} />
         );
       case "zeitraum":
         return (

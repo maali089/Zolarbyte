@@ -5,7 +5,7 @@ import { faqs } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Häufige Fragen",
   description:
-    "Antworten zu Meisterbetrieb, Photovoltaik, elektrischen Prüfungen und Ihrer Anfrage bei Zolarbyte, dem Elektrotechnik-Meisterbetrieb in Karlsfeld bei München.",
+    "Antworten zu Meisterbetrieb, Photovoltaik, elektrischen Prüfungen und Ihrer Anfrage bei ZOLARBYTE ENERGY, dem Elektrotechnik-Meisterbetrieb in Karlsfeld bei München.",
   alternates: { canonical: "/fragen" },
 };
 
