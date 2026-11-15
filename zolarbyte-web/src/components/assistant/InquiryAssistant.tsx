@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import { validateInquiry, type InquiryErrors } from "@/lib/validation";
-import { CheckIcon, TopicIcon } from "./icons";
-import { SunArcProgress } from "./SunArcProgress";
 import {
   HANDOFF_KEY,
   INQUIRY_TOPICS,
@@ -15,7 +13,6 @@ import {
   WALLBOX_EXTRA_OPTIONS,
   ZEITRAUM_OPTIONS,
   topicBySlug,
-  type InquiryTopicSlug,
 } from "./topics";
 import "./assistant.css";
 
@@ -32,11 +29,57 @@ type Values = {
 };
 
 type Status = "idle" | "sending" | "success" | "error" | "not_configured";
+type StepId = "anliegen" | "objekt" | "details" | "zeitraum" | "ort" | "kontakt" | "nachricht";
+type Opt = { value: string; label: string; hint?: string; wide?: boolean };
 
 const EMPTY: Values = { topic: "", objekt: "", zeitraum: "", ort: "", extra: "", name: "", email: "", phone: "", message: "" };
-const STORAGE_KEY = "zb-inquiry-v1";
-const STEP_LABELS = ["Anliegen", "Rahmen", "Kontakt"];
+const STORAGE_KEY = "zb-inquiry-v2";
 const MAX_ORT = 80;
+
+const STEP_LABEL: Record<StepId, string> = {
+  anliegen: "Anliegen",
+  objekt: "Gebäude",
+  details: "Details",
+  zeitraum: "Zeitraum",
+  ort: "Ort",
+  kontakt: "Kontakt",
+  nachricht: "Nachricht",
+};
+
+const TOPIC_HINT: Record<string, string> = {
+  photovoltaik: "Montage & Anschluss",
+  wallbox: "Laden zu Hause",
+  elektroinstallation: "Installation & Wartung",
+  stoerung: "Fehlersuche & Reparatur",
+  pruefung: "E-Check, DGUV V3",
+  schulung: "Inhalte nach Absprache",
+  sonstiges: "Beschreiben Sie es einfach selbst",
+};
+
+const TOPIC_OPTS: Opt[] = INQUIRY_TOPICS.map((t) => ({
+  value: t.slug,
+  label: t.label,
+  hint: TOPIC_HINT[t.slug],
+  wide: t.slug === "sonstiges",
+}));
+
+const OBJEKT_HINT: Record<string, string> = {
+  Einfamilienhaus: "auch Doppel- oder Reihenhaus",
+  Wohnung: "Eigentum oder Miete",
+  Mehrfamilienhaus: "mehrere Parteien",
+  Gewerbe: "Büro, Werkstatt, Halle",
+};
+const OBJEKT_OPTS: Opt[] = OBJEKT_OPTIONS.map((o) => ({ value: o, label: o, hint: OBJEKT_HINT[o] }));
+const ZEITRAUM_OPTS: Opt[] = ZEITRAUM_OPTIONS.map((o) => ({ value: o, label: o }));
+const WALLBOX_OPTS: Opt[] = [
+  { value: WALLBOX_EXTRA_OPTIONS[0], label: "Ja, gleich mitdenken" },
+  { value: WALLBOX_EXTRA_OPTIONS[1], label: "Nein, nur Photovoltaik" },
+];
+const PV_OPTS: Opt[] = [
+  { value: PV_EXTRA_OPTIONS[0], label: "Ja, vorhanden" },
+  { value: PV_EXTRA_OPTIONS[1], label: "Nein" },
+  { value: PV_EXTRA_OPTIONS[2], label: "Ist geplant" },
+];
 
 const PLACEHOLDERS: Record<string, string> = {
   photovoltaik: "Zum Beispiel: Einfamilienhaus mit Satteldach. Ich möchte wissen, ob der Zählerschrank dafür geeignet ist.",
@@ -48,63 +91,111 @@ const PLACEHOLDERS: Record<string, string> = {
   sonstiges: "Schreiben Sie einfach in eigenen Worten, worum es geht.",
 };
 
+function stepsFor(topic: string): StepId[] {
+  const s: StepId[] = ["anliegen"];
+  if (topic !== "schulung") s.push("objekt");
+  if (topic === "photovoltaik" || topic === "wallbox") s.push("details");
+  s.push("zeitraum", "ort", "kontakt", "nachricht");
+  return s;
+}
+
 function scrollIntoView(el: HTMLElement | null) {
   if (!el) return;
+  const top = el.getBoundingClientRect().top;
+  // Nur scrollen, wenn der Anfang des Assistenten nicht im oberen Bildschirmbereich liegt
+  if (top >= 0 && top < window.innerHeight * 0.5) return;
   const lenis = (window as unknown as { __lenis?: { scrollTo: (t: HTMLElement, o?: Record<string, unknown>) => void } }).__lenis;
+  const offset = -(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 72) - 16;
   if (lenis) {
-    lenis.scrollTo(el, { offset: -(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 72) - 16 });
+    lenis.scrollTo(el, { offset });
     return;
   }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  window.scrollTo({ top: window.scrollY + top + offset, behavior: reduce ? "auto" : "smooth" });
 }
 
-type ChipGroupProps = {
+/** Einzelauswahl als Karten (echte Radio-Gruppe). Erneuter Mausklick hebt optionale Auswahl auf. */
+function Cards({
+  legend,
+  name,
+  options,
+  value,
+  onChange,
+  onEnter,
+  optional = true,
+  describedBy,
+}: {
   legend: string;
   name: string;
-  options: string[];
+  options: Opt[];
   value: string;
-  onChange: (value: string) => void;
-  hint?: string;
-};
-
-/** Optionale Einzelauswahl als echte Radio-Gruppe. Erneuter Klick oder „Zurücksetzen“ hebt die Auswahl auf. */
-function ChipGroup({ legend, name, options, value, onChange, hint }: ChipGroupProps) {
+  onChange: (v: string) => void;
+  onEnter?: () => void;
+  optional?: boolean;
+  describedBy?: string;
+}) {
   return (
-    <fieldset className="as-group">
-      <legend>
-        {legend}
-        {value ? (
-          <button type="button" className="as-reset" onClick={() => onChange("")}>
-            Zurücksetzen
-          </button>
-        ) : null}
-      </legend>
-      {hint ? <p className="as-hint">{hint}</p> : null}
-      <div className="as-chips">
-        {options.map((o) => (
-          <label key={o} className="as-chip">
-            <input
-              type="radio"
-              name={name}
-              value={o}
-              checked={value === o}
-              onChange={() => onChange(o)}
-              onClick={(e) => {
-                // Mausklick auf die bereits gewählte Option hebt sie auf (Tastatur: „Zurücksetzen“)
-                if (e.detail > 0 && value === o) onChange("");
-              }}
-            />
-            <span className="as-chip__face">
-              <CheckIcon />
-              {o.includes(": ") ? o.split(": ")[1].replace(/^./, (c) => c.toUpperCase()) : o}
-            </span>
-          </label>
-        ))}
+    <fieldset className="as-q" aria-describedby={describedBy}>
+      <legend className="as-q__legend">{legend}</legend>
+      <div className={`as-opts${options.length > 3 ? " as-opts--grid" : ""}`}>
+        {options.map((o) => {
+          const checked = value === o.value;
+          return (
+            <label key={o.value} className={`as-card${checked ? " is-checked" : ""}${o.wide ? " as-card--wide" : ""}`}>
+              <input
+                type="radio"
+                name={name}
+                value={o.value}
+                checked={checked}
+                onChange={() => onChange(o.value)}
+                onClick={(e) => {
+                  if (optional && e.detail > 0 && checked) onChange("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && onEnter) {
+                    e.preventDefault();
+                    onChange(o.value);
+                    onEnter();
+                  }
+                }}
+              />
+              <span className="as-card__mark" aria-hidden="true" />
+              <span className="as-card__text">
+                <span className="as-card__label">{o.label}</span>
+                {o.hint ? <span className="as-card__hint">{o.hint}</span> : null}
+              </span>
+            </label>
+          );
+        })}
       </div>
     </fieldset>
   );
 }
+
+function Progress({ steps, index, done }: { steps: StepId[]; index: number; done: boolean }) {
+  const p = done ? 1 : Math.min(1, index / steps.length);
+  return (
+    <div className="as-progress" aria-hidden="true">
+      <div className="as-progress__track">
+        <span className="as-progress__fill" style={{ transform: `scaleX(${p})` }} />
+        <span className="as-progress__sun" style={{ left: `${p * 100}%` }} />
+      </div>
+      <ol className="as-progress__steps">
+        {steps.map((s, i) => (
+          <li key={s} className={done || i < index ? "is-done" : i === index ? "is-current" : undefined}>
+            {STEP_LABEL[s]}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+const Arrow = ({ back = false }: { back?: boolean }) => (
+  <svg className="as-btn__arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={back ? "M16 10H5M9 5l-5 5 5 5" : "M4 10h11M11 5l5 5-5 5"} />
+  </svg>
+);
 
 export function InquiryAssistant({
   mailConfigured,
@@ -119,61 +210,57 @@ export function InquiryAssistant({
 }) {
   const reduce = useReducedMotion();
   const uid = useId();
-  const [nav, setNav] = useState({ step: 0, dir: 1 });
-  const { step, dir } = nav;
   const [values, setValues] = useState<Values>(() => ({ ...EMPTY, topic: topicBySlug(initialTopic)?.slug ?? "" }));
+  const steps = useMemo(() => stepsFor(values.topic), [values.topic]);
+  const [nav, setNav] = useState<{ id: StepId; dir: number }>({ id: "anliegen", dir: 1 });
+  const stepId: StepId = steps.includes(nav.id) ? nav.id : "anliegen";
+  const index = steps.indexOf(stepId);
+  const { dir } = nav;
   const [errors, setErrors] = useState<InquiryErrors & { topic?: string }>({});
   const [status, setStatus] = useState<Status>("idle");
-  const [confirming, setConfirming] = useState<string>("");
   const [summary, setSummary] = useState<Values | null>(null);
   const [prefilled, setPrefilled] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
   const startedAt = useRef(0);
   const focusHeading = useRef(false);
-  const [hydrated, setHydrated] = useState(false);
-  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const topic = topicBySlug(values.topic);
   const isStoerung = values.topic === "stoerung";
   const done = status === "success";
 
-  const clearTimer = () => {
-    if (advanceTimer.current) clearTimeout(advanceTimer.current);
-    advanceTimer.current = null;
-  };
-
-  const goTo = useCallback((next: number, opts?: { focus?: boolean }) => {
-    setNav((cur) => ({ step: next, dir: next >= cur.step ? 1 : -1 }));
+  const goToId = useCallback((id: StepId, opts?: { focus?: boolean }) => {
+    setNav((cur) => {
+      const s = stepsFor(values.topic);
+      return { id, dir: s.indexOf(id) >= s.indexOf(cur.id) ? 1 : -1 };
+    });
     focusHeading.current = opts?.focus !== false;
     setErrors({});
-  }, []);
+    requestAnimationFrame(() => scrollIntoView(rootRef.current));
+  }, [values.topic]);
 
-  /** Anliegen von außen (Prop, URL, Event): übernehmen, zu Schritt 2, in den Blick scrollen. */
-  const applyExternalTopic = useCallback(
-    (slug: string, scroll: boolean) => {
-      const t = topicBySlug(slug);
-      if (!t) return;
-      clearTimer();
-      setConfirming("");
-      setStatus((s) => (s === "success" ? "idle" : s));
-      setValues((v) => (v.topic === t.slug ? v : { ...v, topic: t.slug, extra: "" }));
-      goTo(t.slug === "stoerung" ? 0 : 1);
-      if (scroll) requestAnimationFrame(() => scrollIntoView(rootRef.current));
-    },
-    [goTo],
-  );
+  /** Anliegen von außen (Prop, URL, Event): übernehmen und direkt zur nächsten Frage. */
+  const applyExternalTopic = useCallback((slug: string, scroll: boolean) => {
+    const t = topicBySlug(slug);
+    if (!t) return;
+    setStatus((s) => (s === "success" ? "idle" : s));
+    setValues((v) => (v.topic === t.slug ? v : { ...v, topic: t.slug, extra: "" }));
+    setNav({ id: t.slug === "stoerung" ? "anliegen" : stepsFor(t.slug)[1], dir: 1 });
+    focusHeading.current = true;
+    if (scroll) requestAnimationFrame(() => scrollIntoView(rootRef.current));
+  }, []);
 
   // Wiederherstellen (sessionStorage), danach URL-Parameter und Rechner-Übergabe
   useEffect(() => {
     startedAt.current = Date.now();
-    let restoredStep = 0;
+    let restored = false;
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const saved = JSON.parse(raw) as { step?: number; values?: Partial<Values>; t?: number };
+        const saved = JSON.parse(raw) as { step?: string; values?: Partial<Values>; t?: number };
         if (saved.values) {
           /* eslint-disable react-hooks/set-state-in-effect -- einmalige Wiederherstellung aus sessionStorage */
           setValues((v) => ({
@@ -184,8 +271,10 @@ export function InquiryAssistant({
           /* eslint-enable react-hooks/set-state-in-effect */
         }
         if (typeof saved.t === "number" && saved.t < Date.now()) startedAt.current = saved.t;
-        if (typeof saved.step === "number" && saved.step >= 0 && saved.step <= 2) restoredStep = saved.step;
-        setNav({ step: restoredStep, dir: 1 });
+        if (saved.step && saved.step in STEP_LABEL) {
+          setNav({ id: saved.step as StepId, dir: 1 });
+          restored = saved.step !== "anliegen";
+        }
       }
     } catch {
       /* ignorieren */
@@ -199,7 +288,8 @@ export function InquiryAssistant({
         const t = INQUIRY_TOPICS.find((x) => x.service === data.service);
         setValues((v) => ({ ...v, topic: t?.slug ?? v.topic, message: typeof data.message === "string" ? data.message.slice(0, 5000) : v.message }));
         setPrefilled(true);
-        setNav({ step: 2, dir: 1 });
+        setNav({ id: "kontakt", dir: 1 });
+        restored = true;
       }
     } catch {
       /* ignorieren */
@@ -208,8 +298,8 @@ export function InquiryAssistant({
     const param = new URLSearchParams(window.location.search).get("anliegen");
     if (param && topicBySlug(param)) {
       applyExternalTopic(param, true);
-    } else if (initialTopic && topicBySlug(initialTopic) && restoredStep === 0) {
-      setNav((n) => (n.step === 0 && topicBySlug(initialTopic)?.slug !== "stoerung" ? { step: 1, dir: 1 } : n));
+    } else if (initialTopic && topicBySlug(initialTopic) && !restored && initialTopic !== "stoerung") {
+      setNav({ id: stepsFor(initialTopic)[1], dir: 1 });
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- nur beim Mounten
@@ -225,84 +315,82 @@ export function InquiryAssistant({
     return () => window.removeEventListener("zb:inquiry", onEvent);
   }, [applyExternalTopic]);
 
-  // Zustand sichern (nach Erfolg nicht mehr)
+  // Zustand sichern – erst nach einer Nutzereingabe (§ 25 Abs. 2 TDDDG), nach Erfolg löschen
   useEffect(() => {
     if (!hydrated) return;
-    // Erst nach einer Nutzereingabe speichern (§ 25 Abs. 2 TDDDG: nur auf Nutzeraktion)
-    const touched = step > 0 || Object.values(values).some((v) => typeof v === "string" && v.trim() !== "");
+    const touched = stepId !== "anliegen" || Object.values(values).some((v) => v.trim() !== "");
     if (!touched && !done) return;
     try {
       if (done) sessionStorage.removeItem(STORAGE_KEY);
-      else sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ step, values, t: startedAt.current }));
+      else sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ step: stepId, values, t: startedAt.current }));
     } catch {
       /* ignorieren */
     }
-  }, [hydrated, step, values, done]);
-
-  useEffect(() => clearTimer, []);
+  }, [hydrated, stepId, values, done]);
 
   const set = <K extends keyof Values>(key: K, value: Values[K]) => {
     setValues((v) => ({ ...v, [key]: value }));
     setErrors((er) => (er[key as keyof InquiryErrors] ? { ...er, [key]: undefined } : er));
   };
 
-  function selectTopic(slug: InquiryTopicSlug) {
-    setValues((v) => (v.topic === slug ? v : { ...v, topic: slug, extra: "" }));
-    setErrors({});
-  }
-
-  function onTopicClick(slug: InquiryTopicSlug) {
-    // Kein automatischer Schrittwechsel (WCAG 3.2.2) – nur kurze Bestätigung, weiter über „Weiter“
-    selectTopic(slug);
-    clearTimer();
-    setConfirming(slug);
-    advanceTimer.current = setTimeout(() => setConfirming(""), reduce ? 120 : 600);
-  }
+  const payload = () => ({
+    name: values.name,
+    email: values.email,
+    phone: values.phone,
+    message: values.message,
+    service: topic?.service ?? "",
+    topic: values.topic,
+    objekt: values.objekt,
+    zeitraum: values.zeitraum,
+    ort: values.ort,
+    extra: values.extra,
+  });
 
   function next() {
-    if (step === 0) {
-      if (!values.topic) {
-        setErrors({ topic: "Bitte wählen Sie ein Anliegen aus." });
-        return;
-      }
-      clearTimer();
-      setConfirming("");
-      goTo(1);
-    } else if (step === 1) {
-      if (values.ort.length > MAX_ORT) {
-        setErrors({ ort: "Bitte kürzen Sie die Angabe (max. 80 Zeichen)." });
-        return;
-      }
-      goTo(2);
+    if (stepId === "anliegen" && !values.topic) {
+      setErrors({ topic: "Bitte wählen Sie ein Anliegen aus." });
+      return;
     }
+    if (stepId === "ort" && values.ort.length > MAX_ORT) {
+      setErrors({ ort: "Bitte kürzen Sie die Angabe (max. 80 Zeichen)." });
+      return;
+    }
+    if (stepId === "kontakt") {
+      const found = validateInquiry(payload());
+      const own = Object.fromEntries(Object.entries(found).filter(([k]) => k === "name" || k === "email" || k === "phone"));
+      if (Object.keys(own).length) {
+        setErrors(own);
+        formRef.current?.querySelector<HTMLElement>(`[name="${Object.keys(own)[0]}"]`)?.focus();
+        return;
+      }
+    }
+    const nextId = stepsFor(values.topic)[index + 1];
+    if (nextId) goToId(nextId);
+  }
+
+  function back() {
+    const prev = steps[index - 1];
+    if (prev) goToId(prev);
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (step !== 2) return;
-    const payload = {
-      name: values.name,
-      email: values.email,
-      phone: values.phone,
-      message: values.message,
-      service: topic?.service ?? "",
-      topic: values.topic,
-      objekt: values.objekt,
-      zeitraum: values.zeitraum,
-      ort: values.ort,
-      extra: values.extra,
-    };
-    const found = validateInquiry(payload);
+    if (stepId !== "nachricht") {
+      next();
+      return;
+    }
+    const data = payload();
+    const found = validateInquiry(data);
     setErrors(found);
     const first = Object.keys(found)[0];
     if (first) {
-      if (first === "service" || first === "topic") {
-        goTo(0);
-      } else if (first === "ort" || first === "objekt" || first === "zeitraum" || first === "extra") {
-        goTo(1);
-      } else {
-        formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
-      }
+      if (first === "service" || first === "topic") goToId("anliegen");
+      else if (first === "name" || first === "email" || first === "phone") goToId("kontakt");
+      else if (first === "ort") goToId("ort");
+      else if (first === "objekt") goToId("objekt");
+      else if (first === "zeitraum") goToId("zeitraum");
+      else if (first === "extra") goToId("details");
+      else formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
 
@@ -313,14 +401,14 @@ export function InquiryAssistant({
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload, website, t: startedAt.current }),
+        body: JSON.stringify({ ...data, website, t: startedAt.current }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; errors?: InquiryErrors };
-      if (res.ok && data.ok) result = "success";
-      else if (data.error === "validation" && data.errors) {
-        setErrors(data.errors);
+      const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; errors?: InquiryErrors };
+      if (res.ok && body.ok) result = "success";
+      else if (body.error === "validation" && body.errors) {
+        setErrors(body.errors);
         result = "idle";
-      } else if (data.error === "not_configured") result = "not_configured";
+      } else if (body.error === "not_configured") result = "not_configured";
     } catch {
       result = "error";
     }
@@ -338,7 +426,7 @@ export function InquiryAssistant({
   function restart() {
     setSummary(null);
     setStatus("idle");
-    setNav({ step: 0, dir: -1 });
+    setNav({ id: "anliegen", dir: -1 });
     startedAt.current = Date.now();
     focusHeading.current = true;
   }
@@ -350,28 +438,6 @@ export function InquiryAssistant({
     }
   };
 
-  const slide = reduce ? 0 : 28;
-  const motionProps = {
-    initial: { opacity: 0, x: dir * slide },
-    animate: { opacity: 1, x: 0, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const } },
-    exit: { opacity: 0, x: -dir * (slide / 2), transition: { duration: 0.12, ease: "easeIn" as const } },
-  };
-
-  const phoneCall = (
-    <div className="as-call">
-      <p>
-        <strong>Bei Störungen ist ein Anruf am schnellsten.</strong>
-        <span>Rufen Sie uns direkt an – das Formular bleibt als Alternative.</span>
-      </p>
-      <a className="as-btn as-btn--call" href={site.general.phoneHref}>
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-          <path d="M5 4h3.5l1.7 4.3-2.2 1.4a11 11 0 005 5l1.4-2.2L19 14.2V18a2 2 0 01-2 2A13 13 0 013 6a2 2 0 012-2z" />
-        </svg>
-        {site.general.phone}
-      </a>
-    </div>
-  );
-
   const err = (key: string, id: string) =>
     (errors as Record<string, string | undefined>)[key] ? (
       <p id={id} className="as-error">
@@ -379,17 +445,224 @@ export function InquiryAssistant({
       </p>
     ) : null;
 
-  const wallboxExtra = values.topic === "photovoltaik";
-  const pvExtra = values.topic === "wallbox";
+  const field = (
+    key: "name" | "email" | "phone",
+    label: React.ReactNode,
+    props: React.InputHTMLAttributes<HTMLInputElement>,
+  ) => (
+    <div className="as-field">
+      <label htmlFor={`${uid}-${key}`}>{label}</label>
+      <input
+        id={`${uid}-${key}`}
+        name={key}
+        value={values[key]}
+        onChange={(e) => set(key, e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            next();
+          }
+        }}
+        aria-invalid={errors[key] ? true : undefined}
+        aria-describedby={errors[key] ? `${uid}-${key}-error` : undefined}
+        {...props}
+      />
+      {err(key, `${uid}-${key}-error`)}
+    </div>
+  );
+
+  const optionalChosen: Partial<Record<StepId, string>> = {
+    objekt: values.objekt,
+    details: values.extra,
+    zeitraum: values.zeitraum,
+    ort: values.ort.trim(),
+  };
+  const isOptional = stepId in optionalChosen;
+  const nextLabel = isOptional && !optionalChosen[stepId] ? "Ohne Angabe weiter" : "Weiter";
+
+  const TITLE: Record<StepId, string> = {
+    anliegen: "Worum geht es?",
+    objekt: "Um welches Gebäude geht es?",
+    details: values.topic === "photovoltaik" ? "Wallbox gleich mitplanen?" : "Gibt es schon eine PV-Anlage?",
+    zeitraum: "Wann soll es losgehen?",
+    ort: "Wo ist das Gebäude?",
+    kontakt: "Wie erreichen wir Sie?",
+    nachricht: "Noch etwas, das wir wissen sollten?",
+  };
+
+  const body = (() => {
+    switch (stepId) {
+      case "anliegen":
+        return (
+          <>
+            <Cards
+              legend="Wählen Sie ein Anliegen."
+              name={`${uid}-topic`}
+              options={TOPIC_OPTS}
+              value={values.topic}
+              optional={false}
+              onChange={(v) => {
+                setValues((cur) => (cur.topic === v ? cur : { ...cur, topic: v, extra: "" }));
+                setErrors({});
+              }}
+              onEnter={() => requestAnimationFrame(() => next())}
+              describedBy={errors.topic ? `${uid}-topic-error` : undefined}
+            />
+            {err("topic", `${uid}-topic-error`)}
+            {isStoerung ? (
+              <div className="as-call">
+                <p>
+                  <strong>Bei Störungen ist ein Anruf am schnellsten.</strong>
+                  <span>Rufen Sie uns direkt an – online anfragen geht trotzdem.</span>
+                </p>
+                <a className="as-btn as-btn--call" href={site.general.phoneHref}>
+                  {site.general.phone}
+                </a>
+              </div>
+            ) : null}
+          </>
+        );
+      case "objekt":
+        return (
+          <Cards legend="Freiwillig – hilft uns bei der Einschätzung." name={`${uid}-objekt`} options={OBJEKT_OPTS} value={values.objekt} onChange={(v) => set("objekt", v)} onEnter={next} />
+        );
+      case "details":
+        return values.topic === "photovoltaik" ? (
+          <Cards legend="Laden mit eigenem Solarstrom – das planen wir gern zusammen." name={`${uid}-extra`} options={WALLBOX_OPTS} value={values.extra} onChange={(v) => set("extra", v)} onEnter={next} />
+        ) : (
+          <Cards legend="Dann denken wir Wallbox und Photovoltaik zusammen." name={`${uid}-extra`} options={PV_OPTS} value={values.extra} onChange={(v) => set("extra", v)} onEnter={next} />
+        );
+      case "zeitraum":
+        return (
+          <Cards legend="Grobe Richtung genügt." name={`${uid}-zeitraum`} options={ZEITRAUM_OPTS} value={values.zeitraum} onChange={(v) => set("zeitraum", v)} onEnter={next} />
+        );
+      case "ort":
+        return (
+          <div className="as-field as-field--solo">
+            <label htmlFor={`${uid}-ort`}>PLZ oder Ort</label>
+            <input
+              id={`${uid}-ort`}
+              name="ort"
+              type="text"
+              autoComplete="postal-code"
+              maxLength={MAX_ORT}
+              value={values.ort}
+              onChange={(e) => set("ort", e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  next();
+                }
+              }}
+              aria-invalid={errors.ort ? true : undefined}
+              aria-describedby={`${uid}-ort-hint${errors.ort ? ` ${uid}-ort-error` : ""}`}
+              placeholder="zum Beispiel 85757 Karlsfeld"
+            />
+            <p id={`${uid}-ort-hint`} className="as-hint">
+              Freiwillig. Wir sind in Karlsfeld, im Landkreis Dachau und in München unterwegs.
+            </p>
+            {err("ort", `${uid}-ort-error`)}
+          </div>
+        );
+      case "kontakt":
+        return (
+          <>
+            {prefilled ? (
+              <p className="as-notice" role="status">
+                Ihre Angaben aus dem Förder-Check sind in der Nachricht hinterlegt. Sie können sie im nächsten Schritt ändern.
+              </p>
+            ) : null}
+            <div className="as-fields">
+              {field("name", "Name *", { type: "text", autoComplete: "name", required: true, maxLength: 200 })}
+              {field("email", "E-Mail *", { type: "email", autoComplete: "email", inputMode: "email", required: true, maxLength: 200 })}
+              {field(
+                "phone",
+                <>
+                  Telefon <span className="as-opt">(optional, für den Rückruf)</span>
+                </>,
+                { type: "tel", autoComplete: "tel", inputMode: "tel", maxLength: 50 },
+              )}
+            </div>
+          </>
+        );
+      case "nachricht":
+        return (
+          <>
+            <div className="as-field">
+              <label htmlFor={`${uid}-message`}>
+                Nachricht <span className="as-opt">(optional)</span>
+              </label>
+              <textarea
+                id={`${uid}-message`}
+                name="message"
+                rows={5}
+                maxLength={5000}
+                value={values.message}
+                onChange={(e) => set("message", e.target.value)}
+                placeholder={PLACEHOLDERS[values.topic] ?? PLACEHOLDERS.sonstiges}
+                aria-invalid={errors.message ? true : undefined}
+                aria-describedby={errors.message ? `${uid}-message-error` : undefined}
+              />
+              {err("message", `${uid}-message-error`)}
+            </div>
+
+            <dl className="as-recap" aria-label="Ihre Angaben">
+              {[
+                ["Anliegen", topic?.label ?? ""],
+                ["Gebäude", values.objekt],
+                ["Details", values.extra ? values.extra.split(": ")[1].replace(/^./, (c) => c.toUpperCase()) : ""],
+                ["Zeitraum", values.zeitraum],
+                ["Ort", values.ort.trim()],
+                ["Kontakt", [values.name.trim(), values.email.trim(), values.phone.trim()].filter(Boolean).join(" · ")],
+              ]
+                .filter(([, v]) => v)
+                .map(([k, v]) => (
+                  <div key={k}>
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </div>
+                ))}
+            </dl>
+
+            <div className="as-hp" aria-hidden="true">
+              <label htmlFor={`${uid}-website`}>Website</label>
+              <input id={`${uid}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <p className="as-legal">
+              Ihre Angaben verwenden wir ausschließlich zur Bearbeitung Ihrer Anfrage. Mehr dazu in der{" "}
+              <Link href="/datenschutz">Datenschutzerklärung</Link>.
+            </p>
+
+            <div ref={statusRef} tabIndex={-1} className="as-status" aria-live="polite">
+              {status === "not_configured" ? (
+                <p className="as-banner as-banner--error">
+                  Ihre Anfrage wurde nicht gesendet, weil der Formularversand noch nicht eingerichtet ist. Bitte schreiben Sie
+                  uns direkt an <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
+                </p>
+              ) : null}
+              {status === "error" ? (
+                <p className="as-banner as-banner--error">
+                  Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie uns an{" "}
+                  <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
+                </p>
+              ) : null}
+            </div>
+          </>
+        );
+    }
+  })();
 
   const live = done
     ? "Ihre Anfrage wurde gesendet."
     : status === "sending"
       ? "Anfrage wird gesendet."
-      : `Schritt ${step + 1} von 3: ${STEP_LABELS[step]}`;
+      : `Schritt ${index + 1} von ${steps.length}: ${STEP_LABEL[stepId]}`;
+
+  const slide = reduce ? 0 : 40;
 
   return (
-    <div ref={rootRef} className={`zb-assist zb-assist--${tone}`} data-step={step}>
+    <div ref={rootRef} className={`zb-assist zb-assist--${tone}`} data-step={stepId}>
       {!mailConfigured && previewNote ? (
         <p className="as-notice" role="note">
           <strong>Vorschau:</strong> Der Formularversand ist noch nicht eingerichtet. Anfragen über dieses Formular werden
@@ -397,280 +670,92 @@ export function InquiryAssistant({
         </p>
       ) : null}
 
-      {!done ? <SunArcProgress labels={STEP_LABELS} current={step} onGo={(i) => goTo(i)} /> : null}
-      <p className="as-count" role="status" aria-live="polite">
-        {done ? null : <span aria-hidden="true">Schritt {step + 1} von 3</span>}
-        <span className="visually-hidden">{live}</span>
+      <Progress steps={steps} index={index} done={done} />
+      <p className="visually-hidden" role="status" aria-live="polite">
+        {live}
       </p>
 
       <form ref={formRef} noValidate onSubmit={onSubmit} className="as-form" aria-label="Anfrage-Assistent">
         <div className="as-stage">
-          <AnimatePresence mode="wait" initial={false}>
-            {done && summary ? (
-              <motion.div key="done" className="as-step" {...motionProps}>
-                <h3 className="as-title" tabIndex={-1} ref={headingRef}>
-                  Danke, Ihre Anfrage ist bei uns.
-                </h3>
-                <p className="as-lead">
-                  Wir melden uns persönlich bei Ihnen, per E-Mail
-                  {summary.phone.trim() ? " oder telefonisch" : ""}. Falls es dringend ist, erreichen Sie uns auch direkt
-                  unter <a href={site.general.phoneHref}>{site.general.phone}</a>.
-                </p>
-                <dl className="as-summary">
-                  <div>
-                    <dt>Anliegen</dt>
-                    <dd>{topicBySlug(summary.topic)?.service}</dd>
-                  </div>
-                  {[
-                    ["Objekt", summary.objekt],
-                    ["Zeitraum", summary.zeitraum],
-                    ["PLZ / Ort", summary.ort.trim()],
-                    ["Zusatzangabe", summary.extra],
-                  ]
-                    .filter(([, v]) => v)
-                    .map(([k, v]) => (
-                      <div key={k}>
-                        <dt>{k}</dt>
-                        <dd>{v}</dd>
-                      </div>
-                    ))}
-                  <div>
-                    <dt>Name</dt>
-                    <dd>{summary.name.trim()}</dd>
-                  </div>
-                  <div>
-                    <dt>E-Mail</dt>
-                    <dd>{summary.email.trim()}</dd>
-                  </div>
-                  {summary.phone.trim() ? (
-                    <div>
-                      <dt>Telefon</dt>
-                      <dd>{summary.phone.trim()}</dd>
-                    </div>
-                  ) : null}
-                  {summary.message.trim() ? (
-                    <div>
-                      <dt>Nachricht</dt>
-                      <dd className="as-summary__msg">{summary.message.trim()}</dd>
-                    </div>
-                  ) : null}
-                </dl>
-                <div className="as-nav">
-                  <button type="button" className="as-btn as-btn--ghost" onClick={restart}>
-                    Weitere Anfrage stellen
-                  </button>
-                </div>
-              </motion.div>
-            ) : step === 0 ? (
-              <motion.div key="s0" className="as-step" {...motionProps}>
-                <h3 className="as-title" tabIndex={-1} ref={headingRef}>
-                  Worum geht es?
-                </h3>
-                <fieldset className="as-topics" aria-describedby={errors.topic ? `${uid}-topic-error` : undefined}>
-                  <legend className="visually-hidden">Anliegen auswählen</legend>
-                  <div className="as-topics__grid">
-                    {INQUIRY_TOPICS.map((t) => (
-                      <label key={t.slug} className={`as-topic${confirming === t.slug ? " is-confirming" : ""}`}>
-                        <input
-                          type="radio"
-                          name={`${uid}-topic`}
-                          value={t.slug}
-                          checked={values.topic === t.slug}
-                          onChange={() => selectTopic(t.slug)}
-                          onClick={() => onTopicClick(t.slug)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              selectTopic(t.slug);
-                              if (t.slug !== "stoerung") goTo(1);
-                            }
-                          }}
-                        />
-                        <span className="as-topic__face">
-                          <TopicIcon slug={t.slug} />
-                          <span className="as-topic__label">{t.label}</span>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-                {err("topic", `${uid}-topic-error`)}
-                {isStoerung ? phoneCall : null}
-                <div className="as-nav">
-                  <button type="button" className="as-btn as-btn--primary" onClick={next}>
-                    {isStoerung ? "Trotzdem online anfragen" : "Weiter"}
-                  </button>
-                </div>
-              </motion.div>
-            ) : step === 1 ? (
-              <motion.div key="s1" className="as-step" {...motionProps}>
-                <h3 className="as-title" tabIndex={-1} ref={headingRef}>
-                  Ein paar Eckdaten
-                </h3>
-                <p className="as-lead">
-                  Zu <strong>{topic?.label}</strong>. Alles hier ist freiwillig, ein Klick genügt.
-                </p>
-                {isStoerung ? <div className="as-call as-call--compact"><a href={site.general.phoneHref}>Direkt anrufen: {site.general.phone}</a></div> : null}
-                {values.topic !== "schulung" ? (
-                  <ChipGroup legend="Objekt" name={`${uid}-objekt`} options={OBJEKT_OPTIONS} value={values.objekt} onChange={(v) => set("objekt", v)} />
-                ) : null}
-                <ChipGroup legend="Zeitraum" name={`${uid}-zeitraum`} options={ZEITRAUM_OPTIONS} value={values.zeitraum} onChange={(v) => set("zeitraum", v)} />
-                {wallboxExtra ? (
-                  <ChipGroup legend="Wallbox mitdenken?" name={`${uid}-extra`} options={WALLBOX_EXTRA_OPTIONS} value={values.extra} onChange={(v) => set("extra", v)} />
-                ) : null}
-                {pvExtra ? (
-                  <ChipGroup legend="PV-Anlage vorhanden?" name={`${uid}-extra`} options={PV_EXTRA_OPTIONS} value={values.extra} onChange={(v) => set("extra", v)} />
-                ) : null}
-                <div className="as-field">
-                  <label htmlFor={`${uid}-ort`}>PLZ oder Ort</label>
-                  <input
-                    id={`${uid}-ort`}
-                    name="ort"
-                    type="text"
-                    autoComplete="postal-code"
-                    maxLength={MAX_ORT}
-                    value={values.ort}
-                    onChange={(e) => set("ort", e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        next();
-                      }
-                    }}
-                    aria-invalid={errors.ort ? true : undefined}
-                    aria-describedby={errors.ort ? `${uid}-ort-error` : undefined}
-                    placeholder="zum Beispiel 85757"
-                  />
-                  {err("ort", `${uid}-ort-error`)}
-                </div>
-                <div className="as-nav">
-                  <button type="button" className="as-btn as-btn--ghost" onClick={() => goTo(0)}>
-                    Zurück
-                  </button>
-                  <button type="button" className="as-btn as-btn--text" onClick={() => goTo(2)}>
-                    Überspringen
-                  </button>
-                  <button type="button" className="as-btn as-btn--primary" onClick={next}>
-                    Weiter
-                  </button>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div key="s2" className="as-step" {...motionProps}>
-                <h3 className="as-title" tabIndex={-1} ref={headingRef}>
-                  Wie erreichen wir Sie?
-                </h3>
-                <p className="as-lead">Pflichtfelder sind mit * gekennzeichnet.</p>
-                {prefilled ? <p className="as-notice" role="status">Ihre Angaben aus dem Rechner wurden in die Nachricht übernommen. Sie können sie vor dem Absenden ändern.</p> : null}
-                {isStoerung ? <div className="as-call as-call--compact"><a href={site.general.phoneHref}>Bei Störungen schneller: {site.general.phone}</a></div> : null}
-
-                <div className="as-fields">
-                  <div className="as-field">
-                    <label htmlFor={`${uid}-name`}>Name *</label>
-                    <input
-                      id={`${uid}-name`}
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      required
-                      maxLength={200}
-                      value={values.name}
-                      onChange={(e) => set("name", e.target.value)}
-                      aria-invalid={errors.name ? true : undefined}
-                      aria-describedby={errors.name ? `${uid}-name-error` : undefined}
-                    />
-                    {err("name", `${uid}-name-error`)}
-                  </div>
-                  <div className="as-field">
-                    <label htmlFor={`${uid}-email`}>E-Mail *</label>
-                    <input
-                      id={`${uid}-email`}
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      inputMode="email"
-                      required
-                      maxLength={200}
-                      value={values.email}
-                      onChange={(e) => set("email", e.target.value)}
-                      aria-invalid={errors.email ? true : undefined}
-                      aria-describedby={errors.email ? `${uid}-email-error` : undefined}
-                    />
-                    {err("email", `${uid}-email-error`)}
-                  </div>
-                  <div className="as-field">
-                    <label htmlFor={`${uid}-phone`}>
-                      Telefon <span className="as-opt">(optional, für den Rückruf)</span>
-                    </label>
-                    <input
-                      id={`${uid}-phone`}
-                      name="phone"
-                      type="tel"
-                      autoComplete="tel"
-                      inputMode="tel"
-                      maxLength={50}
-                      value={values.phone}
-                      onChange={(e) => set("phone", e.target.value)}
-                      aria-invalid={errors.phone ? true : undefined}
-                      aria-describedby={errors.phone ? `${uid}-phone-error` : undefined}
-                    />
-                    {err("phone", `${uid}-phone-error`)}
-                  </div>
-                  <div className="as-field as-field--wide">
-                    <label htmlFor={`${uid}-message`}>
-                      Nachricht <span className="as-opt">(optional)</span>
-                    </label>
-                    <textarea
-                      id={`${uid}-message`}
-                      name="message"
-                      rows={5}
-                      maxLength={5000}
-                      value={values.message}
-                      onChange={(e) => set("message", e.target.value)}
-                      placeholder={PLACEHOLDERS[values.topic] ?? PLACEHOLDERS.sonstiges}
-                      aria-invalid={errors.message ? true : undefined}
-                      aria-describedby={errors.message ? `${uid}-message-error` : undefined}
-                    />
-                    {err("message", `${uid}-message-error`)}
-                  </div>
-                </div>
-
-                <div className="as-hp" aria-hidden="true">
-                  <label htmlFor={`${uid}-website`}>Website</label>
-                  <input id={`${uid}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
-                </div>
-
-                <p className="as-legal">
-                  Ihre Angaben verwenden wir ausschließlich zur Bearbeitung Ihrer Anfrage. Mehr dazu in der{" "}
-                  <Link href="/datenschutz">Datenschutzerklärung</Link>.
-                </p>
-
-                <div ref={statusRef} tabIndex={-1} className="as-status" aria-live="polite">
-                  {status === "not_configured" ? (
-                    <p className="as-banner as-banner--error">
-                      Ihre Anfrage wurde nicht gesendet, weil der Formularversand noch nicht eingerichtet ist. Bitte
-                      schreiben Sie uns direkt an <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
-                    </p>
-                  ) : null}
-                  {status === "error" ? (
-                    <p className="as-banner as-banner--error">
-                      Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie
-                      uns an <a href={`mailto:${site.general.email}`}>{site.general.email}</a>.
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="as-nav">
-                  <button type="button" className="as-btn as-btn--ghost" onClick={() => goTo(1)}>
-                    Zurück
-                  </button>
-                  <button type="submit" className="as-btn as-btn--primary" disabled={status === "sending"}>
-                    {status === "sending" ? "Wird gesendet …" : "Anfrage senden"}
-                  </button>
-                </div>
-              </motion.div>
-            )}
+          <AnimatePresence mode="wait" initial={false} custom={dir}>
+            <motion.div
+              key={done ? "done" : stepId}
+              className="as-step"
+              initial={{ opacity: 0, x: dir * slide }}
+              animate={{ opacity: 1, x: 0, transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] } }}
+              exit={{ opacity: 0, x: -dir * slide, transition: { duration: 0.14, ease: "easeIn" } }}
+            >
+              {done && summary ? (
+                <>
+                  <h3 className="as-title" tabIndex={-1} ref={headingRef}>
+                    Danke, Ihre Anfrage ist bei uns.
+                  </h3>
+                  <p className="as-lead">
+                    Wir melden uns persönlich bei Ihnen, per E-Mail
+                    {summary.phone.trim() ? " oder telefonisch" : ""}. Falls es dringend ist, erreichen Sie uns direkt
+                    unter <a href={site.general.phoneHref}>{site.general.phone}</a>.
+                  </p>
+                  <dl className="as-recap">
+                    {[
+                      ["Anliegen", topicBySlug(summary.topic)?.service ?? ""],
+                      ["Gebäude", summary.objekt],
+                      ["Zeitraum", summary.zeitraum],
+                      ["Ort", summary.ort.trim()],
+                      ["Kontakt", [summary.name.trim(), summary.email.trim(), summary.phone.trim()].filter(Boolean).join(" · ")],
+                    ]
+                      .filter(([, v]) => v)
+                      .map(([k, v]) => (
+                        <div key={k}>
+                          <dt>{k}</dt>
+                          <dd>{v}</dd>
+                        </div>
+                      ))}
+                  </dl>
+                </>
+              ) : (
+                <>
+                  <p className="as-count" aria-hidden="true">
+                    Schritt {index + 1} von {steps.length}
+                    {topic && stepId !== "anliegen" ? <span> · {topic.label}</span> : null}
+                  </p>
+                  <h3 className="as-title" tabIndex={-1} ref={headingRef}>
+                    {TITLE[stepId]}
+                  </h3>
+                  <div className="as-body">{body}</div>
+                </>
+              )}
+            </motion.div>
           </AnimatePresence>
+        </div>
+
+        <div className="as-nav">
+          {done ? (
+            <button type="button" className="as-btn as-btn--ghost" onClick={restart}>
+              Weitere Anfrage stellen
+            </button>
+          ) : (
+            <>
+              {index > 0 ? (
+                <button type="button" className="as-back" onClick={back}>
+                  <Arrow back />
+                  Zurück
+                </button>
+              ) : (
+                <span />
+              )}
+              {stepId === "nachricht" ? (
+                <button key="submit" type="submit" className="as-btn as-btn--primary" disabled={status === "sending"}>
+                  {status === "sending" ? "Wird gesendet …" : "Anfrage senden"}
+                  {status === "sending" ? null : <Arrow />}
+                </button>
+              ) : (
+                <button key="next" type="button" className="as-btn as-btn--primary" onClick={next}>
+                  {stepId === "anliegen" && isStoerung ? "Online anfragen" : nextLabel}
+                  <Arrow />
+                </button>
+              )}
+            </>
+          )}
         </div>
       </form>
     </div>

@@ -16,6 +16,15 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  /* Weicher Rand: in Nahansichten schneidet die Kamera das Haus nicht hart ab */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 93%, transparent),
+    linear-gradient(transparent, #000 9%, #000 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 93%, transparent),
+    linear-gradient(transparent, #000 9%, #000 93%, transparent);
+  mask-composite: intersect;
 }
 
 /* Umgebung: dunkler Bodenschein nur am Abend, tagsüber steht das Haus auf Kalk */
@@ -196,13 +205,15 @@
 .ehouse[data-focus="pv"] :is(.hl-pv, .hl-inv),
 .ehouse[data-focus="verteiler"] :is(.hl-dist, .hl-inv),
 .ehouse[data-focus="wallbox"] .hl-wb,
-.ehouse[data-focus="netz"] .hl-dist {
+.ehouse[data-focus="netz"] .hl-dist,
+.ehouse[data-focus="pruefung"] .hl-dist {
   opacity: 1;
 }
 .ehouse[data-focus="pv"] :is(.h-bat, .h-hp, .f-bat, .f-hp, .heat, .f-wb, .h-wb, .h-car),
 .ehouse[data-focus="verteiler"] :is(.h-hp, .f-hp, .heat, .f-wb, .h-car),
 .ehouse[data-focus="wallbox"] :is(.h-hp, .f-hp, .heat, .f-bat),
-.ehouse[data-focus="netz"] :is(.h-hp, .f-hp, .heat, .f-pv, .f-inv) {
+.ehouse[data-focus="netz"] :is(.h-hp, .f-hp, .heat, .f-pv, .f-inv),
+.ehouse[data-focus="pruefung"] :is(.h-bat, .h-inv, .f-bat, .f-inv, .f-pv) {
   opacity: 0.22;
 }
 

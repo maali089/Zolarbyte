@@ -27,7 +27,7 @@ export const INQUIRY_TOPICS: InquiryTopic[] = [
   { slug: "wallbox", label: "Wallbox & E-Auto", service: title("e-mobilitaet") },
   { slug: "elektroinstallation", label: "Elektroinstallation", service: title("elektroinstallation") },
   { slug: "stoerung", label: "Störung / Reparatur", service: title("kundendienst") },
-  { slug: "pruefung", label: "Prüfung / E-Check", service: title("pruefung") },
+  { slug: "pruefung", label: "Prüfung / E‑Check", service: title("pruefung") },
   { slug: "schulung", label: "Schulung", service: title("schulungen") },
   { slug: "sonstiges", label: "Etwas anderes", service: "Sonstiges / noch unklar" },
 ];

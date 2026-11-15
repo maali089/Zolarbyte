@@ -116,7 +116,7 @@ export default function DatenschutzPage() {
           <h2>6. Zwischenspeicherung im Browser (Session Storage)</h2>
           <p>
             Der Anfrage-Assistent legt in Ihrem Browser einen Eintrag im Sitzungsspeicher (sessionStorage, Schlüssel
-            „zb-inquiry-v1“) an. Er enthält den aktuellen Schritt, Ihre bisherigen Eingaben und den Zeitpunkt, zu dem
+            „zb-inquiry-v2“) an. Er enthält den aktuellen Schritt, Ihre bisherigen Eingaben und den Zeitpunkt, zu dem
             der Assistent geöffnet wurde. So gehen Ihre Eingaben nicht verloren, wenn Sie die Seite neu laden oder
             zwischen unseren Seiten wechseln. Der Eintrag bleibt auf Ihrem Gerät und wird erst übermittelt, wenn Sie die
             Anfrage selbst absenden. Er wird nach erfolgreichem Absenden gelöscht und spätestens beim Schließen des
@@ -141,7 +141,7 @@ export default function DatenschutzPage() {
 
           <h2>8. Darstellung und Animationen</h2>
           <p>
-            Animationen, weiches Scrollen, die 3D-Darstellung und der Hintergrund werden direkt in Ihrem Browser
+            Animationen, weiches Scrollen, die Hausdarstellung und der Hintergrund werden direkt in Ihrem Browser
             berechnet. Dafür werden keine Daten an Dritte übertragen und keine externen Inhalte nachgeladen.
           </p>
 

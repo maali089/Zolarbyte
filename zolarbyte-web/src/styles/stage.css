@@ -61,8 +61,8 @@
 /* Desktop: Haus rechts neben dem Text, unter dem Sonnenbogen */
 @media (min-width: 1024px) {
   .stage__house {
-    left: 36%;
-    right: 2vw;
+    left: 42%;
+    right: 1vw;
     top: calc(var(--header-h) + 12vh);
     bottom: 4vh;
   }

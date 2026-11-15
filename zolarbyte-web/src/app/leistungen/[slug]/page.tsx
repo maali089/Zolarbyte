@@ -6,6 +6,7 @@ import { ClosingInquiry, FaqList, JsonLd } from "@/components/sections/Blocks";
 import { FoerderTeaser } from "@/components/sections/FoerderTeaser";
 import { ProcessArc } from "@/components/sections/ProcessArc";
 import { ServiceVisual } from "@/components/sections/ServiceVisual";
+import { HouseScene } from "@/components/house/HouseScene";
 import { StartButton } from "@/components/sections/StartButton";
 import { faqsFor, serviceById, services } from "@/lib/content";
 import { site } from "@/lib/site";
@@ -102,12 +103,7 @@ export default async function LeistungPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
           <div className="svc-hero__visual" data-reveal="fade">
-            <ServiceVisual
-              id={s.id}
-              priority
-              sizes="(min-width: 1024px) 55vw, 100vw"
-              alt={`Modell: ${s.title} am Zolarbyte-Hausmodell`}
-            />
+            <HouseScene view={s.id} className="sv sv--house" label={`Modell: ${s.title} am Zolarbyte-Hausmodell`} />
           </div>
         </div>
       </section>

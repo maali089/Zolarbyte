@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
-import { ServiceVisual } from "@/components/sections/ServiceVisual";
+import { HouseScene } from "@/components/house/HouseScene";
 import { startInquiry } from "@/components/sections/TopicChips";
 import type { Service } from "@/lib/content";
 
 /**
  * Leistungen als aufklappbares Register. Eine Zeile ist offen (Akkordeon); geöffnet zeigt sie
  * Kurzbeschreibung, Schwerpunkte, Rendering (mobil) und die Wege „Zur Leistung“ / „Anfragen“.
- * Desktop: rechts das Rendering der offenen bzw. überfahrenen Leistung.
+ * Desktop: rechts das Energiehaus; die Kamera fährt zur offenen bzw. überfahrenen Leistung.
  */
 export function ServiceIndex({ services, headingLevel = 3 }: { services: Service[]; headingLevel?: 2 | 3 }) {
   const [open, setOpen] = useState<string | null>(services[0]?.id ?? null);
@@ -60,7 +60,7 @@ export function ServiceIndex({ services, headingLevel = 3 }: { services: Service
                         </li>
                       ))}
                     </ul>
-                    <ServiceVisual id={s.id} className="svc__inline" sizes="(min-width: 1024px) 1px, 90vw" />
+                    {isOpen ? <HouseScene view={s.id} className="svc__inline" label={`Modell: ${s.title}`} /> : null}
                     <div className="svc__actions">
                       <Link href={`/leistungen/${s.id}`} className="btn btn--ghost btn--small" data-cursor="Ansehen">
                         Zur Leistung
@@ -90,11 +90,9 @@ export function ServiceIndex({ services, headingLevel = 3 }: { services: Service
 
       <div className="svc__plate" aria-hidden="true">
         <div className="svc__plate-inner">
-          {services.map((s) => (
-            <div key={s.id} className={`svc__frame${s.id === shown ? " is-active" : ""}`}>
-              <ServiceVisual id={s.id} className="svc__render" />
-            </div>
-          ))}
+          <div className="svc__frame is-active">
+            <HouseScene view={shown ?? "overview"} className="svc__render" />
+          </div>
           <p className="svc__caption tech">
             <span className="svc__caption-dot" />
             {services.find((s) => s.id === shown)?.short}

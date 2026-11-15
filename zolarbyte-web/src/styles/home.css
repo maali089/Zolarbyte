@@ -293,7 +293,6 @@
 .svc__render {
   width: 100%;
   height: 100%;
-  object-fit: contain;
 }
 
 .svc__caption {
@@ -1092,6 +1091,11 @@ html.js .proc__stamp {
   height: auto;
 }
 
+.svc-hero__visual .sv--house {
+  aspect-ratio: 3 / 2;
+  height: auto;
+}
+
 .svc-scope {
   border-top: 0;
 }
@@ -1501,6 +1505,14 @@ html.js .proc__stamp {
 .fc__tag--netzentgelt {
   border: 1px solid var(--magenta-ink);
   color: var(--magenta-ink);
+}
+
+/* Akkordeon: Energiehaus in der Zeile nur mobil/Tablet */
+.svc__inline {
+  width: min(100%, 460px);
+  aspect-ratio: 3 / 2;
+  height: auto;
+  margin-top: 20px;
 }
 
 /* Akkordeon: Rendering in der Zeile nur mobil/Tablet */

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { sendInquiry } from "@/lib/mail";
 import { validateInquiry, type InquiryInput } from "@/lib/validation";
 
@@ -11,6 +12,27 @@ function str(v: unknown, max: number) {
 }
 
 const invalid = (status = 400) => Response.json({ ok: false, error: "invalid" }, { status });
+
+/**
+ * Einfache Drosselung pro IP (im Speicher der Funktionsinstanz, daher nur „best effort“):
+ * höchstens RATE_MAX Anfragen je RATE_WINDOW_MS. Für harte Limits: Vercel Firewall / WAF-Regel auf /api/contact.
+ */
+const RATE_MAX = 5;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const hits = new Map<string, number[]>();
+
+function limited(ip: string) {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((ts) => now - ts < RATE_WINDOW_MS);
+  if (recent.length >= RATE_MAX) {
+    hits.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear();
+  return false;
+}
 
 export async function POST(request: Request) {
   if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
@@ -28,6 +50,11 @@ export async function POST(request: Request) {
     body = parsed as Record<string, unknown>;
   } catch {
     return invalid();
+  }
+
+  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  if (limited(ip)) {
+    return Response.json({ ok: false, error: "rate_limited" }, { status: 429, headers: { "Retry-After": "600" } });
   }
 
   // Honeypot: von Bots ausgefüllt, für Menschen unsichtbar
@@ -55,6 +82,9 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "validation", errors }, { status: 422 });
   }
 
+  // Doppeltes Absenden derselben Anfrage (Doppelklick, Wiederholung) erzeugt bei Resend nur eine Mail
+  const idempotencyKey = `anfrage-${createHash("sha256").update(`${t}|${input.email.trim().toLowerCase()}|${input.message.length}`).digest("hex").slice(0, 32)}`;
+
   const result = await sendInquiry({
     name: input.name.trim(),
     email: input.email.trim(),
@@ -65,7 +95,7 @@ export async function POST(request: Request) {
     zeitraum: input.zeitraum,
     ort: input.ort?.trim(),
     extra: input.extra,
-  });
+  }, { idempotencyKey });
 
   if (!result.ok) {
     const status = result.reason === "not_configured" ? 503 : 502;

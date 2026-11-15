@@ -882,6 +882,37 @@ html.js .words:not([data-in]) .word > span {
   transform: translateY(105%);
 }
 
+/* Erster Bildschirm (Einstieg, Seitenkopf): Einblenden rein per CSS beim Laden –
+   wartet nicht auf JavaScript/Hydration, damit nach dem Neuladen sofort Text steht. */
+html.js :is(.hero, .svc-hero, .page-head) [data-reveal]:not([data-in]) {
+  animation: rv-in 700ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+
+html.js :is(.hero, .svc-hero, .page-head) .words:not([data-in]) .word > span {
+  animation: rv-word 1100ms var(--ease-out) both;
+  animation-delay: calc(var(--w, 0) * 55ms + var(--delay, 0ms));
+}
+
+@keyframes rv-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rv-word {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+
 /* SVG-Linien zeichnen sich */
 html.js [data-draw] path,
 html.js [data-draw] line,

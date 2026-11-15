@@ -27,7 +27,18 @@ const TICKS = [6, 9, 12, 15, 18, 21];
  * Sonnenbahn (Sommerbogen 6–21 Uhr) mit ziehbarer Sonne.
  * Die Sonne ist ein Slider: Ziehen, Pfeiltasten oder Pos1/Ende ändern die Tageszeit.
  */
-export function SunArc({ interactive = true, onUserSet }: { interactive?: boolean; onUserSet?: (h: number) => void }) {
+export function SunArc({
+  interactive = true,
+  onUserSet,
+  initialHour = 12,
+}: {
+  interactive?: boolean;
+  onUserSet?: (h: number) => void;
+  /** Stand vor der Hydration (Server-Render), damit die Sonne nicht oben links steht. */
+  initialHour?: number;
+}) {
+  const p0 = arcProgress(initialHour);
+  const pt0 = arcPoint(p0);
   const boxRef = useRef<HTMLDivElement>(null);
   const sunRef = useRef<HTMLDivElement>(null);
   const readRef = useRef<HTMLSpanElement>(null);
@@ -101,6 +112,8 @@ export function SunArc({ interactive = true, onUserSet }: { interactive?: boolea
       <div
         ref={sunRef}
         className="arc__sun"
+        style={{ left: `${pt0.x}%`, top: `${pt0.y}%` }}
+        data-below={initialHour < 6 || initialHour > 21 ? "1" : "0"}
         role={interactive ? "slider" : undefined}
         tabIndex={interactive ? 0 : -1}
         aria-label="Tageszeit – Sonne verschieben"
@@ -143,7 +156,7 @@ export function SunArc({ interactive = true, onUserSet }: { interactive?: boolea
       >
         <span className="arc__sun-disc" />
         <span className="arc__read tech" ref={readRef} aria-hidden="true">
-          12:00
+          {formatHour(initialHour)}
         </span>
       </div>
     </div>

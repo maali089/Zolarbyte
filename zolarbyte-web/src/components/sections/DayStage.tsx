@@ -164,7 +164,7 @@ export function DayStage({ house }: { house: React.ReactNode }) {
       <div className="stage__pin">
         <div className="stage__ground" aria-hidden="true" />
         <div className="stage__arc">
-          <SunArc onUserSet={(h) => scrollToHour.current(h)} />
+          <SunArc initialHour={RISE_FROM} onUserSet={(h) => scrollToHour.current(h)} />
         </div>
         <div className="stage__house">{house}</div>
       </div>
