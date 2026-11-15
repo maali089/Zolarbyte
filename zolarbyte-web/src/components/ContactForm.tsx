@@ -279,7 +279,7 @@ export function ContactForm({ mailConfigured, previewNote }: { mailConfigured: b
         ) : null}
       </div>
 
-      <div>
+      <div className="form__submit">
         <button type="submit" className="btn btn--primary" disabled={status === "sending"}>
           {status === "sending" ? "Wird gesendet …" : "Anfrage senden"}
         </button>

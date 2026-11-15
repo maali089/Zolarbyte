@@ -1,0 +1,1086 @@
+/* ==========================================================
+   Startseite – Kapitelaufbau
+   Formensprache aus dem Logo: Sonnenstrahlen als Kapitelmarke,
+   der Knick des Blitzes als Übergang zwischen Bereichen.
+   ========================================================== */
+
+:root {
+  /* Höhe des Blitz-Knicks an Bereichsübergängen */
+  --notch: clamp(1.5rem, 4vw, 3.25rem);
+  --paper: #ebe9e4;
+  --paper-ink: #17171b;
+  --paper-muted: #4f4f58;
+  --paper-line: #cfccc5;
+}
+
+/* ---------- Kapitelmarke ---------- */
+
+.chapter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chapter svg {
+  width: 0.8rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: var(--magenta);
+  stroke-width: 30;
+  stroke-linecap: round;
+}
+
+.chapter__no {
+  color: var(--magenta-text);
+  font-weight: 600;
+}
+
+.chapter__no::after {
+  content: "";
+  display: inline-block;
+  width: 1.4rem;
+  height: 1px;
+  margin: 0 0 0.25em 0.6rem;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+.ch {
+  position: relative;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+}
+
+.ch__title {
+  margin: 0.9rem 0 0;
+  max-width: 22ch;
+  font-size: clamp(1.85rem, 1.15rem + 2.2vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+
+.ch__title--xl {
+  max-width: 14ch;
+  font-size: clamp(2.2rem, 1.1rem + 4vw, 4.6rem);
+  line-height: 1;
+}
+
+.ch__title em {
+  font-style: normal;
+  color: var(--magenta);
+}
+
+/* ---------- Einstieg: Ergänzungen ---------- */
+
+.hero__stamp {
+  position: relative;
+  margin: 0 auto;
+  padding-bottom: 1.4rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.hero__stamp span {
+  color: var(--magenta-text);
+  margin-right: 0.4rem;
+}
+
+@media (min-width: 1000px) {
+  .hero__stamp {
+    padding-bottom: calc(var(--notch) + 1.25rem);
+  }
+}
+
+@media (max-width: 999px) {
+  .hero__stamp {
+    padding-top: 0.25rem;
+    padding-bottom: calc(var(--notch) + 1rem);
+  }
+}
+
+/* ---------- 01 Energiehaus ---------- */
+
+.ch--house {
+  margin-top: calc(-1 * var(--notch));
+  padding-top: calc(var(--notch) + clamp(2.5rem, 5vw, 4.5rem));
+  background: var(--ink-1);
+  /* Knick wie im Blitz des Logos */
+  clip-path: polygon(0 var(--notch), 58% var(--notch), calc(58% + var(--notch) * 0.6) 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.ch-house__head {
+  display: grid;
+  gap: 0 3rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ch-house__head .ch__title {
+  max-width: 18ch;
+}
+
+.ch-house__lead {
+  max-width: 34rem;
+  margin-top: 0.9rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 1000px) {
+  .ch-house__head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    align-items: end;
+  }
+
+  .ch-house__head .chapter {
+    grid-column: 1 / -1;
+  }
+
+  .ch-house__lead {
+    margin: 0;
+  }
+}
+
+.ch-house__more {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.ch-house__more a {
+  color: var(--text);
+}
+
+.ehouse {
+  display: grid;
+  gap: 1.5rem 3rem;
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  .ehouse {
+    grid-template-columns: minmax(0, 1fr) 22.5rem;
+  }
+}
+
+.ehouse__stage {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #070708;
+  /* technische Zeichnung: Eckmarken statt Rahmen */
+  background-image:
+    linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong)),
+    linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong)),
+    linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong)),
+    linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong));
+  background-size:
+    18px 1px, 1px 18px, 18px 1px, 1px 18px,
+    18px 1px, 1px 18px, 18px 1px, 1px 18px;
+  background-position:
+    0 0, 0 0, 100% 0, 100% 0,
+    0 100%, 0 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.ehouse__stage .house__svg {
+  position: absolute;
+  inset: 0;
+}
+
+.ehouse__hud {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.95rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.ehouse__hud span {
+  color: var(--magenta-text);
+  margin-right: 0.35rem;
+}
+
+.ehouse__time {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(5, 5, 6, 0.8);
+}
+
+.ehouse__time button,
+.ehouse__back {
+  min-height: 2.5rem;
+  padding: 0 0.85rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font: 600 0.85rem/1 var(--font-body), system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.ehouse__time button[aria-pressed="true"] {
+  background: #fff;
+  color: var(--black);
+}
+
+.ehouse__back {
+  position: absolute;
+  left: 0.55rem;
+  bottom: 0.55rem;
+  border: 1px solid var(--line-strong);
+  background: rgba(5, 5, 6, 0.85);
+  color: #fff;
+}
+
+.ehouse__back::before {
+  content: "← ";
+  color: var(--magenta-text);
+}
+
+.ehouse__marker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.ehouse__marker > span[aria-hidden] {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--magenta);
+  background: rgba(5, 5, 6, 0.9);
+  color: #fff;
+  font: 600 0.72rem/1 var(--font-mono), ui-monospace, monospace;
+  transition: background-color 0.2s, transform 0.2s var(--ease);
+}
+
+.ehouse__marker:hover > span[aria-hidden],
+.ehouse__marker:focus-visible > span[aria-hidden] {
+  background: var(--magenta);
+  transform: scale(1.1);
+}
+
+/* Index wie ein Stromlaufplan: senkrechte Sammelschiene mit Knoten */
+.ehouse__index {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+  list-style: none;
+}
+
+.ehouse__index::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1.4rem;
+  bottom: 1.4rem;
+  width: 2px;
+  background: var(--line-strong);
+}
+
+.ehouse__index button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.1rem 1fr;
+  gap: 0 0.25rem;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.65rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ehouse__index li:last-child button {
+  border-bottom: 0;
+}
+
+.ehouse__index button::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.5rem + 1px);
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--ink-1);
+  border: 2px solid var(--line-strong);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.ehouse__index button[aria-pressed="true"]::before {
+  background: var(--magenta);
+  border-color: var(--magenta);
+  box-shadow: 0 0 0 4px rgba(199, 28, 132, 0.25);
+}
+
+.ehouse__no {
+  grid-row: span 2;
+  align-self: center;
+  font: 600 0.78rem/1 var(--font-mono), ui-monospace, monospace;
+  color: var(--text-dim);
+}
+
+.ehouse__name {
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+
+.ehouse__short {
+  font-size: 0.86rem;
+  color: var(--text-dim);
+}
+
+.ehouse__index button[aria-pressed="true"] .ehouse__no {
+  color: var(--magenta-text);
+}
+
+.ehouse__index button:hover .ehouse__name {
+  color: var(--magenta-text);
+}
+
+.ehouse__panel {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--magenta);
+}
+
+.ehouse__title {
+  font-size: 1.3rem;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+
+.ehouse__text {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.ehouse__does {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+
+.ehouse__does li::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 2px;
+  margin: 0 0.55rem 0.25em 0;
+  background: var(--magenta);
+  vertical-align: middle;
+}
+
+.ehouse__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-top: 1.1rem;
+}
+
+.ehouse__ask {
+  font-weight: 600;
+  color: var(--magenta-text);
+  text-decoration: none;
+}
+
+.ehouse__ask::after {
+  content: " →";
+}
+
+.ehouse__ask:hover {
+  text-decoration: underline;
+}
+
+.ehouse .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.ehouse .legend__line {
+  width: 1.4rem;
+}
+
+.ehouse__note {
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+/* Zusätzliche Hervorhebung: Wallbox */
+.house[data-focus="wb"] .hl-wb {
+  opacity: 1;
+}
+
+.house[data-focus="wb"] :is(.h-bat, .f-bat, .h-hp, .f-hp, .heat) {
+  opacity: 0.22;
+}
+
+/* Im herangeholten Ausschnitt nur der gewählte Bereich hervorgehoben */
+.house[data-focus="pv"] .hl-inv {
+  opacity: 0;
+}
+
+/* Smartphone: Bühne randlos, Bausteine als Tasten */
+@media (max-width: 999px) {
+  .ehouse__stage {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .ehouse__index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .ehouse__index::before,
+  .ehouse__index button::before,
+  .ehouse__short {
+    display: none;
+  }
+
+  .ehouse__index li:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .ehouse__index button,
+  .ehouse__index li:last-child button {
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+  }
+
+  .ehouse__no {
+    grid-row: auto;
+  }
+
+  .ehouse__index button[aria-pressed="true"] {
+    border-color: var(--magenta);
+    background: var(--magenta-tint);
+  }
+
+  .ehouse__name {
+    font-size: 0.98rem;
+  }
+
+  .ehouse__panel {
+    margin-top: 0.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .ehouse__hud {
+    display: none;
+  }
+}
+
+/* ---------- 02 Wegweiser ---------- */
+
+.ch--guide {
+  background: var(--black);
+}
+
+.guide {
+  display: grid;
+  gap: 2rem 4rem;
+}
+
+.guide__head p {
+  max-width: 26rem;
+  margin-top: 1rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 1000px) {
+  .guide {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+    align-items: start;
+  }
+
+  .guide__head {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+}
+
+.guide__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide__row {
+  counter-increment: guide;
+  display: grid;
+  gap: 0.5rem 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.guide__case {
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+
+.guide__case::before {
+  content: counter(guide, upper-alpha);
+  display: block;
+  margin-bottom: 0.35rem;
+  font: 600 0.72rem/1 var(--font-mono), ui-monospace, monospace;
+  color: var(--magenta-text);
+  letter-spacing: 0.12em;
+}
+
+.guide__advice {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.guide__go {
+  justify-self: start;
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--magenta);
+}
+
+.guide__go::after {
+  content: "→";
+  margin-left: 0.45rem;
+  color: var(--magenta-text);
+  transition: transform 0.2s var(--ease);
+}
+
+.guide__go:hover::after {
+  transform: translateX(3px);
+}
+
+@media (min-width: 760px) {
+  .guide__row {
+    grid-template-columns: 13rem minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .guide__go {
+    min-height: 0;
+    margin-top: 1.1rem;
+  }
+}
+
+/* ---------- 03 Förderung: helle Arbeitsfläche ---------- */
+
+.ch--paper {
+  margin-top: calc(-1 * var(--notch));
+  padding-top: calc(var(--notch) + clamp(2.5rem, 5vw, 4.5rem));
+  background: var(--paper);
+  color: var(--paper-ink);
+  clip-path: polygon(0 0, 34% 0, calc(34% + var(--notch) * 0.6) var(--notch), 100% var(--notch), 100% 100%, 0 100%);
+}
+
+.ch--paper .chapter {
+  color: var(--paper-muted);
+}
+
+.ch--paper .chapter__no {
+  color: #a3166c;
+}
+
+.ch--paper .ch__title {
+  color: var(--paper-ink);
+}
+
+.ch--paper a:not(.btn) {
+  color: #8e0f5c;
+}
+
+.paper__head {
+  display: grid;
+  gap: 2rem 4rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.paper__head p {
+  max-width: 34rem;
+  margin-top: 1rem;
+  color: var(--paper-muted);
+}
+
+@media (min-width: 1000px) {
+  .paper__head {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+    align-items: end;
+  }
+}
+
+.paper__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.paper__facts div {
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--paper-ink);
+}
+
+.paper__facts div:first-child {
+  border-color: var(--magenta);
+}
+
+.paper__facts dt {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+
+.paper__facts dd {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display, inherit);
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.paper__facts small {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--paper-muted);
+}
+
+.paper__facts .paper__date {
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  padding-top: 0.3rem;
+}
+
+.ch--paper .rechner {
+  box-shadow: none;
+  border: 1px solid var(--paper-line);
+  border-radius: 4px 22px 4px 4px;
+}
+
+.paper__more {
+  margin-top: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--paper-muted);
+}
+
+@media (max-width: 560px) {
+  .paper__facts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .paper__facts div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- 04 Meisterbetrieb ---------- */
+
+.ch--meister {
+  background: var(--black);
+}
+
+.meister {
+  display: grid;
+  gap: 2.5rem 3rem;
+}
+
+.meister__lead {
+  max-width: 38rem;
+  margin-top: 1.4rem;
+  font-size: clamp(1.02rem, 0.95rem + 0.3vw, 1.15rem);
+  color: var(--text-muted);
+}
+
+.meister__person {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.meister__who {
+  display: grid;
+  gap: 0.2rem;
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+
+.meister__who span {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.meister__person .card-person {
+  width: 100%;
+  max-width: 26rem;
+}
+
+@media (min-width: 1000px) {
+  .meister {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+
+  .meister__person {
+    padding-top: 4.5rem;
+    justify-self: end;
+    width: 100%;
+    max-width: 26rem;
+  }
+
+  .route {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Ablauf als Leitungsweg: Knoten auf einer durchgehenden Linie */
+.route {
+  position: relative;
+  display: grid;
+  gap: 1.75rem;
+  margin: 1rem 0 0;
+  padding: 0 0 0 3.25rem;
+  list-style: none;
+}
+
+.route::before {
+  content: "";
+  position: absolute;
+  left: calc(1.25rem - 1px);
+  top: 1.25rem;
+  bottom: 1.25rem;
+  width: 2px;
+  background: linear-gradient(var(--magenta), var(--magenta) 70%, var(--line-strong));
+}
+
+.route__step {
+  position: relative;
+}
+
+.route__node {
+  position: absolute;
+  left: -3.25rem;
+  top: -0.2rem;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--magenta);
+  background: var(--black);
+  color: #fff;
+  font: 600 0.75rem/1 var(--font-mono), ui-monospace, monospace;
+}
+
+.route__step h3 {
+  font-size: 1.08rem;
+  margin-bottom: 0.35rem;
+}
+
+.route__step p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 900px) {
+  .route {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 3.75rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .route::before {
+    left: 1.25rem;
+    right: 12%;
+    top: calc(3.75rem + 1.25rem - 1px);
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(90deg, var(--magenta), var(--magenta) 75%, var(--line-strong));
+  }
+
+  .route__node {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin-bottom: 1.1rem;
+  }
+}
+
+.meister__notice {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+/* ---------- Partnerband ---------- */
+
+.partners-band {
+  padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+  background: var(--ink-1);
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.partners-band__inner {
+  display: grid;
+  gap: 1rem 2.5rem;
+  align-items: center;
+}
+
+.partners-band__title {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (min-width: 1000px) {
+  .partners-band__inner {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+}
+
+.partners-band .marquee {
+  gap: 0.75rem;
+}
+
+.partners-band .marquee__tile {
+  width: 10.5rem;
+  height: 5.25rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+}
+
+.partners-band .marquee__tile img {
+  transform: scale(0.86);
+}
+
+.partners-band .marquee__toggle {
+  min-height: 2.5rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .partners-band .marquee__tile {
+    width: 8.75rem;
+    height: 4.5rem;
+    padding: 0.6rem 0.9rem;
+  }
+
+  .partners-band .marquee__tile img {
+    transform: scale(0.78);
+  }
+}
+
+/* ---------- 05 Anfrage & Fragen ---------- */
+
+.ch--ask {
+  background: var(--black);
+}
+
+.ask {
+  display: grid;
+  gap: 2.5rem 4rem;
+}
+
+.ask__intro > p {
+  max-width: 28rem;
+  margin: 1rem 0 1.5rem;
+  color: var(--text-muted);
+}
+
+.contact-links--stack {
+  grid-template-columns: 1fr;
+  max-width: 24rem;
+}
+
+.ask__faq-title {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ask__faq .faq__item summary {
+  font-size: 0.98rem;
+}
+
+@media (min-width: 1000px) {
+  .ask {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas:
+      "intro form"
+      "faq form";
+    align-items: start;
+  }
+
+  .ask__intro {
+    grid-area: intro;
+  }
+
+  .ask__form {
+    grid-area: form;
+  }
+
+  .ask__faq {
+    grid-area: faq;
+  }
+}
+
+/* ---------- Unterseiten: gleiche Formensprache ---------- */
+
+.lp-hero .chapter {
+  margin-bottom: 1.1rem;
+}
+
+.lp-hero__visual .house--detail {
+  background: #070708;
+}
+
+@media (min-width: 960px) {
+  .lp-hero__grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  /* Bildausschnitt läuft bis an den rechten Rand */
+  .lp-hero__visual {
+    margin-right: calc(-1 * max(var(--gutter), (100vw - var(--container)) / 2 + var(--gutter)));
+    border-left: 2px solid var(--magenta);
+  }
+}
+
+@media (max-width: 959px) {
+  .lp-hero__visual {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+}
+
+.lp-hero .ticks {
+  margin-top: 1.4rem;
+}
+
+.cta__title {
+  font-size: clamp(2rem, 1.2rem + 3vw, 3.4rem);
+}
+
+.page-body .guide__list {
+  margin-top: 0.5rem;
+}
+
+.page-body .guide__row {
+  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+}
+
+@media (max-width: 759px) {
+  .page-body .guide__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.process .route {
+  margin-top: 0.5rem;
+}
+
+.lp-hero {
+  overflow: clip;
+}
+
+/* Vergrößerte Schrift: nichts ragt über den Rand */
+.ehouse__index button > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.card-person {
+  overflow: hidden;
+}
+
+/* Wortmarke ist Teil des Logos: feste Größe, wächst nicht mit der Textgröße */
+@media (max-width: 420px) {
+  .brand {
+    min-width: 0;
+  }
+
+  .brand__word {
+    font-size: 13.5px;
+  }
+
+  .brand__sub {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand__word {
+    font-size: 12.5px;
+  }
+}

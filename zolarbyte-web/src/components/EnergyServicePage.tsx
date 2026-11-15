@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HouseDetail } from "@/components/house/Scenes";
 import { energyServices, type EnergyService } from "@/lib/content";
 import { ContactLinks } from "@/components/ContactLinks";
+import { Chapter } from "@/components/Chapter";
 import { isPreview, site } from "@/lib/site";
 
 /** Gemeinsame Vorlage für Photovoltaik, Wärmepumpe und Stromspeicher */
@@ -14,7 +15,7 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
       <section className="lp-hero" aria-labelledby="lp-title">
         <div className="container lp-hero__grid">
           <div>
-            <p className="eyebrow">Energielösungen · Elektrotechnik-Meisterbetrieb</p>
+            <Chapter no={energyServices.indexOf(s) + 1}>Energielösungen · Meisterbetrieb</Chapter>
             <h1 id="lp-title">{s.name}</h1>
             <p className="lp-hero__claim">{s.claim}</p>
             <ul className="ticks">
@@ -37,7 +38,7 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
               )}
             </div>
           </div>
-          <div className="feature__visual">
+          <div className="lp-hero__visual">
             <HouseDetail part={s.id} />
           </div>
         </div>

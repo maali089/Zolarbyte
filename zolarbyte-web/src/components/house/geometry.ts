@@ -907,3 +907,39 @@ export const CROPS = {
   waermepumpe: cropAround([[HP.x0 - 1.4, 0, HP.z0 - 0.6], [HP.x1 + 1.6, 2.4, 0], [HP.x0 - 1.2, 2.4, 0]], 20, 4 / 3),
   stromspeicher: cropAround([[AX0, 0, 0], [AX1, ATOP, 0], [AX0, ATOP, AZ_BACK], [AX1, 0, -0.2]], 20, 4 / 3),
 };
+
+/* ---------- Energiehaus (interaktiv): Kamerafahrten zwischen gleich großen Ausschnitten ---------- */
+
+const VIEW_ASPECT = 3 / 2;
+
+function fullView(aspect: number) {
+  const h = VIEW_W / aspect;
+  const y0 = (VIEW_H - h) / 2;
+  return `0 ${r1(y0)} ${VIEW_W} ${r1(h)}`;
+}
+
+export const VIEWS = {
+  all: fullView(VIEW_ASPECT),
+  pv: cropAround(
+    [roofPt(PV_S0 - 0.4, PV_T0 - 0.5), roofPt(PV_SR + 0.9, PV_T0 - 0.5), roofPt(PV_S0 - 0.4, PV_T0 + 3.6), roofPt(PV_SR + 0.9, PV_T0 + 3.6)],
+    18,
+    VIEW_ASPECT,
+  ),
+  storage: cropAround([[AX0 - 0.3, 0, 0], [AX1 + 0.2, ATOP, 0], [AX0, ATOP, AZ_BACK], [AX1, 0, -0.4]], 16, VIEW_ASPECT),
+  heat: cropAround([[HP.x0 - 1.5, 0, HP.z0 - 0.7], [HP.x1 + 1.7, 2.5, 0], [HP.x0 - 1.3, 2.5, 0]], 18, VIEW_ASPECT),
+  wb: cropAround([[G.x1 - 1.4, 0, -0.6], [CAR.x1 + 0.4, 0, CAR.z0 - 0.4], [G.x1 - 1.2, G.top, 0], [CAR.x1 + 0.2, 1.6, CAR.z1]], 18, VIEW_ASPECT),
+};
+
+/** Lage eines Punkts in % innerhalb der Gesamtansicht (für Markierungen) */
+function pctAll(p: V) {
+  const [, y0, w, h] = VIEWS.all.split(" ").map(Number);
+  const q = P(p);
+  return { left: r1((q.x / w) * 1000) / 10, top: r1(((q.y - y0) / h) * 1000) / 10 };
+}
+
+export const VIEW_MARKERS = {
+  pv: pctAll(roofPt(HW / 2 - 1.5, PV_T0 + MOD_H)),
+  storage: pctAll([13.92, 1.15, 1.75]),
+  heat: pctAll([1.35, 0.9, -1.45]),
+  wb: pctAll([WB.x1, WB.y1 + 0.1, (WB.z0 + WB.z1) / 2]),
+};

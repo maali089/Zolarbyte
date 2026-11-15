@@ -1100,12 +1100,12 @@
   outline-offset: 3px;
 }
 
-/* Smartphone: runde Knöpfe mit kurzer Beschriftung darunter, Seitenende bleibt frei */
-@media (max-width: 640px) {
-  .fab {
-    gap: 0.5rem;
-  }
+/* Kompakte Knöpfe mit Beschriftung unter dem Symbol – überdecken keinen Textrand */
+.fab {
+  gap: 0.5rem;
+}
 
+@media all {
   .fab__btn {
     flex-direction: column;
     justify-content: center;
@@ -1150,8 +1150,8 @@
 @media (min-width: 1000px) {
   .hero__visual {
     position: absolute;
-    /* Szene endet über der Schwerpunkt-Leiste */
-    inset: 0 0 8.4rem;
+    /* Szene endet knapp über dem Knick zum nächsten Kapitel */
+    inset: 0 0 1.75rem;
     z-index: -1;
     display: flex;
     align-items: flex-end;

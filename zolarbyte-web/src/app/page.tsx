@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { HeroHouseScene, ExplorerScene, HouseDetail } from "@/components/house/Scenes";
+import { HeroHouseScene, EnergyHouseScene } from "@/components/house/Scenes";
+import { Chapter } from "@/components/Chapter";
 import { ContactPerson } from "@/components/ContactPerson";
 import { ContactForm } from "@/components/ContactForm";
+import { ContactLinks } from "@/components/ContactLinks";
 import { FoerderRechner } from "@/components/foerderrechner/FoerderRechner";
-import { ServiceIcon } from "@/components/ServiceIcon";
 import { PartnerMarquee } from "@/components/Partners";
-import { energyServices, faqs, steps } from "@/lib/content";
+import { faqs, situations, steps } from "@/lib/content";
+import { GRUNDFOERDERUNG, OBERGRENZE, STAND } from "@/lib/foerderung/regeln-458";
 import { getMailConfig } from "@/lib/mail";
 import { features, isPreview, site } from "@/lib/site";
 
@@ -14,7 +16,7 @@ const jsonLd = {
   "@type": "Electrician",
   name: site.legalName,
   url: site.url,
-  telephone: site.general.phone,
+  telephone: site.project.phone,
   email: site.general.email,
   description: site.description,
   address: {
@@ -27,8 +29,6 @@ const jsonLd = {
   },
 };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 export default function Home() {
   const { configured } = getMailConfig();
 
@@ -39,7 +39,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      {/* ---------- 1 Einstieg ---------- */}
+      {/* Einstieg: Szene mit Haus, Garage, Wallbox */}
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__inner container">
           <div className="hero__copy">
@@ -52,8 +52,8 @@ export default function Home() {
               </span>
             </h1>
             <p className="hero__lead">
-              Photovoltaik, Wärmepumpen und Stromspeicher – passend zu Ihrem Zuhause geplant. ZOLARBYTE ENERGY verbindet moderne
-              Energietechnik mit elektrotechnischer Meisterkompetenz.
+              Photovoltaik, Wärmepumpe, Stromspeicher und Wallbox – geplant und angeschlossen vom
+              Elektrotechnik-Meisterbetrieb aus {site.address.city} bei München.
             </p>
             <div className="hero__actions">
               <Link href="/kontakt#anfrage" className="btn btn--primary">
@@ -68,298 +68,186 @@ export default function Home() {
             <HeroHouseScene />
           </div>
         </div>
-
-        <div className="container">
-          <ul className="hero__rail" aria-label="Unsere Schwerpunkte">
-            {energyServices.map((s) => (
-              <li key={s.id}>
-                <Link href={s.href} className="hero__service">
-                  <ServiceIcon id={s.id} />
-                  <span>
-                    <strong>{s.name}</strong>
-                    <span>{s.claim}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-            <li className="hero__meister">
-              <span className="hero__meister-k">Meisterbetrieb</span>
-              <span>
-                Planung, Anschluss und Inbetriebnahme aus einer Hand – aus {site.address.city} bei München.
-              </span>
-            </li>
-          </ul>
-        </div>
+        <p className="hero__stamp container">
+          <span>Eingetragen in die Handwerksrolle</span> {site.chamber.name}
+        </p>
       </section>
 
-      {/* ---------- 2 Übersicht ---------- */}
-      <section id="leistungen" className="section overview" aria-labelledby="leistungen-title">
+      {/* 01 Energiehaus: was wir bauen und wie es zusammenspielt */}
+      <section id="zusammenspiel" className="ch ch--house" aria-labelledby="house-title">
         <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">Energielösungen</p>
-              <h2 id="leistungen-title" className="h2">
-                Drei Bausteine. Ein System.
-              </h2>
-            </div>
-            <p className="section-head__text">
-              Jede Komponente funktioniert für sich. Ihren vollen Nutzen entfalten sie, wenn sie elektrisch sauber
-              aufeinander abgestimmt sind – genau das ist unser Handwerk.
+          <header className="ch-house__head">
+            <Chapter no={1}>Energiehaus</Chapter>
+            <h2 id="house-title" className="ch__title">
+              Vier Bausteine, ein Zählerschrank.
+            </h2>
+            <p className="ch-house__lead">
+              Wählen Sie einen Baustein: Die Ansicht fährt an die Stelle im Haus, daneben steht, was er tut und was wir
+              dafür übernehmen.
             </p>
-          </div>
-
-          <ol className="overview__list">
-            {energyServices.map((s, i) => (
-              <li key={s.id} className="overview__item">
-                <span className="overview__index" aria-hidden="true">
-                  {pad(i + 1)}
-                </span>
-                <h3 className="overview__title">
-                  <Link href={s.href}>{s.name}</Link>
-                </h3>
-                <p className="overview__text">{s.short}</p>
-                <span className="overview__arrow" aria-hidden="true">
-                  →
-                </span>
-              </li>
-            ))}
-          </ol>
-          <p className="overview__more">
-            Ergänzend weiterhin für Sie da: <Link href="/elektrotechnik">Elektroinstallation, Kundendienst und elektrische Prüfungen</Link>.
+          </header>
+          <EnergyHouseScene />
+          <p className="ch-house__more">
+            Außerdem für Sie da: <Link href="/elektrotechnik">Elektroinstallation, Kundendienst und Prüfungen</Link>
           </p>
         </div>
       </section>
 
-      {/* ---------- 3 Zusammenspiel ---------- */}
-      <section id="zusammenspiel" className="section system" aria-labelledby="system-title">
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">So arbeitet Ihr Energiesystem</p>
-              <h2 id="system-title" className="h2">
-                Wohin fließt Ihr Strom?
-              </h2>
-            </div>
-            <p className="section-head__text">
-              Wählen Sie einen Baustein oder die Tageszeit. Die Darstellung ist schematisch und zeigt keine Messwerte.
+      {/* 02 Wegweiser: ruhig, typografisch */}
+      <section id="wegweiser" className="ch ch--guide" aria-labelledby="guide-title">
+        <div className="container guide">
+          <header className="guide__head">
+            <Chapter no={2}>Wegweiser</Chapter>
+            <h2 id="guide-title" className="ch__title">
+              Welche Lösung passt zu Ihrem Haus?
+            </h2>
+            <p>
+              Fünf typische Ausgangslagen und womit wir jeweils anfangen würden. Die genaue Planung klären wir vor Ort.
             </p>
-          </div>
-          <ExplorerScene />
+          </header>
+          <ol className="guide__list">
+            {situations.map((s) => (
+              <li key={s.situation} className="guide__row">
+                <h3 className="guide__case">{s.situation}</h3>
+                <p className="guide__advice">{s.advice}</p>
+                <Link href={s.action.href} className="guide__go">
+                  {s.action.label}
+                </Link>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* ---------- 4 Leistungen im Einzelnen ---------- */}
-      {energyServices.map((s, i) => (
-        <section
-          key={s.id}
-          id={s.id}
-          className={`section feature${i % 2 ? " feature--flip" : ""}`}
-          aria-labelledby={`${s.id}-title`}
-        >
-          <div className="container feature__grid">
-            <div className="feature__visual">
-              <HouseDetail part={s.id} />
-            </div>
-            <div className="feature__copy">
-              <p className="eyebrow">
-                {pad(i + 1)} · {s.name}
-              </p>
-              <h2 id={`${s.id}-title`} className="h2 feature__title">
-                {s.claim}
-              </h2>
-              <p className="feature__text">{s.sections[0].text}</p>
-              <ul className="ticks">
-                {s.deliverables.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
-              </ul>
-              <p className="feature__meister">
-                <span>Meisterbetrieb</span>
-                {s.meister}
-              </p>
-              <div className="feature__actions">
-                <Link href={s.href} className="btn btn--ghost">
-                  Mehr zu {s.name === "Wärmepumpe" ? "Wärmepumpen" : s.name}
-                </Link>
-                {s.id === "waermepumpe" ? (
-                  <Link href="/foerderrechner" className="text-link">
-                    Förderung berechnen
-                  </Link>
-                ) : (
-                  <Link href={`/kontakt?interesse=${s.id}#anfrage`} className="text-link">
-                    {s.name} anfragen
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-      ))}
-
-      {/* ---------- 5 Förderrechner ---------- */}
+      {/* 03 Förderung: helle Arbeitsfläche */}
       {features.calculator ? (
-        <section id="foerderung" className="section calc-section" aria-labelledby="foerderung-title">
+        <section id="foerderung" className="ch ch--paper" aria-labelledby="foerderung-title">
           <div className="container">
-            <div className="section-head">
+            <header className="paper__head">
               <div>
-                <p className="eyebrow">Förderrechner Wärmepumpe</p>
-                <h2 id="foerderung-title" className="h2">
-                  Wie viel Zuschuss ist möglich?
+                <Chapter no={3}>Förderung</Chapter>
+                <h2 id="foerderung-title" className="ch__title">
+                  Was zahlt die KfW für Ihre Wärmepumpe?
                 </h2>
+                <p>
+                  Fünf kurze Schritte zur Heizungsförderung (KfW 458). Gerechnet wird nur in Ihrem Browser – Angaben zum
+                  Einkommen verlassen Ihr Gerät nicht.
+                </p>
               </div>
-              <p className="section-head__text">
-                Wenige Fragen zur KfW-Heizungsförderung. Die Berechnung läuft nur in Ihrem Browser – ohne Anmeldung und
-                ohne Pflichtformular. Zu Photovoltaik und Speicher finden Sie Hinweise auf der{" "}
-                <Link href="/foerderrechner#pv-speicher">Seite des Förderrechners</Link>.
-              </p>
-            </div>
+              <dl className="paper__facts">
+                <div>
+                  <dt>Grundförderung</dt>
+                  <dd>{GRUNDFOERDERUNG.percent} %</dd>
+                </div>
+                <div>
+                  <dt>Zuschuss insgesamt höchstens</dt>
+                  <dd>
+                    {OBERGRENZE.percent} %<small> bzw. {OBERGRENZE.lowIncomePercent} % bei geringem Einkommen</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Regeln geprüft</dt>
+                  <dd className="paper__date">{STAND}</dd>
+                </div>
+              </dl>
+            </header>
             <FoerderRechner />
+            <p className="paper__more">
+              Photovoltaik und Speicher werden nicht über diesen Zuschuss gefördert – was es dort gibt, steht unter{" "}
+              <Link href="/foerderrechner#pv-speicher">Förderung für PV und Speicher</Link>.
+            </p>
           </div>
         </section>
       ) : null}
 
-      {/* ---------- 6 Meisterbetrieb & Ansprechpartner ---------- */}
-      <section id="betrieb" className="section people" aria-labelledby="people-title">
-        <div className="container people__grid">
-          <div>
-            <p className="eyebrow">Meisterbetrieb aus Karlsfeld</p>
-            <h2 id="people-title" className="h2">
-              Energietechnik braucht saubere Elektrik.
+      {/* 04 Meisterbetrieb: persönlich, mit Ablauf als Leitungsweg */}
+      <section id="betrieb" className="ch ch--meister" aria-labelledby="meister-title">
+        <div className="container meister">
+          <div className="meister__statement">
+            <Chapter no={4}>Meisterbetrieb</Chapter>
+            <h2 id="meister-title" className="ch__title ch__title--xl">
+              Am Ende hängt alles am <em>Zählerschrank.</em>
             </h2>
-            <p className="lead people__lead">
-              Photovoltaik, Speicher und Wärmepumpe hängen am Zählerschrank und an der Hausinstallation. ZOLARBYTE ENERGY ist
-              als Elektrotechnik-Meisterbetrieb bei der Handwerkskammer für München und Oberbayern eingetragen und
-              verantwortet Planung, elektrischen Anschluss und Inbetriebnahme.
+            <p className="meister__lead">
+              Module, Speicher, Wärmepumpe und Wallbox sind nur so gut wie ihr elektrischer Anschluss. ZOLARBYTE ENERGY ist
+              als Elektrotechnik-Meisterbetrieb in die Handwerksrolle der {site.chamber.name} eingetragen und verantwortet
+              Planung, Anschluss und Inbetriebnahme selbst.
             </p>
-            <dl className="spec">
-              <div>
-                <dt>Betrieb</dt>
-                <dd>Elektrotechnik-Meisterbetrieb, Handwerkskammer für München und Oberbayern</dd>
-              </div>
-              <div>
-                <dt>Inhaber</dt>
-                <dd>{site.management.name} – berät Sie persönlich zu neuen Projekten</dd>
-              </div>
-              <div>
-                <dt>Sitz</dt>
-                <dd>
-                  {site.address.street}, {site.address.zip} {site.address.city}
-                </dd>
-              </div>
-            </dl>
-            <Link href="/meisterbetrieb" className="text-link people__more">
-              Mehr über den Meisterbetrieb
+          </div>
+
+          <div className="meister__person">
+            <p className="meister__who">
+              <span>Ihr Ansprechpartner</span>
+              {site.management.name}, {site.management.role}
+            </p>
+            <ContactPerson />
+            <Link href="/meisterbetrieb" className="text-link">
+              Mehr über den Betrieb
             </Link>
           </div>
-          <ContactPerson />
+
+          <ol className="route" aria-label="So läuft ein Projekt ab">
+            {steps.map((step, i) => (
+              <li key={step.title} className="route__step">
+                <span className="route__node" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </li>
+            ))}
+          </ol>
+
+          {isPreview && !features.references ? (
+            <p className="notice meister__notice" role="note">
+              <span>
+                <strong>Vorschau:</strong> Hier können später freigegebene Projektfotos und Referenzen stehen.
+              </span>
+            </p>
+          ) : null}
         </div>
       </section>
 
-      {/* ---------- 7 Partner ---------- */}
+      {/* Partnerband als Übergang */}
       {features.partners ? (
-        <section id="partner" className="section partners" aria-labelledby="partner-title">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <p className="eyebrow">Partner &amp; Hersteller</p>
-                <h2 id="partner-title" className="h2">
-                  Starke Marken. Saubere Installation.
-                </h2>
-              </div>
-              <p className="section-head__text">
-                Für Module, Wechselrichter, Speicher, Montagesysteme, Wärmepumpen und Energiemanagement arbeiten wir mit
-                diesen Herstellern zusammen.
-              </p>
-            </div>
+        <section id="partner" className="partners-band" aria-labelledby="partner-title">
+          <div className="container partners-band__inner">
+            <h2 id="partner-title" className="partners-band__title">
+              Hersteller, mit denen wir arbeiten
+            </h2>
             <PartnerMarquee />
           </div>
         </section>
       ) : null}
 
-      {/* ---------- Referenzen (nur mit freigegebenem Material) ---------- */}
-      {isPreview && !features.references ? (
-        <section className="section preview-gap" aria-label="Hinweis Referenzen">
-          <div className="container">
-            <div className="notice" role="note">
-              <span>
-                <strong>Vorschau – Platz für Referenzen:</strong> Hier erscheinen echte Projekte und Fotos, sobald sie
-                freigegeben sind. Bis dahin bleibt der Bereich auf der öffentlichen Seite
-                ausgeblendet.
-              </span>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ---------- 8 Ablauf ---------- */}
-      <section id="ablauf" className="section process" aria-labelledby="ablauf-title">
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">Ablauf</p>
-              <h2 id="ablauf-title" className="h2">
-                Von der Anfrage bis zur Inbetriebnahme.
-              </h2>
-            </div>
-            <p className="section-head__text">
-              Ein Ansprechpartner, klare Schritte und eine Anlage, die elektrisch zu Ihrem Haus passt.
-            </p>
-          </div>
-          <ol className="process__steps">
-            {steps.map((step, i) => (
-              <li key={step.title} className="process__step">
-                <span className="process__node" aria-hidden="true" />
-                <span className="process__index" aria-hidden="true">
-                  {pad(i + 1)}
-                </span>
-                <h3 className="process__title">{step.title}</h3>
-                <p>{step.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ---------- 9 Fragen ---------- */}
-      <section id="fragen" className="section faq" aria-labelledby="fragen-title">
-        <div className="container faq__grid">
-          <div>
-            <p className="eyebrow">Häufige Fragen</p>
-            <h2 id="fragen-title" className="h2">
-              Kurz beantwortet.
-            </h2>
-          </div>
-          <div className="faq__list">
-            {faqs.map((f) => (
-              <details key={f.q} className="faq__item">
-                <summary>
-                  <span>{f.q}</span>
-                  <span className="faq__icon" aria-hidden="true" />
-                </summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- 10 Anfrage ---------- */}
-      <section id="anfrage" className="section inquiry" aria-labelledby="anfrage-title">
-        <div className="container inquiry__grid">
-          <div>
-            <p className="eyebrow">Projekt anfragen</p>
-            <h2 id="anfrage-title" className="h2">
+      {/* 05 Anfrage und Fragen */}
+      <section id="anfrage" className="ch ch--ask" aria-labelledby="anfrage-title">
+        <div className="container ask">
+          <div className="ask__intro">
+            <Chapter no={5}>Anfrage</Chapter>
+            <h2 id="anfrage-title" className="ch__title">
               Sprechen wir über <em>Ihr Haus.</em>
             </h2>
-            <p className="inquiry__text">
-              Ein paar Angaben genügen. Wir melden uns persönlich – oder Sie rufen direkt an.
-            </p>
-            <a href={site.project.phoneHref} className="cta__phone">
-              <span>Telefon für Projektanfragen</span>
-              {site.project.phone}
-            </a>
+            <p>Ein paar Angaben genügen. {site.management.name} meldet sich persönlich – oder Sie schreiben direkt.</p>
+            <ContactLinks className="contact-links--stack" />
           </div>
-          <ContactForm mailConfigured={configured} previewNote={isPreview} />
+          <div className="ask__form">
+            <ContactForm mailConfigured={configured} previewNote={isPreview} />
+          </div>
+          <div className="ask__faq" id="fragen">
+            <h3 className="ask__faq-title">Häufige Fragen</h3>
+            <div className="faq__list">
+              {faqs.map((f) => (
+                <details key={f.q} className="faq__item">
+                  <summary>
+                    <span>{f.q}</span>
+                    <span className="faq__icon" aria-hidden="true" />
+                  </summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </>

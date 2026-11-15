@@ -6,6 +6,7 @@ import { FloatingContact } from "@/components/FloatingContact";
 import { isPreview, site } from "@/lib/site";
 import "./globals.css";
 import "./relaunch.css";
+import "./home.css";
 
 const display = Archivo({
   subsets: ["latin"],

@@ -33,26 +33,26 @@ export default function MeisterbetriebPage() {
           <h2 id="rollen-title" className="h2" style={{ marginBottom: "2rem" }}>
             Wer berät, wer plant, wer schließt an?
           </h2>
-          <ul className="roles">
-            <li>
-              <h3>Beratung & Angebot</h3>
-              <p>
+          <ol className="guide__list">
+            <li className="guide__row">
+              <h3 className="guide__case">Beratung & Angebot</h3>
+              <p className="guide__advice">
                 {site.project.name}, {site.project.role}, ist Ihr persönlicher Ansprechpartner für neue Projekte – vom
                 ersten Gespräch bis zum Angebot.
               </p>
             </li>
-            <li>
-              <h3>Planung & elektrischer Anschluss</h3>
-              <p>
+            <li className="guide__row">
+              <h3 className="guide__case">Planung & elektrischer Anschluss</h3>
+              <p className="guide__advice">
                 Auslegung, Anschluss an Zählerschrank und Hausinstallation sowie Absicherung liegen in der Verantwortung des
                 Meisterbetriebs – nach den geltenden VDE-Bestimmungen.
               </p>
             </li>
-            <li>
-              <h3>Inbetriebnahme & Dokumentation</h3>
-              <p>Wir nehmen die Anlage in Betrieb, prüfen sie und übergeben sie mit Dokumentation und Einweisung.</p>
+            <li className="guide__row">
+              <h3 className="guide__case">Inbetriebnahme & Dokumentation</h3>
+              <p className="guide__advice">Wir nehmen die Anlage in Betrieb, prüfen sie und übergeben sie mit Dokumentation und Einweisung.</p>
             </li>
-          </ul>
+          </ol>
 
           {isPreview ? (
             <div className="notice" role="note" style={{ marginTop: "2rem" }}>
@@ -100,14 +100,13 @@ export default function MeisterbetriebPage() {
               </h2>
             </div>
           </div>
-          <ol className="process__steps">
+          <ol className="route" aria-label="So läuft ein Projekt ab">
             {steps.map((step, i) => (
-              <li key={step.title} className="process__step">
-                <span className="process__node" aria-hidden="true" />
-                <span className="process__index" aria-hidden="true">
+              <li key={step.title} className="route__step">
+                <span className="route__node" aria-hidden="true">
                   {pad(i + 1)}
                 </span>
-                <h3 className="process__title">{step.title}</h3>
+                <h3>{step.title}</h3>
                 <p>{step.text}</p>
               </li>
             ))}

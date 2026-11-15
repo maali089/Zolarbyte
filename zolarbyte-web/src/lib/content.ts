@@ -227,3 +227,37 @@ export const STAGES = [
   "Bestehende Anlage erweitern",
   "Angebot liegt vor, Zweitmeinung",
 ] as const;
+
+/** Wegweiser auf der Startseite: typische Ausgangslagen → sinnvoller erster Schritt */
+export const situations = [
+  {
+    situation: "Neubau oder Dach ohne Anlage",
+    advice:
+      "Photovoltaik ist die Basis. Speicher und Wallbox planen wir gleich mit, damit Zählerschrank und Leitungswege nur einmal vorbereitet werden – auch wenn Sie sie erst später ergänzen.",
+    action: { href: "/kontakt?interesse=photovoltaik#anfrage", label: "Photovoltaik anfragen" },
+  },
+  {
+    situation: "Alte Öl- oder Gasheizung",
+    advice:
+      "Eine Wärmepumpe prüfen wir anhand von Heizlast, Heizkörpern oder Fußbodenheizung und Hausanschluss. Für den Heizungstausch gibt es einen Zuschuss der KfW.",
+    action: { href: "/foerderrechner", label: "Förderung berechnen" },
+  },
+  {
+    situation: "PV vorhanden, mittags geht viel ins Netz",
+    advice:
+      "Ein Speicher hebt Solarstrom für den Abend auf. Oft lohnt es sich auch, Wärmepumpe oder Auto in die Mittagsstunden zu legen.",
+    action: { href: "/kontakt?interesse=stromspeicher#anfrage", label: "Speicher anfragen" },
+  },
+  {
+    situation: "Ein E-Auto ist geplant",
+    advice:
+      "Eine Wallbox an Garage oder Stellplatz, sauber an den Zählerschrank angebunden und beim Netzbetreiber angemeldet. Mit PV kann tagsüber Solarstrom geladen werden.",
+    action: { href: "/kontakt?interesse=elektrotechnik#anfrage", label: "Wallbox anfragen" },
+  },
+  {
+    situation: "Älteres Haus, alter Zählerschrank",
+    advice:
+      "Vor jeder Erweiterung prüfen wir den Zählerschrank. Häufig muss er für PV, Speicher oder Wärmepumpe erneuert werden – das gehört bei uns zur Planung.",
+    action: { href: "/elektrotechnik", label: "Elektrotechnik ansehen" },
+  },
+];
