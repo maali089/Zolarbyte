@@ -4,7 +4,7 @@ import { BaseFacts, ClosingInquiry, JsonLd } from "@/components/sections/Blocks"
 import { FoerderTeaser } from "@/components/sections/FoerderTeaser";
 import { PartnerBand } from "@/components/sections/PartnerBand";
 import { DayStage } from "@/components/sections/DayStage";
-import { ServiceIndex } from "@/components/sections/ServiceIndex";
+import { ServiceRail } from "@/components/sections/ServiceRail";
 import { HouseSlot } from "@/components/sections/Slots";
 import { services } from "@/lib/content";
 import { businessLd } from "@/lib/schema";
@@ -28,7 +28,9 @@ export default function Home() {
               Vom Modul auf dem Dach bis zum Prüfprotokoll: ein Ansprechpartner, der die ganze Anlage im Blick hat.
             </p>
           </header>
-          <ServiceIndex services={services} />
+        </div>
+        <ServiceRail services={services} />
+        <div className="container">
           <p className="sec-more" data-reveal>
             <Link href="/leistungen" className="btn btn--ghost">
               Alle Leistungen im Detail

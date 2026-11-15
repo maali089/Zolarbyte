@@ -312,6 +312,213 @@
   background: var(--amber);
 }
 
+/* ---------- Leistungen als horizontale Schiene (Startseite) ---------- */
+
+.rail {
+  position: relative;
+  --rail-pad: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+}
+
+.rail__bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: clamp(24px, 3vw, 40px);
+  color: var(--schiefer-2);
+}
+
+.rail__now {
+  color: var(--magenta-ink);
+}
+
+.rail__line {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.rail__fill {
+  position: absolute;
+  inset: -0.5px 0;
+  background: var(--magenta);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.rail__hint {
+  display: none;
+  min-width: 16em;
+  text-align: right;
+}
+
+@media (min-width: 720px) {
+  .rail__hint {
+    display: block;
+  }
+}
+
+.rail__track {
+  display: flex;
+  gap: clamp(20px, 3vw, 56px);
+  margin: 0;
+  padding: 0 var(--rail-pad) 8px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--rail-pad);
+  scrollbar-width: none;
+}
+
+.rail__track::-webkit-scrollbar {
+  display: none;
+}
+
+.rail__card {
+  position: relative;
+  flex: 0 0 min(82vw, 420px);
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  border-top: 1px solid var(--rule-strong);
+}
+
+@media (min-width: 1024px) {
+  .rail__card {
+    flex-basis: clamp(360px, 31vw, 480px);
+  }
+}
+
+/* Leitung, die über der aktiven Karte anliegt */
+.rail__card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: var(--magenta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out);
+}
+
+.rail__card.is-active::before {
+  transform: scaleX(1);
+}
+
+.rail__media {
+  display: block;
+  margin-top: 20px;
+  aspect-ratio: 4 / 3;
+  max-height: clamp(150px, 100svh - 540px, 360px);
+  overflow: hidden;
+}
+
+.rail__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
+  transition: transform var(--dur-4) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .rail__card:hover .rail__img {
+    transform: scale(1.04);
+  }
+}
+
+.rail__num {
+  margin: 20px 0 6px;
+  color: var(--schiefer-3);
+}
+
+.rail__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.rail__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.rail__card.is-active .rail__title a,
+.rail__title a:hover {
+  color: var(--magenta-ink);
+}
+
+.rail__lead {
+  margin: 14px 0 0;
+  max-width: 34em;
+  color: var(--schiefer-2);
+}
+
+.rail__points {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  color: var(--schiefer-2);
+}
+
+.rail__points li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.75rem;
+}
+
+.rail__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--magenta);
+}
+
+.rail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+/* Gepinnt: vertikales Scrollen schiebt die Schiene (Höhe der .rail setzt das Script) */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .rail__pin {
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100svh - var(--header-h));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 24px;
+    overflow: clip;
+  }
+
+  .rail__track {
+    width: max-content;
+    overflow: visible;
+    scroll-snap-type: none;
+    will-change: transform;
+  }
+}
+
 /* ---------- Betrieb / Fundament ---------- */
 
 .base {
