@@ -11,6 +11,8 @@
     "render:house": "node scripts/render-house.ts"
   },
   "dependencies": {
+    "framer-motion": "^14.14.0",
+    "lenis": "^1.3.27",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",

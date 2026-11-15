@@ -1,6 +1,8 @@
 "use client";
 
+import { useReducedMotionPref } from "@/lib/hooks/useReducedMotionPref";
 import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 type Anchor = { left: number; top: number };
 
@@ -43,11 +45,22 @@ export function HeroHouse({
 
   const at = (a: Anchor) => ({ left: `${a.left}%`, top: `${a.top}%` });
 
+  // Räumliche Kamerabewegung beim Herausscrollen: Szene kippt nach hinten und kommt näher
+  const reduce = useReducedMotionPref();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 30%", "end start"] });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 14]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 70]);
+
   return (
-    <div
+    <motion.div
       ref={ref}
       className={`house house--hero${skipped ? " is-skipped" : ""}`}
-      style={{ aspectRatio: ratio, ["--house-start" as string]: houseStart }}
+      style={{
+        aspectRatio: ratio,
+        ["--house-start" as string]: houseStart,
+        ...(reduce ? {} : { rotateX, scale, y, transformPerspective: 1400, transformOrigin: "50% 100%" }),
+      }}
     >
       {children}
       <ul className="house__tags" aria-hidden="true">
@@ -69,6 +82,6 @@ export function HeroHouse({
           Animation überspringen
         </button>
       ) : null}
-    </div>
+    </motion.div>
   );
 }

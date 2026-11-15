@@ -47,20 +47,37 @@ const svc = (id: "photovoltaik" | "waermepumpe" | "stromspeicher") => energyServ
 
 const PARTS: PartInfo[] = [
   {
-    id: "pv",
-    name: "Photovoltaik",
-    short: "Strom vom eigenen Dach",
-    deliverables: svc("photovoltaik").deliverables,
-    more: { href: "/photovoltaik", label: "Mehr zur Photovoltaik" },
-    ask: { href: "/kontakt?interesse=photovoltaik#anfrage", label: "Photovoltaik anfragen" },
+    id: "all",
+    name: "Ihr Energiehaus",
+    short: "Alles am Zählerschrank",
+    more: { href: "/meisterbetrieb", label: "Warum Meisterbetrieb" },
+    ask: { href: "/kontakt?interesse=kombination#anfrage", label: "Kombination anfragen" },
     text: {
       day: {
-        title: "Die Module erzeugen Gleichstrom",
-        text: "Der Strom läuft über jedes Modul zum Wechselrichter im Technikraum. Dort wird er zu Wechselstrom für das Hausnetz und versorgt zuerst Ihre Verbraucher. Was übrig bleibt, lädt den Speicher oder geht ins Netz.",
+        title: "Vier Bausteine, ein Anschluss.",
+        text: "Dach erzeugt, Speicher puffert, Wärmepumpe heizt, Wallbox lädt – verbunden über den Zählerschrank.",
       },
       evening: {
-        title: "Ohne Sonne keine Erzeugung",
-        text: "Abends und nachts liefern die Module keinen Strom. Dann übernehmen – sofern vorhanden – der Speicher oder das öffentliche Netz die Versorgung.",
+        title: "Abends übernimmt der Speicher.",
+        text: "Ist er leer, liefert das Netz. Völlige Unabhängigkeit übers ganze Jahr ist bei Wohnhäusern in der Regel nicht realistisch.",
+      },
+    },
+  },
+  {
+    id: "pv",
+    name: "Photovoltaik",
+    short: "Strom vom Dach",
+    deliverables: svc("photovoltaik").deliverables,
+    more: { href: "/photovoltaik", label: "Mehr zur Photovoltaik" },
+    ask: { href: "/kontakt?interesse=photovoltaik#anfrage", label: "Anfragen" },
+    text: {
+      day: {
+        title: "Jedes Modul liefert mit.",
+        text: "Der Strom läuft über alle Module zum Wechselrichter und versorgt zuerst Ihr Haus.",
+      },
+      evening: {
+        title: "Ohne Sonne keine Erzeugung.",
+        text: "Nachts liefern die Module nichts – dann übernehmen Speicher oder Netz.",
       },
     },
   },
@@ -69,16 +86,16 @@ const PARTS: PartInfo[] = [
     name: "Stromspeicher",
     short: "Solarstrom für den Abend",
     deliverables: svc("stromspeicher").deliverables,
-    more: { href: "/stromspeicher", label: "Mehr zum Stromspeicher" },
-    ask: { href: "/kontakt?interesse=stromspeicher#anfrage", label: "Speicher anfragen" },
+    more: { href: "/stromspeicher", label: "Mehr zum Speicher" },
+    ask: { href: "/kontakt?interesse=stromspeicher#anfrage", label: "Anfragen" },
     text: {
       day: {
-        title: "Überschuss für später",
-        text: "Erzeugt die Anlage mehr, als im Haus gerade gebraucht wird, lädt der Speicher neben Wechselrichter und Zählerschrank. Größe und Technik richten sich nach Ihrem Verbrauch und der Anlage.",
+        title: "Mittags laden.",
+        text: "Überschuss vom Dach lädt den Speicher im Technikraum – passend zu Ihrem Verbrauch ausgelegt.",
       },
       evening: {
-        title: "Solarstrom zeitversetzt nutzen",
-        text: "Am Abend gibt der Speicher den gespeicherten Strom an das Haus ab. Ist er leer, kommt der Strom wie gewohnt aus dem Netz. Eine Ersatzstromfunktion bei Netzausfall ist eine eigene Option und nicht bei jedem Speicher vorhanden.",
+        title: "Abends nutzen.",
+        text: "Der Speicher gibt den Solarstrom ans Haus ab. Ersatzstrom bei Netzausfall ist eine eigene Option.",
       },
     },
   },
@@ -91,12 +108,12 @@ const PARTS: PartInfo[] = [
     ask: { href: "/foerderrechner", label: "Förderung berechnen" },
     text: {
       day: {
-        title: "Strom plus Umweltwärme",
-        text: "Die Außeneinheit nimmt Wärme aus der Luft auf und bringt sie mit Hilfe von Strom auf Heiztemperatur – für Heizung und Warmwasser. Tagsüber kann ein Teil dieses Stroms vom eigenen Dach kommen.",
+        title: "Luft rein, Wärme raus.",
+        text: "Aus Umweltwärme und Strom wird Heizwärme und Warmwasser – tagsüber teils mit Strom vom Dach.",
       },
       evening: {
-        title: "Heizen auch am Abend",
-        text: "Die Wärmepumpe arbeitet weiter und bezieht ihren Strom dann aus dem Speicher oder aus dem Netz. Wie gut sie im Gebäude arbeitet, hängt von Heizlast und Wärmeverteilung ab – das prüfen wir vorher.",
+        title: "Heizt auch abends.",
+        text: "Dann kommt der Strom aus Speicher oder Netz. Heizlast und Heizflächen prüfen wir vorher.",
       },
     },
   },
@@ -105,32 +122,15 @@ const PARTS: PartInfo[] = [
     name: "Wallbox",
     short: "Laden an der Garage",
     more: { href: "/elektrotechnik#e-mobilitaet", label: "Mehr zur E-Mobilität" },
-    ask: { href: "/kontakt?interesse=elektrotechnik#anfrage", label: "Wallbox anfragen" },
+    ask: { href: "/kontakt?interesse=elektrotechnik#anfrage", label: "Anfragen" },
     text: {
       day: {
-        title: "Laden mit Strom vom Dach",
-        text: "Die Wallbox sitzt an der Garagenwand neben dem Stellplatz und ist an den Zählerschrank angebunden. Tagsüber kann das Auto Solarstrom laden. Eine Wallbox muss beim Netzbetreiber angemeldet werden – wir sagen Ihnen, was dafür nötig ist.",
+        title: "Solarstrom tanken.",
+        text: "Wallbox an der Garagenwand, angebunden an den Zählerschrank und beim Netzbetreiber angemeldet.",
       },
       evening: {
-        title: "Laden am Abend",
-        text: "Abends kommt der Ladestrom aus dem Speicher oder aus dem Netz. Ein Energiemanagement kann das Laden auf Zeiten mit Solarüberschuss legen, wenn das Auto tagsüber zu Hause steht.",
-      },
-    },
-  },
-  {
-    id: "all",
-    name: "Zusammenspiel",
-    short: "Alles am Zählerschrank",
-    more: { href: "/meisterbetrieb", label: "Warum Meisterbetrieb" },
-    ask: { href: "/kontakt?interesse=kombination#anfrage", label: "Kombination anfragen" },
-    text: {
-      day: {
-        title: "Ein abgestimmtes System",
-        text: "Photovoltaik erzeugt, der Speicher puffert, die Wärmepumpe macht aus Strom und Umweltwärme Heizwärme, die Wallbox lädt das Auto. Der Zählerschrank verbindet alles mit dem Hausnetz – elektrisch geplant und angeschlossen vom Meisterbetrieb.",
-      },
-      evening: {
-        title: "Ein abgestimmtes System – am Abend",
-        text: "Der Speicher versorgt Haushalt und Wärmepumpe, solange er geladen ist. Danach bleibt das Netz die Reserve. Eine vollständige Unabhängigkeit vom Stromnetz übers ganze Jahr ist bei Wohnhäusern in der Regel nicht realistisch.",
+        title: "Laden am Abend.",
+        text: "Dann aus Speicher oder Netz. Ein Energiemanagement legt das Laden auf Solarüberschuss.",
       },
     },
   },

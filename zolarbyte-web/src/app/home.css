@@ -160,13 +160,26 @@
 
 .ehouse {
   display: grid;
-  gap: 1.5rem 3rem;
+  gap: 0 3.5rem;
   align-items: start;
+}
+
+/* Bühne bleibt stehen, Schritte ziehen vorbei */
+.ehouse__pin {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 2;
+  background: var(--ink-1);
 }
 
 @media (min-width: 1000px) {
   .ehouse {
-    grid-template-columns: minmax(0, 1fr) 22.5rem;
+    grid-template-columns: minmax(0, 1fr) 21rem;
+  }
+
+  .ehouse__pin {
+    top: calc(var(--header-h) + max(1.5rem, (100svh - var(--header-h) - 38rem) / 2));
+    background: none;
   }
 }
 
@@ -175,7 +188,6 @@
   aspect-ratio: 3 / 2;
   overflow: hidden;
   background: #070708;
-  /* technische Zeichnung: Eckmarken statt Rahmen */
   background-image:
     linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong)),
     linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(var(--line-strong), var(--line-strong)),
@@ -188,6 +200,12 @@
     0 0, 0 0, 100% 0, 100% 0,
     0 100%, 0 100%, 100% 100%, 100% 100%;
   background-repeat: no-repeat;
+}
+
+@media (min-width: 1000px) {
+  .ehouse__stage {
+    max-height: calc(100svh - var(--header-h) - 3rem);
+  }
 }
 
 .ehouse__stage .house__svg {
@@ -223,8 +241,7 @@
   background: rgba(5, 5, 6, 0.8);
 }
 
-.ehouse__time button,
-.ehouse__back {
+.ehouse__time button {
   min-height: 2.5rem;
   padding: 0 0.85rem;
   border: 0;
@@ -240,18 +257,48 @@
   color: var(--black);
 }
 
-.ehouse__back {
+/* Fortschritt: Knoten auf einer Leitung (Stromlaufplan) */
+.ehouse__progress {
   position: absolute;
-  left: 0.55rem;
-  bottom: 0.55rem;
-  border: 1px solid var(--line-strong);
-  background: rgba(5, 5, 6, 0.85);
-  color: #fff;
+  left: 0.75rem;
+  bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.ehouse__back::before {
-  content: "← ";
-  color: var(--magenta-text);
+.ehouse__progress li + li::before {
+  content: "";
+  display: inline-block;
+  width: 0.9rem;
+  height: 2px;
+  margin: 0 0.15rem;
+  vertical-align: middle;
+  background: var(--line-strong);
+}
+
+.ehouse__progress button {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  background: rgba(5, 5, 6, 0.9);
+  color: var(--text-muted);
+  font: 600 0.66rem/1 var(--font-mono), ui-monospace, monospace;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+}
+
+.ehouse__progress button[aria-current="step"] {
+  border-color: var(--magenta);
+  background: var(--magenta);
+  color: #fff;
 }
 
 .ehouse__marker {
@@ -286,113 +333,107 @@
   transform: scale(1.1);
 }
 
-/* Index wie ein Stromlaufplan: senkrechte Sammelschiene mit Knoten */
-.ehouse__index {
+/* Textschritte */
+.ehouse__steps {
   position: relative;
-  margin: 0;
-  padding: 0 0 0 1.5rem;
-  list-style: none;
+  padding-left: 1.5rem;
 }
 
-.ehouse__index::before {
+.ehouse__steps::before {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 1.4rem;
-  bottom: 1.4rem;
+  left: 4px;
+  top: 0;
+  bottom: 3rem;
   width: 2px;
   background: var(--line-strong);
 }
 
-.ehouse__index button {
+.ehouse__step {
   position: relative;
-  display: grid;
-  grid-template-columns: 2.1rem 1fr;
-  gap: 0 0.25rem;
-  width: 100%;
-  min-height: 3.25rem;
-  padding: 0.65rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  background: none;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
+  min-height: 72svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 0;
+  opacity: 0.35;
+  overflow-wrap: anywhere;
+  transition: opacity 0.4s var(--ease);
 }
 
-.ehouse__index li:last-child button {
-  border-bottom: 0;
+.ehouse__step:first-child {
+  min-height: 60svh;
+  justify-content: flex-start;
+  padding-top: 25svh;
 }
 
-.ehouse__index button::before {
+.ehouse__step.is-active {
+  opacity: 1;
+}
+
+.ehouse__step::before {
   content: "";
   position: absolute;
-  left: calc(-1.5rem + 1px);
+  left: calc(-1.5rem - 1px);
   top: 50%;
-  width: 10px;
-  height: 10px;
-  margin-top: -5px;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
   border-radius: 50%;
   background: var(--ink-1);
   border: 2px solid var(--line-strong);
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-.ehouse__index button[aria-pressed="true"]::before {
+.ehouse__step:first-child::before {
+  top: calc(25svh + 0.6rem);
+}
+
+.ehouse__step.is-active::before {
   background: var(--magenta);
   border-color: var(--magenta);
-  box-shadow: 0 0 0 4px rgba(199, 28, 132, 0.25);
+  box-shadow: 0 0 0 5px rgba(199, 28, 132, 0.22);
 }
 
 .ehouse__no {
-  grid-row: span 2;
-  align-self: center;
-  font: 600 0.78rem/1 var(--font-mono), ui-monospace, monospace;
+  font: 600 0.72rem/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--magenta-text);
+}
+
+.ehouse__no span {
+  margin-left: 0.5rem;
   color: var(--text-dim);
 }
 
 .ehouse__name {
-  font-weight: 650;
-  font-size: 1.05rem;
-}
-
-.ehouse__short {
-  font-size: 0.86rem;
-  color: var(--text-dim);
-}
-
-.ehouse__index button[aria-pressed="true"] .ehouse__no {
-  color: var(--magenta-text);
-}
-
-.ehouse__index button:hover .ehouse__name {
-  color: var(--magenta-text);
-}
-
-.ehouse__panel {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 2px solid var(--magenta);
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .ehouse__title {
-  font-size: 1.3rem;
-  line-height: 1.2;
-  margin-bottom: 0.6rem;
+  margin-top: 0.7rem;
+  font-weight: 650;
+  font-size: 1.08rem;
 }
 
 .ehouse__text {
+  margin-top: 0.35rem;
   color: var(--text-muted);
   font-size: 0.98rem;
 }
 
 .ehouse__does {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.2rem;
   margin: 0.9rem 0 0;
   padding: 0;
   list-style: none;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
+  color: var(--text);
 }
 
 .ehouse__does li::before {
@@ -414,6 +455,9 @@
 }
 
 .ehouse__ask {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   font-weight: 600;
   color: var(--magenta-text);
   text-decoration: none;
@@ -421,28 +465,15 @@
 
 .ehouse__ask::after {
   content: " →";
+  white-space: pre;
 }
 
 .ehouse__ask:hover {
   text-decoration: underline;
 }
 
-.ehouse .legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
-  margin-top: 1.1rem;
-  padding-top: 0.9rem;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.ehouse .legend__line {
-  width: 1.4rem;
-}
-
 .ehouse__note {
-  margin-top: 0.6rem;
+  padding: 0 0 2rem;
   font-size: 0.78rem;
   color: var(--text-dim);
 }
@@ -456,66 +487,53 @@
   opacity: 0.22;
 }
 
-/* Im herangeholten Ausschnitt nur der gewählte Bereich hervorgehoben */
 .house[data-focus="pv"] .hl-inv {
   opacity: 0;
 }
 
-/* Smartphone: Bühne randlos, Bausteine als Tasten */
+/* Smartphone: Bühne randlos oben angeheftet, Schritte laufen darunter */
 @media (max-width: 999px) {
-  .ehouse__stage {
+  .ehouse__pin {
     margin-inline: calc(-1 * var(--gutter));
+    box-shadow: 0 14px 24px -12px rgba(0, 0, 0, 0.9);
   }
 
-  .ehouse__index {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-    padding: 0;
+  .ehouse__steps {
+    padding-top: 0.5rem;
   }
 
-  .ehouse__index::before,
-  .ehouse__index button::before,
-  .ehouse__short {
-    display: none;
+  .ehouse__step {
+    min-height: 58svh;
   }
 
-  .ehouse__index li:last-child {
-    grid-column: 1 / -1;
+  .ehouse__step:first-child {
+    min-height: 45svh;
+    padding-top: 2rem;
   }
 
-  .ehouse__index button,
-  .ehouse__index li:last-child button {
-    grid-template-columns: auto 1fr;
-    gap: 0.6rem;
-    align-items: center;
-    min-height: 3rem;
-    padding: 0.5rem 0.85rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 10px;
+  .ehouse__step:first-child::before {
+    top: 2.6rem;
   }
 
-  .ehouse__no {
-    grid-row: auto;
+  .ehouse__progress button {
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
-  .ehouse__index button[aria-pressed="true"] {
-    border-color: var(--magenta);
-    background: var(--magenta-tint);
-  }
-
-  .ehouse__name {
-    font-size: 0.98rem;
-  }
-
-  .ehouse__panel {
-    margin-top: 0.25rem;
+  .ehouse__progress li + li::before {
+    width: 0.35rem;
   }
 }
 
 @media (max-width: 420px) {
   .ehouse__hud {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ehouse__step {
+    opacity: 1;
   }
 }
 
@@ -1055,10 +1073,7 @@
 }
 
 /* Vergrößerte Schrift: nichts ragt über den Rand */
-.ehouse__index button > span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
+
 
 .card-person {
   overflow: hidden;
@@ -1082,5 +1097,136 @@
 @media (max-width: 360px) {
   .brand__word {
     font-size: 12.5px;
+  }
+}
+
+/* ---------- 02 Wegweiser als horizontale Strecke ---------- */
+
+.hscroll {
+  padding: 0;
+  /* verhindert seitlichen Überlauf, bevor die Strecke gemessen ist */
+  overflow: clip;
+}
+
+.hscroll__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.25rem, 3vh, 2.25rem);
+  padding-block: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.hscroll.is-horizontal .hscroll__sticky {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100svh - var(--header-h));
+  overflow: hidden;
+  padding-block: 1.5rem;
+}
+
+.hscroll__track {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  width: max-content;
+  margin: 0;
+  padding: 0 max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+  list-style: none;
+  will-change: transform;
+}
+
+.hpanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(80vw, 27rem);
+  min-height: clamp(17rem, 46vh, 24rem);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 2px solid var(--magenta);
+  background: linear-gradient(180deg, var(--ink-2), var(--ink-1) 70%);
+  overflow: hidden;
+}
+
+.hpanel__letter {
+  position: absolute;
+  right: -0.08em;
+  bottom: -0.28em;
+  font-size: clamp(8rem, 14vw, 12rem);
+  font-weight: 800;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+  pointer-events: none;
+}
+
+.hpanel__case {
+  position: relative;
+  max-width: 14ch;
+  font-size: clamp(1.45rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.hpanel__advice {
+  position: relative;
+  max-width: 26rem;
+  margin-top: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.hpanel .guide__go {
+  position: relative;
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
+.hscroll__foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.hscroll__hint {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.hscroll__bar {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--line-strong);
+}
+
+.hscroll__bar span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--magenta);
+}
+
+/* Reduzierte Bewegung: normales Raster */
+.hscroll.is-static .hscroll__track {
+  flex-wrap: wrap;
+  width: auto;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.hscroll.is-static .hscroll__foot {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .hpanel {
+    width: 84vw;
+  }
+
+  .hscroll.is-static .hpanel {
+    width: 100%;
   }
 }

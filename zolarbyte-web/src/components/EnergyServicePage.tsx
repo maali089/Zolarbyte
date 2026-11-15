@@ -10,8 +10,27 @@ export function EnergyServicePage({ id }: { id: EnergyService["id"] }) {
   const s = energyServices.find((x) => x.id === id)!;
   const others = energyServices.filter((x) => x.id !== id);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        name: s.name,
+        description: s.short,
+        serviceType: s.name,
+        areaServed: "Karlsfeld und Umgebung bei München",
+        provider: { "@type": "Electrician", name: site.legalName, telephone: site.project.phone, email: site.project.email },
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: s.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      },
+    ],
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <section className="lp-hero" aria-labelledby="lp-title">
         <div className="container lp-hero__grid">
           <div>

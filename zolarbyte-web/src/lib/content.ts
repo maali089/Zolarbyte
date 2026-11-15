@@ -232,32 +232,27 @@ export const STAGES = [
 export const situations = [
   {
     situation: "Neubau oder Dach ohne Anlage",
-    advice:
-      "Photovoltaik ist die Basis. Speicher und Wallbox planen wir gleich mit, damit Zählerschrank und Leitungswege nur einmal vorbereitet werden – auch wenn Sie sie erst später ergänzen.",
+    advice: "Photovoltaik als Basis – Speicher und Wallbox gleich mitplanen, damit der Zählerschrank nur einmal vorbereitet wird.",
     action: { href: "/kontakt?interesse=photovoltaik#anfrage", label: "Photovoltaik anfragen" },
   },
   {
     situation: "Alte Öl- oder Gasheizung",
-    advice:
-      "Eine Wärmepumpe prüfen wir anhand von Heizlast, Heizkörpern oder Fußbodenheizung und Hausanschluss. Für den Heizungstausch gibt es einen Zuschuss der KfW.",
+    advice: "Wärmepumpe prüfen: Heizlast, Heizflächen, Hausanschluss. Für den Tausch gibt es KfW-Zuschuss.",
     action: { href: "/foerderrechner", label: "Förderung berechnen" },
   },
   {
-    situation: "PV vorhanden, mittags geht viel ins Netz",
-    advice:
-      "Ein Speicher hebt Solarstrom für den Abend auf. Oft lohnt es sich auch, Wärmepumpe oder Auto in die Mittagsstunden zu legen.",
+    situation: "PV da, mittags geht viel ins Netz",
+    advice: "Ein Speicher hebt Solarstrom für den Abend auf – oder Wärmepumpe und Auto laufen mittags.",
     action: { href: "/kontakt?interesse=stromspeicher#anfrage", label: "Speicher anfragen" },
   },
   {
     situation: "Ein E-Auto ist geplant",
-    advice:
-      "Eine Wallbox an Garage oder Stellplatz, sauber an den Zählerschrank angebunden und beim Netzbetreiber angemeldet. Mit PV kann tagsüber Solarstrom geladen werden.",
+    advice: "Wallbox an Garage oder Stellplatz, sauber angebunden und angemeldet – mit PV lädt es tagsüber Solarstrom.",
     action: { href: "/kontakt?interesse=elektrotechnik#anfrage", label: "Wallbox anfragen" },
   },
   {
     situation: "Älteres Haus, alter Zählerschrank",
-    advice:
-      "Vor jeder Erweiterung prüfen wir den Zählerschrank. Häufig muss er für PV, Speicher oder Wärmepumpe erneuert werden – das gehört bei uns zur Planung.",
+    advice: "Vor jeder Erweiterung prüfen wir den Zählerschrank. Oft muss er für PV, Speicher oder Wärmepumpe erneuert werden.",
     action: { href: "/elektrotechnik", label: "Elektrotechnik ansehen" },
   },
 ];
