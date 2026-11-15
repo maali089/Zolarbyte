@@ -1,0 +1,493 @@
+/* ==========================================================
+   Energiehaus (SVG) – Animationen aus der Live-Version,
+   Farben/Tageszeit an „Sonnenbahn“ angepasst (--dusk kommt von .stage)
+   ========================================================== */
+
+.ehouse {
+  --dusk-k: var(--dusk, 0);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+}
+
+.ehouse__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Umgebung: dunkler Bodenschein nur am Abend, tagsüber steht das Haus auf Kalk */
+.ehouse .h-env-glow {
+  opacity: calc(var(--dusk-k) * 0.9);
+}
+
+/* ---------- Energieflüsse ---------- */
+.ehouse .flow__base {
+  stroke: var(--magenta);
+  stroke-width: 2.2px;
+  opacity: 0.55;
+  transition: opacity 0.45s var(--ease-out);
+}
+.ehouse .flow__pulse {
+  stroke: #ff6cc0;
+  stroke-width: 3.6px;
+  stroke-dasharray: 5 95;
+  stroke-dashoffset: 100px;
+  opacity: 0;
+  animation: eh-pulse var(--pd, 3.2s) linear var(--pdel, 0s) infinite;
+}
+.ehouse .f-pv .flow__pulse {
+  --pd: 6.5s;
+  stroke-dasharray: 3.2 96.8;
+  stroke-width: 4px;
+  filter: drop-shadow(0 0 3px rgba(255, 92, 184, 0.9));
+}
+.ehouse .f-pv .flow__base {
+  opacity: 0.42;
+}
+.ehouse .f-wb .flow__pulse {
+  --pd: 4.6s;
+  --pdel: 1.8s;
+}
+.ehouse .f-inv .flow__pulse {
+  --pd: 1.4s;
+  --pdel: 0.9s;
+}
+.ehouse .f-house .flow__pulse {
+  --pd: 3.6s;
+  --pdel: 1.4s;
+}
+.ehouse .f-bat .flow__pulse {
+  --pd: 2s;
+  --pdel: 0.5s;
+}
+.ehouse .f-hp .flow__pulse {
+  --pd: 5s;
+  --pdel: 2s;
+}
+/* Netz: auf Kalk dunkel, nachts hell */
+.ehouse .f-grid .flow__pulse {
+  --pd: 4.2s;
+  --pdel: 1s;
+  stroke: color-mix(in oklab, #4b4f58, #e8e8ee calc(var(--dusk-k) * 100%));
+}
+.ehouse .f-grid .flow__base {
+  stroke: color-mix(in oklab, #6b6f78, #c9c9d1 calc(var(--dusk-k) * 100%));
+  stroke-width: 1.6px;
+  stroke-dasharray: 1.2 1.6;
+  opacity: 0.6;
+}
+
+@keyframes eh-pulse {
+  0% {
+    stroke-dashoffset: 100px;
+    opacity: 0;
+  }
+  6%,
+  92% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes eh-pulse-rev {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  6%,
+  92% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 100px;
+    opacity: 0;
+  }
+}
+
+/* ---------- Wärme, Lüfter, Modulglanz, LEDs ---------- */
+.ehouse .heat__line {
+  fill: none;
+  stroke: #f2a766;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.01 7;
+  animation: eh-heat 2.4s linear infinite;
+}
+.ehouse .heat__env {
+  fill: none;
+  stroke: #9fb0ba;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 7;
+  opacity: 0.8;
+  animation: eh-env 2.2s linear infinite;
+}
+@keyframes eh-heat {
+  to {
+    stroke-dashoffset: -14px;
+  }
+}
+@keyframes eh-env {
+  to {
+    stroke-dashoffset: -21px;
+  }
+}
+.ehouse .h-fan {
+  transform-box: fill-box;
+  transform-origin: 50%;
+  animation: eh-spin 1.6s linear infinite;
+}
+@keyframes eh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.ehouse .h-sheen {
+  opacity: 0;
+  animation: eh-sheen 11s var(--ease-in-out) 6s infinite;
+}
+@keyframes eh-sheen {
+  0% {
+    opacity: 0;
+    transform: skew(-28deg) translate(0);
+  }
+  2%,
+  13% {
+    opacity: 1;
+  }
+  15%,
+  to {
+    transform: skewX(-28deg) translateX(var(--sweep));
+    opacity: 0;
+  }
+}
+.ehouse .h-lamp {
+  opacity: 0.55;
+  transition: opacity 0.7s var(--ease-out);
+}
+.ehouse .h-wb-led {
+  animation: eh-blink 3.2s ease-in-out infinite;
+}
+.ehouse .h-bat-seg.s5 {
+  animation: eh-blink 1.6s ease-in-out infinite;
+}
+@keyframes eh-blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* ---------- Fokus (aktive Tagesphase) ---------- */
+.ehouse .hl {
+  stroke: var(--magenta);
+  stroke-width: 2.6px;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.ehouse :is(.h-pv, .h-bat, .h-hp, .h-inv, .h-dist, .h-wb, .h-car, .heat, .flow) {
+  transition: opacity 0.45s var(--ease-out);
+}
+.ehouse[data-focus="pv"] :is(.hl-pv, .hl-inv),
+.ehouse[data-focus="verteiler"] :is(.hl-dist, .hl-inv),
+.ehouse[data-focus="wallbox"] .hl-wb,
+.ehouse[data-focus="netz"] .hl-dist {
+  opacity: 1;
+}
+.ehouse[data-focus="pv"] :is(.h-bat, .h-hp, .f-bat, .f-hp, .heat, .f-wb, .h-wb, .h-car),
+.ehouse[data-focus="verteiler"] :is(.h-hp, .f-hp, .heat, .f-wb, .h-car),
+.ehouse[data-focus="wallbox"] :is(.h-hp, .f-hp, .heat, .f-bat),
+.ehouse[data-focus="netz"] :is(.h-hp, .f-hp, .heat, .f-pv, .f-inv) {
+  opacity: 0.22;
+}
+
+/* ---------- Abend (aus der Scroll-Tageszeit) ---------- */
+.ehouse .h-night {
+  opacity: calc(var(--dusk-k) * 0.5);
+}
+.ehouse .h-glow {
+  opacity: calc(var(--dusk-k) * 0.65);
+}
+.ehouse[data-time="evening"] :is(.f-pv, .f-inv) {
+  opacity: 0.08;
+}
+.ehouse[data-time="evening"] :is(.f-pv, .f-inv) .flow__pulse {
+  opacity: 0;
+  animation: none;
+}
+.ehouse[data-time="evening"] .h-lamp {
+  opacity: 1;
+}
+.ehouse[data-time="evening"] .h-inv-led {
+  opacity: 0.25;
+}
+.ehouse[data-time="evening"] .h-sheen {
+  animation: none;
+}
+.ehouse[data-time="evening"] :is(.f-bat, .f-grid) .flow__pulse {
+  animation-name: eh-pulse-rev;
+}
+.ehouse[data-time="evening"] .h-bat-seg.s5 {
+  opacity: 0.12;
+  animation: none;
+}
+.ehouse[data-time="evening"] .h-bat-seg.s4 {
+  animation: eh-blink 1.6s ease-in-out infinite;
+}
+
+/* ---------- Aufbau beim ersten Laden ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .ehouse.is-intro .ehouse__svg {
+    animation: eh-cam 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .ehouse.is-intro .flow__base {
+    stroke-dasharray: 100;
+    animation: eh-draw var(--dd, 0.8s) var(--ease-out) var(--ds, 2s) both;
+  }
+  .ehouse.is-intro .f-grid .flow__base {
+    stroke-dasharray: 1.2 1.6;
+    animation: eh-fade-in 0.6s ease-out 4.4s both;
+  }
+  .ehouse.is-intro .f-pv .flow__base {
+    --ds: 1.2s;
+    --dd: 1.5s;
+  }
+  .ehouse.is-intro .f-wb .flow__base {
+    --ds: 3.3s;
+    --dd: 0.9s;
+  }
+  .ehouse.is-intro .f-inv .flow__base {
+    --ds: 2.6s;
+    --dd: 0.3s;
+  }
+  .ehouse.is-intro .f-bat .flow__base {
+    --ds: 2.9s;
+    --dd: 0.45s;
+  }
+  .ehouse.is-intro .f-house .flow__base {
+    --ds: 3s;
+    --dd: 0.7s;
+  }
+  .ehouse.is-intro .f-hp .flow__base {
+    --ds: 3.4s;
+    --dd: 0.9s;
+  }
+  .ehouse.is-intro .flow__pulse {
+    animation-delay: calc(var(--pdel, 0s) + 4.6s);
+  }
+  .ehouse.is-intro .f-pv .flow__pulse {
+    animation:
+      eh-pulse 2.4s linear 1.3s both,
+      eh-pulse var(--pd) linear 5.2s infinite;
+  }
+  .ehouse.is-intro .h-inv-led {
+    animation: eh-fade-in 0.3s ease-out 2.6s both;
+  }
+  .ehouse.is-intro .hl-inv {
+    animation: eh-flash 1s ease-in-out 2.5s both;
+  }
+  .ehouse.is-intro .hl-dist {
+    animation: eh-flash 1s ease-in-out 2.85s both;
+  }
+  .ehouse.is-intro .hl-bat {
+    animation: eh-flash 1.3s ease-in-out 3.1s both;
+  }
+  .ehouse.is-intro .hl-wb {
+    animation: eh-flash 1.2s ease-in-out 3.9s both;
+  }
+  .ehouse.is-intro .h-bat-seg {
+    animation: eh-seg 0.3s ease-out both;
+  }
+  .ehouse.is-intro .h-bat-seg.s1 {
+    animation-delay: 3.2s;
+  }
+  .ehouse.is-intro .h-bat-seg.s2 {
+    animation-delay: 3.4s;
+  }
+  .ehouse.is-intro .h-bat-seg.s3 {
+    animation-delay: 3.6s;
+  }
+  .ehouse.is-intro .h-bat-seg.s4 {
+    animation-delay: 3.8s;
+  }
+  .ehouse.is-intro .h-bat-seg.s5 {
+    animation:
+      eh-seg 0.3s ease-out 4s both,
+      eh-blink 1.6s ease-in-out 4.6s infinite;
+  }
+  .ehouse.is-intro .heat {
+    animation: eh-fade-in 0.8s ease-out 4.2s both;
+  }
+  .ehouse.is-intro .ehouse__tag {
+    animation: eh-tag 0.6s var(--ease-out) both;
+  }
+  .ehouse.is-intro .ehouse__tag[data-tag="pv"] {
+    animation-delay: 1.3s;
+  }
+  .ehouse.is-intro .ehouse__tag[data-tag="verteiler"] {
+    animation-delay: 2.9s;
+  }
+  .ehouse.is-intro .ehouse__tag[data-tag="wallbox"] {
+    animation-delay: 4s;
+  }
+  .ehouse.is-intro .ehouse__tag[data-tag="netz"] {
+    animation-delay: 4.4s;
+  }
+}
+@keyframes eh-cam {
+  0% {
+    opacity: 0.35;
+    transform: scale(1.06) translate(1.4%, 1.8%);
+  }
+}
+@keyframes eh-draw {
+  0% {
+    stroke-dashoffset: 100px;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes eh-fade-in {
+  0% {
+    opacity: 0;
+  }
+}
+@keyframes eh-flash {
+  0%,
+  to {
+    opacity: 0;
+  }
+  30%,
+  60% {
+    opacity: 1;
+  }
+}
+@keyframes eh-seg {
+  0% {
+    opacity: 0.12;
+  }
+}
+@keyframes eh-tag {
+  0% {
+    opacity: 0;
+  }
+}
+
+.ehouse.is-paused,
+.ehouse.is-paused * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ehouse,
+  .ehouse * {
+    animation: none !important;
+  }
+  .ehouse .flow__pulse {
+    opacity: 1;
+    stroke-dashoffset: 50px;
+  }
+}
+
+/* ---------- Beschriftungen ---------- */
+.ehouse__tags {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ehouse__tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+}
+/* Gesamtansicht: alle Beschriftungen; Nahansicht: nur die aktive */
+.ehouse[data-focus="overview"] .ehouse__tag[data-inside="true"],
+.ehouse[data-focus="pv"] .ehouse__tag[data-tag="pv"][data-inside="true"],
+.ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"][data-inside="true"],
+.ehouse[data-focus="wallbox"] .ehouse__tag[data-tag="wallbox"][data-inside="true"],
+.ehouse[data-focus="netz"] .ehouse__tag[data-tag="netz"][data-inside="true"] {
+  opacity: 1;
+}
+.ehouse__tag::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--magenta);
+  box-shadow: 0 0 0 2px var(--kalk);
+}
+.ehouse__tag::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: var(--lead, 34px);
+  background: var(--magenta);
+}
+.ehouse__tag span {
+  position: absolute;
+  left: 0;
+  bottom: var(--lead, 34px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--kalk) 92%, transparent);
+  color: var(--schiefer);
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.ehouse__tag[data-tag="netz"] {
+  --lead: 22px;
+}
+.ehouse__tag[data-tag="verteiler"] {
+  --lead: 64px;
+}
+.ehouse__tag[data-tag="wallbox"] {
+  --lead: 48px;
+}
+.ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"] {
+  --lead: 120px;
+}
+
+@media (max-width: 1023px) {
+  .ehouse__tag {
+    --lead: 20px;
+  }
+  .ehouse__tag[data-tag="verteiler"] {
+    --lead: 40px;
+  }
+  .ehouse__tag[data-tag="wallbox"] {
+    --lead: 30px;
+  }
+  .ehouse[data-focus="verteiler"] .ehouse__tag[data-tag="verteiler"] {
+    --lead: 70px;
+  }
+  .ehouse__tag span {
+    padding: 2px 7px;
+    font-size: 0.625rem;
+  }
+}

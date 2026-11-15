@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { HANDOFF_KEY } from "@/components/ContactForm";
+import { HANDOFF_KEY } from "@/components/assistant/topics";
 import "./wizard.css";
 
 /*

@@ -16,7 +16,7 @@ export default function RechnerKonzeptPage() {
     <>
       <section className="page-head">
         <div className="container">
-          <p className="eyebrow eyebrow--light">Interne Vorschau · Konzept</p>
+          <p className="tech">Interne Vorschau · Konzept</p>
           <h1>Rechner-Komponente</h1>
           <p>
             Vorbereitete Bedienung für einen späteren Rechner. Diese Seite ist nicht verlinkt und nicht für die

@@ -10,7 +10,7 @@ export const site = {
   url: "https://zolarbyte.de",
   tagline: "Elektrotechnik-Meisterbetrieb aus Karlsfeld",
   description:
-    "Zolarbyte ist Ihr Elektrotechnik-Meisterbetrieb aus Karlsfeld bei München: Elektroinstallation, Kundendienst, E-Check, Photovoltaik, E-Mobilität und Schulungen.",
+    "Zolarbyte, Elektrotechnik-Meisterbetrieb in Karlsfeld bei München: Photovoltaik, E-Mobilität, Elektroinstallation, Störungsbehebung, E-Check und Schulungen.",
   address: {
     street: "Nußbaumstraße 4",
     zip: "85757",
@@ -61,6 +61,8 @@ export const features = {
   partners: false,
   /** Kundenstimmen: keine freigegebenen Stimmen */
   testimonials: false,
+  /** Förder-Check: Datenstand (src/lib/foerderung.ts) muss vor Livegang von Zolarbyte freigegeben werden */
+  foerdercheck: false,
 } as const;
 
 /** Vorschau-Modus: zeigt interne Hinweise (Entwurf, Formularstatus). */

@@ -1,0 +1,81 @@
+/* Sonnen-Cursor. Elemente bleiben unsichtbar, bis die Komponente html.has-sun-cursor setzt. */
+.sun-cursor-dot,
+.sun-cursor-ring,
+.sun-cursor-label {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out, ease-out);
+}
+html.has-sun-cursor .sun-cursor-dot,
+html.has-sun-cursor .sun-cursor-ring,
+html.has-sun-cursor .sun-cursor-label {
+  display: block;
+}
+html.has-sun-cursor[data-sun-visible="true"] .sun-cursor-dot,
+html.has-sun-cursor[data-sun-visible="true"] .sun-cursor-ring {
+  opacity: 1;
+}
+
+html.has-sun-cursor,
+html.has-sun-cursor * {
+  cursor: none !important;
+}
+html.has-sun-cursor :is(input, textarea, select, [contenteditable="true"], [contenteditable=""]) {
+  cursor: text !important;
+}
+html.has-sun-cursor :is(select, input[type="checkbox"], input[type="radio"], input[type="range"], input[type="submit"]) {
+  cursor: pointer !important;
+}
+
+.sun-cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--amber, #f2a20c);
+}
+
+.sun-cursor-ring {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  /* difference: auf Kalk dunkel, auf Nacht hell – eine Regel für beide Gründe */
+  mix-blend-mode: difference;
+  transition: opacity 180ms var(--ease-out, ease-out), background-color 240ms var(--ease-out, ease-out),
+    border-color 240ms var(--ease-out, ease-out);
+}
+.sun-cursor-ring[data-hover="true"] {
+  mix-blend-mode: normal;
+  border-color: var(--magenta, #c51c84);
+  background: transparent;
+}
+
+html.has-sun-cursor[data-sun-hidden="true"] .sun-cursor-dot,
+html.has-sun-cursor[data-sun-hidden="true"] .sun-cursor-ring,
+html.has-sun-cursor[data-sun-hidden="true"] .sun-cursor-label {
+  opacity: 0;
+}
+
+.sun-cursor-label {
+  margin: 30px 0 0 30px;
+  padding: 3px 8px 2px;
+  border-radius: 999px;
+  background: var(--magenta, #c51c84);
+  color: #fff;
+  font-family: var(--font-tech, "Arial Narrow", sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sun-cursor-label[data-on="true"] {
+  opacity: 1;
+}

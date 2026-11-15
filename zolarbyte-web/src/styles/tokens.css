@@ -1,0 +1,73 @@
+/* ==========================================================
+   Zolarbyte „Sonnenbahn“ – Design-Tokens
+   Zwei Tinten (Magenta, Amber) auf Kalk; Nacht als Abendgrund.
+   ========================================================== */
+:root {
+  /* Grund */
+  --kalk: #f1f2ee;
+  --kalk-2: #e7e9e3;
+  --kalk-3: #dcdfd8;
+  --daemmerung: #ece2e6;
+  --nacht: #17121f;
+  --nacht-2: #221b2d;
+  --nacht-3: #2e2539;
+
+  /* Tinte */
+  --schiefer: #15171c;
+  --schiefer-2: #464a53;
+  --schiefer-3: #63676f; /* zurückgenommener Text, AA auf Kalk (4.9:1) */
+  --on-nacht: #f3eff5;
+  --on-nacht-2: #bdb2c6;
+
+  /* Zwei Tinten */
+  --magenta: #c51c84;
+  --magenta-ink: #a3126b; /* Text-Akzent auf Kalk */
+  --magenta-hi: #ff6bbb; /* Text-Akzent auf Nacht */
+  --magenta-wash: rgba(197, 28, 132, 0.08);
+  --amber: #f2a20c;
+  --amber-hi: #ffc14a;
+  --amber-ink: #7d4e00; /* Amber als Text auf Kalk */
+  --amber-wash: rgba(242, 162, 12, 0.14);
+
+  /* Linien */
+  --rule: rgba(21, 23, 28, 0.14);
+  --rule-strong: rgba(21, 23, 28, 0.32);
+  --rule-ghost: rgba(21, 23, 28, 0.07);
+  --rule-nacht: rgba(243, 239, 245, 0.14);
+
+  /* Status */
+  --error: #b42318;
+  --success: #12704a;
+
+  /* Typo */
+  --font-display: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
+  --font-tech: var(--font-barlow), "Arial Narrow", sans-serif;
+
+  --fs-display: clamp(2.75rem, 1.15rem + 6.4vw, 6rem);
+  --fs-h2: clamp(2.125rem, 1.2rem + 3.6vw, 4.25rem);
+  --fs-h3: clamp(1.25rem, 1.02rem + 0.9vw, 1.625rem);
+  --fs-lead: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.8125rem;
+
+  /* Raster: alles rastet auf 8px-Module */
+  --u: 8px;
+  --container: 1320px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --section: clamp(96px, 14vw, 192px);
+  --header-h: 72px;
+
+  --radius-s: 6px;
+  --radius: 12px;
+  --radius-pill: 999px;
+
+  /* Bewegung */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 640ms;
+  --dur-4: 1100ms;
+}

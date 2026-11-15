@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { services } from "@/lib/content";
-import { site } from "@/lib/site";
+import { features, isPreview, site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" data-ground="night">
       <div className="container site-footer__grid">
         <div className="site-footer__brand">
-          <Logo tone="light" />
+          <Logo animated={false} />
           <p>
             Elektrotechnik-Meisterbetrieb
             <br />
@@ -23,7 +23,7 @@ export function Footer() {
           <ul>
             {services.map((s) => (
               <li key={s.id}>
-                <Link href={`/#${s.id}`}>{s.title}</Link>
+                <Link href={`/leistungen/${s.id}`}>{s.title}</Link>
               </li>
             ))}
           </ul>
@@ -39,13 +39,27 @@ export function Footer() {
               <a href={`mailto:${site.general.email}`}>{site.general.email}</a>
             </li>
             <li>
-              <Link href="/kontakt">Projekt anfragen</Link>
+              <Link href="/kontakt">Anfrage starten</Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <h2 className="site-footer__title">Rechtliches</h2>
+          <h2 className="site-footer__title">Betrieb</h2>
+          <ul>
+            <li>
+              <Link href="/betrieb">Über uns &amp; Ablauf</Link>
+            </li>
+            <li>
+              <Link href="/fragen">Häufige Fragen</Link>
+            </li>
+            {features.foerdercheck || isPreview ? (
+              <li>
+                <Link href="/foerderung">Förder-Check</Link>
+              </li>
+            ) : null}
+          </ul>
+          <h2 className="site-footer__title site-footer__title--gap">Rechtliches</h2>
           <ul>
             <li>
               <Link href="/impressum">Impressum</Link>
@@ -56,8 +70,18 @@ export function Footer() {
           </ul>
         </div>
       </div>
+
       <div className="container site-footer__base">
-        <p>© {site.copyrightYear} {site.legalName}</p>
+        <p>
+          © {site.copyrightYear} {site.legalName}
+        </p>
+        <p>Eingetragen bei der {site.chamber.name}</p>
+        <p className="footer-credit">
+          Website von{" "}
+          <a href="https://pje-systems.de" target="_blank" rel="noopener">
+            PJE Systems
+          </a>
+        </p>
       </div>
     </footer>
   );

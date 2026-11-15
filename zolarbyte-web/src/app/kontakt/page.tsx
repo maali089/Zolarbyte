@@ -1,59 +1,60 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/ContactForm";
-import { getMailConfig } from "@/lib/mail";
-import { isPreview, site } from "@/lib/site";
+import { InquirySlot } from "@/components/sections/Slots";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Kontakt & Projektanfrage",
+  title: "Anfrage & Kontakt in Karlsfeld",
   description:
-    "Projekt anfragen bei Zolarbyte, Ihrem Elektrotechnik-Meisterbetrieb in Karlsfeld bei München – per Formular, Telefon oder E-Mail.",
+    "Photovoltaik, Wallbox, Elektroinstallation, Störung oder Prüfung anfragen: in drei Schritten beim Elektro-Meisterbetrieb Zolarbyte in Karlsfeld. Oder direkt anrufen.",
   alternates: { canonical: "/kontakt" },
 };
 
 export default function KontaktPage() {
-  const { configured } = getMailConfig();
-
   return (
     <>
-      <section className="page-head">
+      <section className="page-head" data-ground="day">
         <div className="container">
-          <p className="eyebrow eyebrow--light">Kontakt</p>
-          <h1>Projekt anfragen</h1>
-          <p>
-            Beschreiben Sie kurz Ihr Vorhaben oder Ihr Problem. Wir melden uns persönlich bei Ihnen – oder Sie rufen
-            uns direkt an.
-          </p>
+          <h1>Anfrage starten</h1>
+          <p>Drei kurze Schritte. Wir melden uns persönlich – oder Sie rufen uns direkt an.</p>
         </div>
+        <svg className="page-head__arc" viewBox="0 0 520 200" fill="none" aria-hidden="true">
+          <path d="M0 199 C 130 20, 390 20, 520 199" stroke="currentColor" />
+          <line x1="0" y1="199" x2="520" y2="199" stroke="currentColor" strokeDasharray="2 6" />
+          <circle cx="388" cy="78" r="9" fill="var(--amber)" stroke="none" />
+        </svg>
       </section>
 
-      <section className="section">
-        <div className="container contact-layout">
-          <div>
-            <h2 className="visually-hidden">Anfrageformular</h2>
-            <ContactForm mailConfigured={configured} previewNote={isPreview} />
+      <section className="section contact" data-ground="day">
+        <div className="container contact__grid">
+          <div className="contact__form">
+            <h2 className="visually-hidden">Anfrage-Assistent</h2>
+            <InquirySlot tone="day" />
           </div>
 
-          <aside className="contact-aside" aria-label="Direkter Kontakt">
-            <div className="contact-block">
-              <h2>Allgemeiner Kontakt</h2>
-              <p>
-                <a href={site.general.phoneHref}>{site.general.phone}</a>
-                <br />
-                <a href={`mailto:${site.general.email}`}>{site.general.email}</a>
-              </p>
+          <aside className="contact__aside" aria-label="Direkter Kontakt">
+            <div className="contact__block">
+              <h2 className="tech">Allgemein &amp; Störungen</h2>
+              <a className="contact__phone" href={site.general.phoneHref} data-cursor="Anrufen">
+                {site.general.phone}
+              </a>
+              <a className="link-line" href={`mailto:${site.general.email}`}>
+                {site.general.email}
+              </a>
             </div>
-            <div className="contact-block">
-              <h2>Vertrieb &amp; neue Projekte</h2>
-              <p>
+            <div className="contact__block">
+              <h2 className="tech">Neue Projekte &amp; Angebote</h2>
+              <p className="contact__name">
                 {site.sales.name}, {site.sales.role}
-                <br />
-                <a href={site.sales.phoneHref}>{site.sales.phone}</a>
-                <br />
-                <a href={`mailto:${site.sales.email}`}>{site.sales.email}</a>
               </p>
+              <a className="contact__phone" href={site.sales.phoneHref} data-cursor="Anrufen">
+                {site.sales.phone}
+              </a>
+              <a className="link-line" href={`mailto:${site.sales.email}`}>
+                {site.sales.email}
+              </a>
             </div>
-            <div className="contact-block">
-              <h2>Adresse</h2>
+            <div className="contact__block">
+              <h2 className="tech">Adresse</h2>
               <p>
                 {site.legalName}
                 <br />

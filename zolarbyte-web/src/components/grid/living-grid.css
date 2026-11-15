@@ -1,0 +1,17 @@
+/* Living Grid – fixe Ebene ÜBER Sektionsgründen, UNTER Inhalten. Inhalte liegen darüber (z-index 2). */
+.living-grid {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100lvh;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+  contain: strict;
+}
+
+/* Zur Mitte (Textspalten) hin ausblenden – das Feld lebt an den Rändern */
+.living-grid {
+  -webkit-mask-image: radial-gradient(ellipse 62% 70% at 50% 50%, rgba(0, 0, 0, 0.25) 35%, #000 100%);
+  mask-image: radial-gradient(ellipse 62% 70% at 50% 50%, rgba(0, 0, 0, 0.25) 35%, #000 100%);
+}

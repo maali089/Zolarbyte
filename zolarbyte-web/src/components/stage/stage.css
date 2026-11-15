@@ -1,0 +1,148 @@
+/* Hausmodell „Sonnenbahn“ – Container, Poster, Übergang */
+.house-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  contain: layout paint;
+}
+.house-stage__scene,
+.house-stage__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.house-stage__scene {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.house-stage[data-ready="true"] .house-stage__scene {
+  opacity: 1;
+}
+.house-stage__poster {
+  transition: opacity 0.4s ease;
+}
+.house-stage[data-ready="true"] .house-stage__poster {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .house-stage__scene,
+  .house-stage__poster {
+    transition: none;
+  }
+}
+
+.house-stage__poster {
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Beschriftungen: Kalk-Pille, Schiefer-Schrift, 1px-Leader; aktives Label Magenta */
+.stage-labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.stage-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  --lead: 34px;
+}
+.stage-label[data-state="idle"] {
+  opacity: 0.88;
+}
+.stage-label[data-state="active"] {
+  opacity: 1;
+}
+.stage-label__dot {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--schiefer, #15171c);
+  box-shadow: 0 0 0 2px var(--kalk, #f1f2ee);
+}
+.stage-label__line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: var(--lead);
+  background: var(--schiefer-2, #464a53);
+}
+.stage-label__pill {
+  position: absolute;
+  bottom: var(--lead);
+  left: -1px;
+  white-space: nowrap;
+  font-family: var(--font-tech, "Arial Narrow", sans-serif);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--schiefer, #15171c);
+  background: var(--kalk, #f1f2ee);
+  border: 1px solid var(--rule-strong, rgba(21, 23, 28, 0.32));
+  padding: 6px 9px 5px;
+}
+.stage-label[data-side="l"] .stage-label__pill {
+  left: auto;
+  right: -1px;
+}
+.stage-label[data-state="active"] .stage-label__dot {
+  background: var(--magenta, #c51c84);
+}
+.stage-label[data-state="active"] .stage-label__line {
+  background: var(--magenta, #c51c84);
+}
+.stage-label[data-state="active"] .stage-label__pill {
+  color: var(--magenta-ink, #a3126b);
+  border-color: var(--magenta, #c51c84);
+}
+/* Mobil: Pille unten, Leader nach unten */
+.stage-label[data-dir="down"] .stage-label__line {
+  bottom: auto;
+  top: 0;
+  height: var(--lead);
+}
+.stage-label[data-dir="down"] .stage-label__pill {
+  bottom: auto;
+  top: var(--lead);
+  left: var(--px, 0);
+  right: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-label {
+    transition: none;
+  }
+}
+
+/* Querformat: Szene läuft links weich aus (dort steht der Text) – nie eine harte Kante */
+@media (min-aspect-ratio: 13/10) {
+  .house-stage__scene,
+  .house-stage__poster {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18%);
+    mask-image: linear-gradient(to right, transparent 0, #000 18%);
+  }
+}
+
+/* Fokus Wallbox: Carport rückt in die rechte Hälfte, das Haus dahinter blendet weicher aus */
+@media (min-aspect-ratio: 13/10) {
+  .house-stage[data-focus="wallbox"] .house-stage__scene {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 22%, #000 46%);
+    mask-image: linear-gradient(to right, transparent 0, transparent 22%, #000 46%);
+  }
+}

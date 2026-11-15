@@ -25,7 +25,11 @@ export type Inquiry = {
   email: string;
   phone?: string;
   service: string;
-  message: string;
+  message?: string;
+  objekt?: string;
+  zeitraum?: string;
+  ort?: string;
+  extra?: string;
 };
 
 export async function sendInquiry(inquiry: Inquiry) {
@@ -34,15 +38,25 @@ export async function sendInquiry(inquiry: Inquiry) {
     return { ok: false as const, reason: "not_configured" as const };
   }
 
+  // Zeilenumbrüche aus Einzeilen-Feldern entfernen (kein Header-/Zeilen-Einschleusen im Mailtext)
+  const one = (v?: string) => (v ? v.replace(/[\r\n]+/g, " ").trim() : "") || "–";
   const text = [
     `Neue Anfrage über zolarbyte.de`,
     ``,
-    `Name: ${inquiry.name}`,
-    `E-Mail: ${inquiry.email}`,
-    `Telefon: ${inquiry.phone || "–"}`,
-    `Leistung: ${inquiry.service}`,
+    `ANLIEGEN`,
+    `Leistung: ${one(inquiry.service)}`,
+    `Objekt: ${one(inquiry.objekt)}`,
+    `Zeitraum: ${one(inquiry.zeitraum)}`,
+    `PLZ / Ort: ${one(inquiry.ort)}`,
+    `Zusatzangaben: ${one(inquiry.extra)}`,
     ``,
-    inquiry.message,
+    `KONTAKT`,
+    `Name: ${one(inquiry.name)}`,
+    `E-Mail: ${one(inquiry.email)}`,
+    `Telefon (Rückruf): ${one(inquiry.phone)}`,
+    ``,
+    `NACHRICHT`,
+    inquiry.message?.trim() || "(keine Nachricht)",
   ].join("\n");
 
   try {
@@ -56,7 +70,7 @@ export async function sendInquiry(inquiry: Inquiry) {
         from: cfg.from,
         to: [cfg.recipient],
         reply_to: inquiry.email,
-        subject: `Anfrage: ${inquiry.service} – ${inquiry.name}`,
+        subject: `Anfrage: ${one(inquiry.service)} – ${one(inquiry.name)}`,
         text,
       }),
     });

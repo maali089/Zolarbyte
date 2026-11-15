@@ -5,9 +5,9 @@ import type { NextConfig } from "next";
  * Die alten Blog-, Tag- und Archivseiten enthielten nur Platzhaltertexte.
  */
 const legacy: Array<[string, string]> = [
-  ["/services", "/#leistungen"],
-  ["/ueber-uns", "/#betrieb"],
-  ["/about-us", "/#leistungen"],
+  ["/services", "/leistungen"],
+  ["/ueber-uns", "/betrieb"],
+  ["/about-us", "/betrieb"],
   ["/unsere-partner", "/"],
   ["/disclaimer", "/impressum"],
   ["/hello-world", "/"],

@@ -1,53 +1,63 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Barlow_Semi_Condensed, Schibsted_Grotesk } from "next/font/google";
+import { ViewTransition } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MobileDock } from "@/components/MobileDock";
+import { GroundObserver } from "@/components/fx/GroundObserver";
+import { RevealObserver } from "@/components/fx/RevealObserver";
+import { LivingGrid } from "@/components/grid/LivingGrid";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { SunCursor } from "@/components/motion/SunCursor";
 import { isPreview, site } from "@/lib/site";
 import "./globals.css";
 
-const display = Archivo({
+const display = Schibsted_Grotesk({
   subsets: ["latin"],
-  axes: ["wdth"],
-  variable: "--font-display",
+  variable: "--font-schibsted",
   display: "swap",
 });
 
-const body = IBM_Plex_Sans({
+const tech = Barlow_Semi_Condensed({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
+  variable: "--font-barlow",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Zolarbyte – Elektrotechnik-Meisterbetrieb in Karlsfeld bei München",
+    default: "Photovoltaik & Elektroinstallation in Karlsfeld – Zolarbyte",
     template: "%s – Zolarbyte",
   },
   description: site.description,
+  applicationName: "Zolarbyte",
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "de_DE",
     siteName: "Zolarbyte",
   },
+  twitter: { card: "summary_large_image" },
+  formatDetection: { telephone: false },
   robots: isPreview ? { index: false, follow: false } : undefined,
 };
 
 export const viewport: Viewport = {
-  themeColor: "#121216",
+  themeColor: "#f1f2ee",
+  colorScheme: "light",
 };
+
+// Setzt html.js vor dem ersten Paint: Reveal-Animationen verstecken nur mit JS.
+const jsFlag = `document.documentElement.classList.add('js')`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="de" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="de" className={`${display.variable} ${tech.variable}`} data-ground="day" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
+      </head>
       <body>
         <a className="skip-link" href="#inhalt">
           Zum Inhalt springen
@@ -57,11 +67,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             Interne Vorschau – noch nicht veröffentlicht
           </div>
         ) : null}
+        <LivingGrid />
         <Header />
-        <main id="inhalt" tabIndex={-1}>
-          {children}
-        </main>
+        <ViewTransition>
+          <main id="inhalt" tabIndex={-1}>
+            {children}
+          </main>
+        </ViewTransition>
         <Footer />
+        <MobileDock />
+        <SmoothScroll />
+        <SunCursor />
+        <RevealObserver />
+        <GroundObserver />
       </body>
     </html>
   );
